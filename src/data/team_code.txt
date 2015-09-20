@@ -1,0 +1,30 @@
+1,Aldosivi
+2,Argentinos Juniors
+3,Arsenal
+4,Atlético de Rafaela
+5,Banfield
+6,Belgrano
+7,Boca Juniors
+8,Colón
+9,Crucero del Norte
+10,Defensa y Justicia
+11,Estudiantes (LP)
+12,Gimnasia y Esgrima (LP)
+13,Godoy Cruz
+14,Huracán
+15,Independiente
+16,Lanús
+17,Newell's Old Boys
+18,Nueva Chicago
+19,Olimpo
+20,Quilmes
+21,Racing Club
+22,River Plate
+23,Rosario Central
+24,San Lorenzo
+25,San Martín (SJ)
+26,Sarmiento
+27,Temperley
+28,Tigre
+29,Unión
+30,Vélez Sarsfield
