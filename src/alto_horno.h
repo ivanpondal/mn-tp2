@@ -10,7 +10,7 @@
 #include <iomanip>
 #include <math.h>
 
-#include <sistema_ecuaciones.h>
+#include <page_rank.h>
 
 enum TipoIsoterma : int {BINARIA = 0, AVG = 1, LINEAR_FIT = 2};
 enum TipoEvaluacion : int {SIMPLE = 0, PROM = 1};
@@ -28,7 +28,7 @@ class AltoHorno{
 		bool evaluarEstructura(const vector<double> &isoterma, double epsilon, TipoEvaluacion tipo);
 		vector<pair<vector<double>, vector<double> > > darInstancias();
 		vector<vector<double> > darSoluciones();
-		SistemaEcuaciones darSistema();
+		PageRank darSistema();
 
 	private:
 		void cargar(istream& entrada);
@@ -47,7 +47,7 @@ class AltoHorno{
 		int cantInstancias;
 		vector<pair<vector<double>, vector<double> > > instancias;
 		vector<vector<double> > soluciones;
-		SistemaEcuaciones sistemaTemperaturas;
+		PageRank sistemaTemperaturas;
 };
 
 #endif // ALTO_HORNO_H_INCLUDED

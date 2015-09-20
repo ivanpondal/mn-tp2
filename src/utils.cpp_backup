@@ -1,7 +1,4 @@
-#include <vector>
-#include <iostream>
-
-using namespace std;
+#include <utils.h>
 
 class Utils {
 	public:
@@ -26,5 +23,34 @@ class Utils {
 				}
 			}
 			return resultado;
+		}
+
+		static vector<vector<double> > cargarSNAP(const char* entrada) {
+			ifstream datos;
+			datos.open(entrada);
+			if (!datos.good()) {
+				cout << endl;
+				cout << "\tNo se pudo cargar el archivo: " << entrada << endl;
+			}
+
+			char buff[200];
+			datos >> buff;
+			cout << buff;
+
+			datos.close();
+		}
+
+		static vector<vector<double> > cargarLigaDeportiva(const char* entrada) {
+
+		}
+
+		static void imprimirMatriz(vector<vector<double> > A) {
+			for(unsigned int i = 0; i < A.size(); i++){
+				cout<<"[";
+				for(unsigned int j = 0; j < A[i].size(); j++){
+					cout<<" "<< A[i][j];
+				}
+				cout<<" ]"<<endl;
+			}
 		}
 };

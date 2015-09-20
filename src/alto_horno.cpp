@@ -93,7 +93,7 @@ void AltoHorno::generarSistema(){
 		}
 	}
 
-	this->sistemaTemperaturas = SistemaEcuaciones(A, instB, dimMatriz, cantAngulos);
+	this->sistemaTemperaturas = PageRank(A, instB, dimMatriz, cantAngulos);
 }
 
 double AltoHorno::jesimoRadio(int j){
@@ -112,7 +112,7 @@ vector<pair<vector<double>, vector<double> > > AltoHorno::darInstancias(){
 	return this->instancias;
 }
 
-SistemaEcuaciones AltoHorno::darSistema(){
+PageRank AltoHorno::darSistema(){
 	return this->sistemaTemperaturas;
 }
 
@@ -198,7 +198,7 @@ vector<double> AltoHorno::calcularIsotermaBinaria(int instancia){
 					A[f][f + (((k - 1) == -1) ? n-1 : -1)] = alpha;
 					A[f][f + (((k + 1) == n) ? 1-n : 1)] = alpha;
 				}
-				SistemaEcuaciones sistema = SistemaEcuaciones(A, b, dimension, n);
+				PageRank sistema = PageRank(A, b, dimension, n);
 				vector<double> solucionAuxiliar = sistema.resolverSistema(0, GAUSS); // no tiene sentido usar LU (solo quiero resolverlo para un b)
 				double temperaturaMedia = solucionAuxiliar[angulo+n];
 				if (temperaturaMedia < isoterma) {
