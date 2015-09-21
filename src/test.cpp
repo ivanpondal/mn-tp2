@@ -8,13 +8,20 @@
 #include <ctime>
 #include <chrono>
 
+using namespace std;
+using namespace utils;
+
 void test_cargar_SNAP() {
 	string entrada = "tests/test1.txt";
-	vector< vector<int> > A = Utils::cargarSNAP(entrada.c_str());
-	Utils::imprimirMatriz(A);
+	vector< vector<int> > A = cargarSNAP(entrada.c_str());
+	//imprimirMatriz(A);
 }
 
 void test_page_rank_1() {
+	string entrada = "tests/test1.txt";
+	vector< vector<int> > A = cargarSNAP(entrada.c_str());
+	PageRank<int> page_rank(A);
+	page_rank.rankear();
 }
 
 // para correr un test: ./test test.in test.expected {0: EG, 1: LU}
