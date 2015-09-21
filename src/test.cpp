@@ -20,8 +20,11 @@ void test_cargar_SNAP() {
 void test_page_rank_1() {
 	string entrada = "tests/test1.txt";
 	vector< vector<double> > A = cargarSNAP(entrada.c_str());
-	PageRank<double> page_rank(A);
-	page_rank.rankear();
+	PageRank page_rank(A);
+	vector< PageRank::rankeable > ranking = page_rank.rankear();
+	for (unsigned int i = 0; i < ranking.size(); i++) {
+		cout << ranking[i].posicion << ": " << ranking[i].valor << endl;
+	}
 }
 
 // para correr un test: ./test test.in test.expected {0: EG, 1: LU}

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <cmath>
 #include <math.h>
 #include <utils.h>
@@ -13,17 +14,24 @@ using namespace utils;
 
 #define PRECISION_DEFAULT 0.001
 
-template <class T>
 class PageRank{
 	public:
-		PageRank(vector<vector<T> > A);
-		vector< pair<int, T> > rankear();
+		struct rankeable {
+			rankeable(int pos, double v) : posicion(pos), valor(v) {};
+			bool operator<(const rankeable& other) const { return valor > other.valor; }
+
+			int posicion;
+			double valor;
+		};
+
+		PageRank(vector< vector<double> > A);
+		vector< rankeable > rankear();
 		void set_precision(double p);
 	private:
-		vector<vector<T> > A;
+		vector< vector<double> > A;
 		double precision = PRECISION_DEFAULT;
-		double metodoPotencia();
-		double phi(const vector<T> &A);
+		vector<double> metodoPotencia();
+		double phi(const vector<double> &A);
 };
 
 #endif // PAGE_RANK_H_INCLUDED

@@ -53,6 +53,15 @@ namespace utils {
 		return aux;
 	}
 
+	static double norma2(const vector<double> &x) {
+		double sum = 0;
+		for (unsigned int i = 0; i < x.size(); i++) {
+			sum += pow(x[i],2);
+		}
+
+		return sqrt(sum);
+	}
+
 	template <typename T>
 	static vector< vector<T> > sum(const vector< vector<T> > &A, const vector< vector<T> > &B) {
 		if (A.size() !=  B.size() || A[0].size() != B[0].size()) {
@@ -75,14 +84,25 @@ namespace utils {
 	}
 
 	template <typename T>
-	static vector< vector<T> > scale(const vector< vector<T> > &A, const T &scalar) {
+	static vector<T> scaleVector(const vector<T> &A, const T &scalar) {
+		int n = A.size();
+		vector<T> resultado(n, 0);
+
+		for (int i = 0; i < n; ++i) {
+			resultado[i] = A[i] * scalar;
+		}
+		return resultado;
+	}
+
+	template <typename T>
+	static vector< vector<T> > scaleMatriz(const vector< vector<T> > &A, const T &scalar) {
 		int rows = A.size();
 		int cols = A[0].size();
 		vector< vector<T> > resultado(rows, vector<T>(cols, 0));
 
 		for (int i = 0; i < rows; ++i) {
 			for (int j = 0; j < cols; ++j) {
-				resultado[i][j] += A[i][j] * scalar;
+				resultado[i][j] = A[i][j] * scalar;
 			}
 		}
 		return resultado;
@@ -142,7 +162,7 @@ namespace utils {
 				d[j] = 1;
 			}
 		}
-		
+
 		vector< vector<double> > D = multiply(row2Column(v), vector2matrix(d));
 		vector< vector<double> > P1 = sum(P, D);
 
@@ -150,7 +170,7 @@ namespace utils {
 		vector<double> unos(n, 1);
 		vector< vector<double> > E = multiply(row2Column(v), vector2matrix(unos));
 
-		vector< vector<double> > P2 = sum(scale(P1, teletransportacion), scale(E, 1-teletransportacion));
+		vector< vector<double> > P2 = sum(scaleMatriz(P1, teletransportacion), scaleMatriz(E, 1-teletransportacion));
 
 		return P2;
 	}
