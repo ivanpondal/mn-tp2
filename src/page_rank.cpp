@@ -9,7 +9,7 @@ PageRank<T>::PageRank(vector<vector<T> > A){
 }
 
 template <class T>
-void PageRank<T>:: set_precision(double p) {
+void PageRank<T>::set_precision(double p) {
 	precision = p;
 }
 
@@ -35,10 +35,12 @@ double PageRank<T>::metodoPotencia() {
 	vector< vector<T> > B = multiply(A, A);
 	vector< vector<T> > C = A;
 	double delta = phi(column2Row(multiply(B, aux))) / phi(column2Row(multiply(C, aux)));
+	double last_delta = INFINITY;
 
-	while (delta > precision) {
+	while (fabs(delta - last_delta) > precision) {
 		C = B;
 		B = multiply(B, A);
+		last_delta = delta;
 		delta = phi(column2Row(multiply(B, aux))) / phi(column2Row(multiply(C, aux)));
 	}
 
