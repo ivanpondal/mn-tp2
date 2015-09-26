@@ -1,5 +1,5 @@
-function retval = GeM(filename, c = 0.85)
-	fid = fopen(filename, 'r');
+function GeM(in_filename, out_filename, c = 0.85)
+	fid = fopen(in_filename, 'r');
 	[equipos, partidos] = fscanf(fid, '%u %u' ,"C");
 
 	# Genero la matriz A
@@ -58,5 +58,21 @@ function retval = GeM(filename, c = 0.85)
 	# Normalizo el vector solución
 	x = abs(x)/sum(abs(x));
 
-	retval = x;
+	# Ordeno las soluciones
+	S = zeros(equipos, 2);
+	for i = 1:equipos
+		S(i, 1) = i;
+		S(i, 2) = x(i);
+	endfor
+
+	S = sortrows(S, 2);
+
+	# Escribo la solución
+	fid = fopen(out_filename, 'w');
+
+	for i = 0:equipos - 1
+		fprintf(fid, '%u %f\n',S(equipos - i,1) ,S(equipos - i, 2));
+	endfor
+
+	fclose(fid);
 endfunction
