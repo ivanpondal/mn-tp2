@@ -175,7 +175,7 @@ namespace utils {
 		return P2;
 	}
 
-	static vector< vector<double> > cargarSNAP(const char* entrada) {
+	static vector< vector<int> > cargarSNAP(const char* entrada) {
 		ifstream datos;
 		datos.open(entrada);
 		if (!datos.good()) {
@@ -205,7 +205,7 @@ namespace utils {
 		}
 		datos.close();
 
-		return matrizTransicion(A);
+		return A;
 	}
 
 	static vector< vector<double> > cargarLigaDeportiva(const char* entrada) {
