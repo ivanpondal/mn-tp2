@@ -11,7 +11,7 @@ LDFLAGS=
 INCDIR=. #../../../../../Modulos-CPP
 
 # Agregar acá los archivos .cpp a compilar
-SOURCES=test.cpp page_rank.cpp in_deg.cpp
+SOURCES=test.cpp page_rank.cpp in_deg.cpp page_rank_esparso.cpp
 
 # Objetos que serán generados (no tocar)
 OBJECTS=$(SOURCES:.cpp=.o)

@@ -2,6 +2,7 @@
 #define UTILS_H_
 
 #include <vector>
+#include <map>
 #include <iostream>
 #include <fstream>
 #include <utility>
@@ -62,6 +63,17 @@ namespace utils {
 		return sqrt(sum);
 	}
 
+	static double norma1(const vector<double> &x) {
+		double max = abs(x[0]);
+		for (unsigned int i = 1; i < x.size(); i++) {
+			if (max < abs(x[i])) {
+				max = abs(x[i]);
+			}
+		}
+
+		return max;
+	}
+
 	template <typename T>
 	static vector< vector<T> > sum(const vector< vector<T> > &A, const vector< vector<T> > &B) {
 		if (A.size() !=  B.size() || A[0].size() != B[0].size()) {
@@ -79,6 +91,23 @@ namespace utils {
 			for (int j = 0; j < cols; ++j) {
 				resultado[i][j] += A[i][j] + B[i][j];
 			}
+		}
+		return resultado;
+	}
+
+	template <typename T>
+	static vector<T> sumVector(const vector<T> &x, const vector<T> &y) {
+		if (x.size() !=  y.size()) {
+			cout << "No coinciden los tamaños para sumar los vectores" << endl;
+			cout << "x: " << x.size() << endl;
+			cout << "y: " << y.size() << endl;
+			return vector<T>();
+		}
+
+		vector<T> resultado(x.size(), 0);
+
+		for (int i = 0; i < x.size(); ++i) {
+			resultado[i] += x[i] + y[i];
 		}
 		return resultado;
 	}
@@ -196,7 +225,7 @@ namespace utils {
 		// skip another line
 		datos  >> line;
 		getline(datos,line);
-		// loead the graph edges
+		// load the graph edges
 		vector< vector<int> >A(nodes, vector<int>(nodes, 0));
 		for (int e = 0; e < edges; e++) {
 			int i, j;
@@ -204,6 +233,51 @@ namespace utils {
 			A[i-1][j-1] = 1;
 		}
 		datos.close();
+
+		return A;
+	}
+
+	static vector< map<int, double> > cargarSNAPEsparso(const char* entrada) {
+		ifstream datos;
+		datos.open(entrada);
+		if (!datos.good()) {
+			cout << endl;
+			cout << "\tNo se pudo cargar el archivo: " << entrada << endl;
+		}
+
+		// skip first two lines
+		string line;
+		getline(datos,line);
+		getline(datos,line);
+		// get how many nodes and edges has the graph
+		int nodes = 0, edges = 0;
+		datos >> line >> line; // Skip "# Nodes:"
+		datos >> nodes;
+		datos >> line; // Skip " Edges:"
+		datos >> edges;
+		// skip another line
+		datos  >> line;
+		getline(datos,line);
+		// load the graph edges
+		vector< map<int, double> > A(nodes);
+		vector<int> links_salientes(nodes);
+		for (int e = 0; e < edges; e++) {
+			int i, j;
+			datos >> i >> j;
+			A[i-1].insert(pair<int,double>(j-1,1));
+			links_salientes[j-1]++;
+		}
+		datos.close();
+
+		// convierto la matriz A en una matriz P, donde p_{i,j} = 1/n_{j} si w_{i,j} = 1, y 0 en caso contrario.
+		// Y n_{j} = cantidad de links salientes desde la página j
+		for (int i = 0; i < nodes; i++) {
+			typedef map<int, double>::iterator it_type;
+			for(it_type iterator = A[i].begin(); iterator != A[i].end(); iterator++) {
+				int j = iterator->first;
+				iterator->second = double(1)/double(links_salientes[j]);
+			}
+		}
 
 		return A;
 	}

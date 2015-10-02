@@ -14,6 +14,7 @@ void PageRank::set_precision(double p) {
 vector< typename PageRank::rankeable > PageRank::rankear() {
 	vector<double> autovector = metodoPotencia(); // autovector asociado al autovalor 1
 
+	// cout << "Norma2: " << norma2(autovector) << endl;
 	vector< typename PageRank::rankeable > ranking;
 	for (unsigned int i = 0; i < autovector.size(); i++) {
 		ranking.push_back(rankeable(i, autovector[i]));
