@@ -1,6 +1,8 @@
 1;
 
-function GeM(in_filename, out_filename, c = 0.85)
+function GeM(in_filename, out_filename, team_codes_filename = '', c = 0.85, date_limit = 0)
+	has_date_limit = date_limit != 0;
+
 	fid = fopen(in_filename, 'r');
 	[equipos, partidos] = fscanf(fid, '%u %u' ,"C");
 
@@ -9,15 +11,19 @@ function GeM(in_filename, out_filename, c = 0.85)
 	while (partidos > 0)
 		[f, e0, p0, e1, p1] = fscanf(fid, '%u %u %u %u %u', "C");
 
-		if(p0 < p1)
-			# si e0 perdió contra e1
-			A(e0, e1) += p1 - p0;
-		elseif(p0 > p1)
-			# si e1 perdió contra e0
-			A(e1, e0) += p0 - p1;
-		endif
+		if(has_date_limit && f > date_limit)
+			partidos = 0;
+		else
+			if(p0 < p1)
+				# si e0 perdió contra e1
+				A(e0, e1) += p1 - p0;
+			elseif(p0 > p1)
+				# si e1 perdió contra e0
+				A(e1, e0) += p0 - p1;
+			endif
 
-		partidos--;
+			partidos--;
+		endif
 	endwhile
 	fclose(fid);
 
@@ -67,20 +73,12 @@ function GeM(in_filename, out_filename, c = 0.85)
 		S(i, 2) = x(i);
 	endfor
 
-	S = sortrows(S, 2);
-
-	# Escribo la solución
-	fid = fopen(out_filename, 'w');
-
-	for i = 0:equipos - 1
-		fprintf(fid, '%u %f\n',S(equipos - i,1) ,S(equipos - i, 2));
-	endfor
-
-	fclose(fid);
+	save_solution(equipos, S, out_filename, team_codes_filename);
 endfunction
 
-function AFA(in_filename, out_filename, team_codes_filename)
-	has_team_codes = !strcmp(team_codes_filename, '');
+function AFA(in_filename, out_filename, team_codes_filename = '', date_limit = 0)
+	has_date_limit = date_limit != 0;
+
 	fid = fopen(in_filename, 'r');
 	[equipos, partidos] = fscanf(fid, '%u %u' ,"C");
 
@@ -90,24 +88,35 @@ function AFA(in_filename, out_filename, team_codes_filename)
 	while (partidos > 0)
 		[f, e0, p0, e1, p1] = fscanf(fid, '%u %u %u %u %u', "C");
 
-		if(p0 == p1)
-			# si e0 empató contra e1
-			S(e0, 2) += 1;
-			S(e1, 2) += 1;
-		elseif(p0 > p1)
-			# si ganó e0
-			S(e0, 2) += 3;
+		if(has_date_limit && f > date_limit)
+			partidos = 0;
 		else
-			# si ganó e1
-			S(e1, 2) += 3;
-		endif
+			if(p0 == p1)
+				# si e0 empató contra e1
+				S(e0, 2) += 1;
+				S(e1, 2) += 1;
+			elseif(p0 > p1)
+				# si ganó e0
+				S(e0, 2) += 3;
+			else
+				# si ganó e1
+				S(e1, 2) += 3;
+			endif
 
-		partidos--;
+			partidos--;
+		endif
 	endwhile
 	fclose(fid);
 
+	save_solution(equipos, S, out_filename, team_codes_filename);
+endfunction
+
+function save_solution(equipos, S, out_filename, team_codes_filename)
+	has_team_codes = !strcmp(team_codes_filename, '');
+
 	S = sortrows(S, 2);
 
+	# Si tengo el nombre de cada equipo, lo cargo
 	if(has_team_codes)
 		i = equipos;
 		fid = fopen(team_codes_filename, 'r');
