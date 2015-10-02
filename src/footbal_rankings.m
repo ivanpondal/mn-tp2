@@ -79,11 +79,12 @@ function GeM(in_filename, out_filename, c = 0.85)
 	fclose(fid);
 endfunction
 
-function AFA(in_filename, out_filename)
+function AFA(in_filename, out_filename, team_codes_filename)
+	has_team_codes = !strcmp(team_codes_filename, '');
 	fid = fopen(in_filename, 'r');
 	[equipos, partidos] = fscanf(fid, '%u %u' ,"C");
 
-	# Genero la matriz A
+	# Genero la matriz S
 	S = zeros(equipos, 2);
 	S(:, 1) = 1:equipos;
 	while (partidos > 0)
@@ -107,12 +108,31 @@ function AFA(in_filename, out_filename)
 
 	S = sortrows(S, 2);
 
+	if(has_team_codes)
+		i = equipos;
+		fid = fopen(team_codes_filename, 'r');
+		teamcodes = cell(1, equipos);
+		while (i > 0)
+			team_code = fgetl(fid);
+			codearray = strsplit(team_code, ',');
+			teamcodes{str2num(codearray{1})} = codearray{2};
+			i--;
+		endwhile
+		fclose(fid);
+	endif
+
 	# Escribo la solución
 	fid = fopen(out_filename, 'w');
 
-	for i = 0:equipos - 1
-		fprintf(fid, '%u %f\n',S(equipos - i,1) ,S(equipos - i, 2));
-	endfor
+	if(has_team_codes)
+		for i = 0:equipos - 1
+			fprintf(fid, '%u, %s %f\n', S(equipos - i,1), teamcodes{S(equipos - i,1)},S(equipos - i, 2));
+		endfor
+	else
+		for i = 0:equipos - 1
+			fprintf(fid, '%u %f\n', S(equipos - i,1), S(equipos - i, 2));
+		endfor
+	endif
 
 	fclose(fid);
 endfunction
