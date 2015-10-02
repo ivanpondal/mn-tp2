@@ -1,3 +1,5 @@
+1;
+
 function GeM(in_filename, out_filename, c = 0.85)
 	fid = fopen(in_filename, 'r');
 	[equipos, partidos] = fscanf(fid, '%u %u' ,"C");
@@ -64,6 +66,44 @@ function GeM(in_filename, out_filename, c = 0.85)
 		S(i, 1) = i;
 		S(i, 2) = x(i);
 	endfor
+
+	S = sortrows(S, 2);
+
+	# Escribo la solución
+	fid = fopen(out_filename, 'w');
+
+	for i = 0:equipos - 1
+		fprintf(fid, '%u %f\n',S(equipos - i,1) ,S(equipos - i, 2));
+	endfor
+
+	fclose(fid);
+endfunction
+
+function AFA(in_filename, out_filename)
+	fid = fopen(in_filename, 'r');
+	[equipos, partidos] = fscanf(fid, '%u %u' ,"C");
+
+	# Genero la matriz A
+	S = zeros(equipos, 2);
+	S(:, 1) = 1:equipos;
+	while (partidos > 0)
+		[f, e0, p0, e1, p1] = fscanf(fid, '%u %u %u %u %u', "C");
+
+		if(p0 == p1)
+			# si e0 empató contra e1
+			S(e0, 2) += 1;
+			S(e1, 2) += 1;
+		elseif(p0 > p1)
+			# si ganó e0
+			S(e0, 2) += 3;
+		else
+			# si ganó e1
+			S(e1, 2) += 3;
+		endif
+
+		partidos--;
+	endwhile
+	fclose(fid);
 
 	S = sortrows(S, 2);
 
