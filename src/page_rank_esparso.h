@@ -32,6 +32,8 @@ class PageRankEsparso {
 		double precision = PRECISION_DEFAULT;
 		vector<double> metodoPotencia();
 		vector<double> multiplyEsparso(const vector< map<int, double> > &A, const vector<double> &x);
+		void imprimirEsparso(const vector< map<int, double> > &A);
+		double phi(const vector<double> &A);
 };
 
 #endif // PAGE_RANK_ESPARSO_H_INCLUDED

@@ -48,7 +48,7 @@ vector<double> PageRank::metodoPotencia() {
 	}
 	vector<double> v = column2Row(multiply(B, aux));
 
-	return scaleVector(v, 1/norma2(v));
+	return scaleVector(v, 1/norma1(v));
 }
 
 double PageRank::phi(const vector<double> &x) {

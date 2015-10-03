@@ -29,20 +29,21 @@ vector<double> PageRankEsparso::metodoPotencia() {
 		x[i] = random_in_range(1,50);
 	}
 	// creo el v aleatorio
-	vector<double> v(n, 1/n);
+	vector<double> v(n, double(1)/double(n));
 
 	vector<double> y = x;
 	double delta = INFINITY;
+	double last_delta;
 	do {
 		x = y;
 		y = scaleVector(multiplyEsparso(A, x), teletransportacion);
 		double w = norma1(x) - norma1(y);
 		y = sumVector(y, scaleVector(v, w));
+		last_delta = delta;
+		delta = phi(y) / phi(x);
+	} while (fabs(delta - last_delta) > precision);
 
-		delta = norma1(sumVector(y, scaleVector(x, double(-1))));
-	} while (delta > precision);
-
-	return scaleVector(y, 1/norma2(y));
+	return scaleVector(y, 1/norma1(y));
 }
 
 vector<double> PageRankEsparso::multiplyEsparso(const vector< map<int, double> > &A, const vector<double> &x) {
@@ -57,4 +58,28 @@ vector<double> PageRankEsparso::multiplyEsparso(const vector< map<int, double> >
 		y[i] = sum;
 	}
 	return y;
+}
+
+void PageRankEsparso::imprimirEsparso(const vector< map<int, double> > &A) {
+	vector< vector<double> > v(A.size(), vector<double>(A.size(), 0));
+	for (unsigned int i = 0; i < A.size(); i++) {
+		typedef map<int, double>::const_iterator it_type;
+		for(it_type iterator = A[i].begin(); iterator != A[i].end(); iterator++) {
+			v[i][iterator->first] = iterator->second;
+		}
+	}
+	imprimirMatriz(v);
+}
+
+double PageRankEsparso::phi(const vector<double> &x) {
+	double ret = x[0];
+	double max = abs(ret);
+	for (unsigned int i = 1; i < x.size(); i++) {
+		if (max < abs(x[i])) {
+			ret = x[i];
+			max = abs(ret);
+		}
+	}
+
+	return ret;
 }

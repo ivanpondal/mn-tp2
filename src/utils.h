@@ -64,14 +64,11 @@ namespace utils {
 	}
 
 	static double norma1(const vector<double> &x) {
-		double max = abs(x[0]);
-		for (unsigned int i = 1; i < x.size(); i++) {
-			if (max < abs(x[i])) {
-				max = abs(x[i]);
-			}
+		double sum = 0;
+		for (unsigned int i = 0; i < x.size(); i++) {
+			sum += abs(x[i]);
 		}
-
-		return max;
+		return sum;
 	}
 
 	template <typename T>
@@ -107,7 +104,7 @@ namespace utils {
 		vector<T> resultado(x.size(), 0);
 
 		for (int i = 0; i < x.size(); ++i) {
-			resultado[i] += x[i] + y[i];
+			resultado[i] = x[i] + y[i];
 		}
 		return resultado;
 	}
@@ -230,7 +227,7 @@ namespace utils {
 		for (int e = 0; e < edges; e++) {
 			int i, j;
 			datos >> i >> j;
-			A[i-1][j-1] = 1;
+			A[j-1][i-1] = 1;
 		}
 		datos.close();
 
@@ -264,8 +261,8 @@ namespace utils {
 		for (int e = 0; e < edges; e++) {
 			int i, j;
 			datos >> i >> j;
-			A[i-1].insert(pair<int,double>(j-1,1));
-			links_salientes[j-1]++;
+			A[j-1].insert(pair<int,double>(i-1,1));
+			links_salientes[i-1]++;
 		}
 		datos.close();
 
@@ -295,6 +292,15 @@ namespace utils {
 			}
 			cout<<" ]"<<endl;
 		}
+	}
+
+	template <typename T>
+	static void imprimirVector(const vector<T> &A) {
+		cout<<"[";
+		for(unsigned int i = 0; i < A.size(); i++){
+			cout<<" "<< A[i];
+		}
+		cout<<" ]"<<endl;
 	}
 };
 
