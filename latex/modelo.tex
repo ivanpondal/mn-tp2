@@ -18,9 +18,12 @@ trabajaremos sobre los resultados del Torneo de Primera División
 utilizaremos el sistema de ranking estándar de la AFA como punto de comparación.
 
 \subsubsection{Generalized Markov chains Method (GeM)}
+
+\subsubsection*{Definición del método}
+
 El método GeM es el resultado de tomar el algoritmo PageRank y mediante pequeñas
 modificaciones utilizar su potencial para establecer un ranking de equipos.
-Análofo a PageRank, los equipos pasan a formar parte de un grafo dirigido
+Análogo a PageRank, los equipos pasan a formar parte de un grafo dirigido
 con pesos, donde cada nodo representa un equipo y los pesos de cada arista
 reflejan el resultado de los partidos jugados entre los vértices conectados.
 
@@ -33,7 +36,7 @@ Formalmente, el modelado se realiza de la siguiente manera:
 	equipo tiene su respectivo nodo y las aristas contienen como peso la
 	diferencia positiva entre los nodos conectados.
 
-	\item Definimos la matriz de adyacencia $A$.
+	\item Definimos la matriz de adyacencia $A \in \mathbb{R}^{n \times n}$.
 		\begin{equation*}
 			A_{ij} =
 				\begin{cases}
@@ -44,7 +47,7 @@ Formalmente, el modelado se realiza de la siguiente manera:
 		Donde $w_{ij}$ es la suma total de diferencia positiva de puntaje sobre todos
 		los partidos en los que $i$ perdió contra $j$.
 
-	\item Definimos la matriz $H$.
+	\item Definimos la matriz $H \in \mathbb{R}^{n \times n}$.
 		\begin{equation*}
 			H_{ij} =
 				\begin{cases}
@@ -53,10 +56,59 @@ Formalmente, el modelado se realiza de la siguiente manera:
 				\end{cases}
 		\end{equation*}
 
-	\item Definimos la matriz GeM $G$.
-		\begin{equation*}
-			G = c(H + au^{t}) + (1 - c)ev^{t}
-		\end{equation*}
-		Donde $0 < c < 1$, $v$ es un vector de probabilidad positivo,
+	\item Definimos la matriz GeM, $G \in \mathbb{R}^{n \times n}$ con $u, v, a, e \in \mathbb{R}^n$ y $c \in \mathbb{R}$.
+		\begin{gather*}
+			G = c(H + au^{t}) + (1 - c)ev^{t} \\
+			\sum_{k = 1}^{n}v_{k} = 1 \qquad \sum_{k = 1}^{n}u_{k} = 1 \qquad \forall_{i = 1..n} e_{i} = 1 \\
+			0 \leq c \leq 1 \qquad
+			a_{i} =
+			\begin{cases}
+				1 & \text{si la fila $i$ de $H$ es un vector nulo} \\
+				0 & \text{caso contrario}
+			\end{cases}
+		\end{gather*}
 
+	\item Por último tenemos que el ranking de los equipos estará definido por
+		el vector $\pi \in \mathbb{R}^n$ tal que
+		\begin{gather*}
+			\pi^{t} = \pi^{t}G \\
+			\text{o si tomamos la transpuesta en ambos lados} \\
+			G^{t}\pi = \pi
+		\end{gather*}
 \end{enumerate}
+
+De esta forma al igual que con PageRank, calculando el autovector $\pi$
+obtenemos nuestro ranking. Este modelo permite cierta flexibidad a partir del
+$u$, $v$ y $c$ que tomemos.
+
+El vector de probabilidad $u$ se aplicará en el caso de que un equipo se encuentre invicto, esto
+es el equivalente a que en PageRank un sitio no tenga ningún link saliente, por
+lo tanto su tratamiento es el mismo, se le asigna a la fila correspondiente el
+vector con las probabilidades de saltar a otro nodo. Por lo tanto, el vector $u$
+nos permite definir con qué probabilidades un equipo invicto perdería contra el
+resto de los participantes. En el caso de PageRank, este es un vector de
+distribución uniforme, donde es igual la posibilidad de saltar a cualquiera de
+los otros nodos, una posible alternativa sería definirlo como un vector cuyas
+probabilidades se basen en algún ranking anterior.
+
+El vector de probabilidad $v$, nos da otro tipo de personalización que es
+la del \textit{navegante aleatorio}. Esta es la probabilidad de que un equipo
+cualquiera independientemente de los resultados registrados, pierda contra el
+resto de los equipos. En PageRank, esto lo veíamos como la posibilidad de que
+estando navegando el grafo, uno se \textit{teletransportará} a otro nodo
+independientemente de las conexiones de los mismos. Este vector por defecto
+también suele tomar el valor de la distribución uniforme.
+
+Por último tenemos nuestro valor $c$ que actua como un factor de amortiguación
+donde lo que se modifica es cuánto afecta el \textit{navegante aleatorio} al
+resultado final, donde con $c = 0$, únicamente influye el \textit{navegante
+aleatorio} y con $c = 1$ se elimina el efecto del mismo.
+
+\subsubsection*{Modelado del empate}
+
+Una particularidad de este sistema que se puede observar en la definición del
+mismo es que no contempla los partidos donde hubo empate. Un empate equivale
+a que no exista un perdedor y por ende no se modifica el peso de ningún nodo.
+Para deportes donde el empate no es algo frecuente esto no sería un problema,
+pero si tomamos como ejemplo el fútbol, donde los empates son algo mucho más
+común, el ignorar estos partidos afecta notablemente el ranking.
