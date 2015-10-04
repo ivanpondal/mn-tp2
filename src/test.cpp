@@ -96,7 +96,7 @@ void exp_prank_manhattan_aux(const char * in, const char * out, double tel) {
 	FILE *file = fopen(out, "w+");
 	fprintf(file, "instancia l1\n");
 
-	vector< map<int, double> > A = cargarSNAPEsparso(in);
+	vector< map<int, double> > A = cargarSNAPEsparso(in,0);
 	
 	int n = A.size();
 
@@ -156,7 +156,8 @@ int main(int argc, char *argv[])
 		test_page_rank_1();
 		test_in_deg_1();
 		test_page_rank_esparso_1();
-		// exp_prank_manhattan();
+		
+		exp_prank_manhattan();
 	}
 	return 0;
 }
