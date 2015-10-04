@@ -99,6 +99,14 @@ void resolver(int algoritmo, double tele, int tipo_instancia, const char* path, 
 			}
 		} else {
 			// la instancia es de deportes
+            // octave --eval "source('footbal_rankings.m'); GeM(exp/gem_resultados_1.txt, exp/gem_resultados_1.out, c=0.85, pres=0.1)"
+            char command[1024];
+            string out_file(path);
+			out_file = remove_extension(out_file);
+			out_file.append(".out");
+            sprintf(command, "octave --eval \"source('footbal_rankings.m'); GeM('%s','%s', team_codes_filename='', c=%.3f, date_limit=0, pres=%.9f);\" >> /dev/null",
+                path, out_file.c_str(), tele, tolerancia);
+            if(system(command)) { cout << "System failed" << endl; };
 		}
 	} else {
 		// Resolver con Método alternativo
@@ -237,33 +245,41 @@ void exp_prank_calidad_aux(const char * in, const char * out) {
 	vector< vector<double> > M = matrizTransicion(A);
 
 	fprintf(file, "Matriz Adyacencia\n");
-	for (int i = 0; i < A.size(); ++i) { for (int j = 0; j < A.size(); ++j) {fprintf(file, "%d ", A[i][j]);} fprintf(file, "\n"); }
+	for (unsigned int i = 0; i < A.size(); ++i) { for (unsigned int j = 0; j < A.size(); ++j) {fprintf(file, "%d ", A[i][j]);} fprintf(file, "\n"); }
 	fprintf(file, "\n");
 
 	fprintf(file, "Matriz Transicion\n");
-	for (int i = 0; i < A.size(); ++i) { for (int j = 0; j < A.size(); ++j) {fprintf(file, "%.6f ", M[i][j]);} fprintf(file, "\n"); }
+	for (unsigned int i = 0; i < A.size(); ++i) { for (unsigned int j = 0; j < A.size(); ++j) {fprintf(file, "%.6f ", M[i][j]);} fprintf(file, "\n"); }
 	fprintf(file, "\n");
-	
+
 	fprintf(file, "Ranking InDeg:\n");
 	fprintf(file, "rank nodo valor\n");
 	InDeg indeg(A);
 	vector< InDeg::rankeable > ranking1 = indeg.rankear();
-	for (int i = 0; i < A.size(); ++i) { fprintf(file, "%d %d %.6f ", i, ranking1[i].posicion, ranking1[i].valor); }
+	for (unsigned int i = 0; i < A.size(); ++i) { fprintf(file, "%d %d %.6f ", i, ranking1[i].posicion, ranking1[i].valor); }
 	fprintf(file, "\n");
 
 	fprintf(file, "Ranking PageRank:\n");
 	fprintf(file, "rank nodo valor\n");
 	PageRank page_rank(M);
 	vector< PageRank::rankeable > ranking2 = page_rank.rankear();
-	for (int i = 0; i < A.size(); ++i) { fprintf(file, "%d %d %.6f ", i, ranking2[i].posicion, ranking2[i].valor); }
+	for (unsigned int i = 0; i < A.size(); ++i) { fprintf(file, "%d %d %.6f ", i, ranking2[i].posicion, ranking2[i].valor); }
 	fprintf(file, "\n");
-	
+
 }
 
 void exp_prank_calidad() {
 	exp_prank_calidad_aux("exp/pr-2-1-generated.txt","exp/pr-2-1.out");
 	exp_prank_calidad_aux("exp/pr-2-2-no-edges.txt","exp/pr-2-2.out");
 	exp_prank_calidad_aux("exp/pr-2-3-complete.txt","exp/pr-2-3.out");
+}
+
+void exp_gem_resultados() {
+    resolver(0, 0, 1, "exp/gem_resultados_1_1.txt", 0.0001);
+    resolver(0, 0.3, 1, "exp/gem_resultados_1_2.txt", 0.0001);
+    resolver(0, 0.6, 1, "exp/gem_resultados_1_3.txt", 0.0001);
+    resolver(0, 0.85, 1, "exp/gem_resultados_1_4.txt", 0.0001);
+    resolver(0, 1, 1, "exp/gem_resultados_1_5.txt", 0.0001);
 }
 
 // para correr un test: ./test test.in test.expected {0: EG, 1: LU}
@@ -281,9 +297,10 @@ int main(int argc, char *argv[])
 		test_page_rank_1();
 		test_in_deg_1();
 		test_page_rank_esparso_1();
-		exp_prank_manhattan();
-		exp_prank_tiempos();
-		exp_prank_calidad();
+		// exp_prank_manhattan();
+		// exp_prank_tiempos();
+		// exp_prank_calidad();
+        exp_gem_resultados();
 	}
 	return 0;
 }

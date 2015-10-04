@@ -1,6 +1,6 @@
 1;
 
-function GeM(in_filename, out_filename, team_codes_filename = '', c = 0.85, date_limit = 0)
+function GeM(in_filename, out_filename, team_codes_filename = '', c = 0.85, date_limit = 0, pres = 0.0001)
 	has_date_limit = date_limit != 0;
 
 	fid = fopen(in_filename, 'r');
@@ -58,7 +58,7 @@ function GeM(in_filename, out_filename, team_codes_filename = '', c = 0.85, date
 
 	# Busco el autovalor 1
 	i = 1;
-	while(abs(l(i, i) - 1) > 0.0001)
+	while(abs(l(i, i) - 1) > pres)
 		i++;
 	endwhile
 	x = V(:, i);
@@ -131,7 +131,7 @@ function save_solution(equipos, S, out_filename, team_codes_filename)
 	endif
 
 	# Escribo la solución
-	fid = fopen(out_filename, 'w');
+	fid = fopen(out_filename, 'a');
 
 	if(has_team_codes)
 		for i = 0:equipos - 1
