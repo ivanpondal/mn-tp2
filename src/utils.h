@@ -184,7 +184,7 @@ namespace utils {
 
 			// asigno el peso a la celda p_{i,j}
 			for (int i = 0; i < n; i++) {
-				P[i][j] = links_salientes[j] > 0 ? double(A[i][j])/double(links_salientes[j]) : double(1)/double(n);
+				P[i][j] = links_salientes[j] > 0 ? double(A[i][j])/double(links_salientes[j]) : 0;
 			}
 		}
 

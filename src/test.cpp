@@ -276,13 +276,13 @@ int main(int argc, char *argv[])
 		a = 0;
 	}
 	else{
-		test_cargar_SNAP();
-		test_matriz_transicion();
-		test_page_rank_1();
-		test_in_deg_1();
-		test_page_rank_esparso_1();
-		exp_prank_manhattan();
-		exp_prank_tiempos();
+		// test_cargar_SNAP();
+		// test_matriz_transicion();
+		// test_page_rank_1();
+		// test_in_deg_1();
+		// test_page_rank_esparso_1();
+		// exp_prank_manhattan();
+		// exp_prank_tiempos();
 		exp_prank_calidad();
 	}
 	return 0;
