@@ -13,6 +13,17 @@
 using namespace std;
 using namespace utils;
 
+static chrono::time_point<chrono::high_resolution_clock> start_time;
+
+void start_timer() {
+    start_time = chrono::high_resolution_clock::now();
+}
+
+double stop_timer() {
+    chrono::time_point<chrono::high_resolution_clock> end_time = chrono::high_resolution_clock::now();
+    return double(chrono::duration_cast<chrono::nanoseconds>(end_time - start_time).count());
+}
+
 void test_cargar_SNAP() {
 	string entrada = "tests/test1.txt";
 	vector< vector<int> > A = cargarSNAP(entrada.c_str());
@@ -59,6 +70,40 @@ void test_page_rank_esparso_1() {
 	}
 }
 
+// Programa principal que pide la cátedra
+
+string remove_extension(const std::string& filename) {
+    size_t lastdot = filename.find_last_of(".");
+    if (lastdot == std::string::npos) return filename;
+    return filename.substr(0, lastdot);
+}
+
+void resolver(int algoritmo, double tele, int tipo_instancia, const char* path, double tolerancia) {
+	if (algoritmo == 0) {
+		// Resolver con PageRank
+		if (tipo_instancia == 0) {
+			// la instancia es de paginas web
+			PageRankEsparso page_rank(cargarSNAPEsparso(path));
+			page_rank.set_precision(tolerancia);
+			set_teletransportacion(tele);
+			vector< PageRankEsparso::rankeable > ranking = page_rank.rankear();
+			// imprimo el resultado
+			string out_file(path);
+			out_file = remove_extension(out_file);
+			out_file.append(".out");
+
+			FILE *file = fopen(out_file.c_str(), "w+");
+			for (unsigned int i = 0; i < ranking.size(); i++) {
+				fprintf(file, "%d %5.f\n",ranking[i].posicion, ranking[i].valor);
+			}
+		} else {
+			// la instancia es de deportes
+		}
+	} else {
+		// Resolver con Método alternativo
+	}
+}
+
 // Experimentos
 
 double phi(const vector<double> &x) {
@@ -92,12 +137,12 @@ void exp_prank_manhattan_aux(const char * in, const char * out, double tel) {
 
 	double tel_aux = teletransportacion;
 	teletransportacion = tel;
-	
+
 	FILE *file = fopen(out, "w+");
 	fprintf(file, "instancia l1\n");
 
 	vector< map<int, double> > A = cargarSNAPEsparso(in);
-	
+
 	int n = A.size();
 
 	vector<double> x(n, 0);
@@ -142,6 +187,23 @@ void exp_prank_manhattan() {
 	exp_prank_manhattan_aux("exp/pr-1-2-p2p-Gnutella04.txt", "exp/pr-1-2-3.out", 0.9);
 }
 
+void exp_prank_tiempos_aux(const char * in, double tel, double pres) {
+	start_timer();
+	resolver(0, tel, 0, in, pres);
+	double tiempo = stop_timer();
+	cout << "Tiempo para: "<< in << " -> " << tiempo << "ns" << endl;
+}
+
+void exp_prank_tiempos() {
+	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.3, 0.85);
+	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.6, 0.85);
+	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.9, 0.85);
+
+	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.3, 0.85);
+	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.6, 0.85);
+	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.9, 0.85);
+}
+
 // para correr un test: ./test test.in test.expected {0: EG, 1: LU}
 int main(int argc, char *argv[])
 {
@@ -157,6 +219,7 @@ int main(int argc, char *argv[])
 		test_in_deg_1();
 		test_page_rank_esparso_1();
 		// exp_prank_manhattan();
+		exp_prank_tiempos();
 	}
 	return 0;
 }
