@@ -177,7 +177,7 @@ obtenemos nuestro ranking. Este modelo permite cierta flexibidad a partir del
 $u$, $v$ y $c$ que tomemos.
 
 El vector de probabilidad $u$ se aplicará en el caso de que un equipo se encuentre invicto, esto
-es el equivalente a que en PageRank un sitio no tenga ningún link saliente, por
+es el equivalente a que en PageRank un sitio no tenga ningún link entrante, por
 lo tanto su tratamiento es el mismo, se le asigna a la fila correspondiente el
 vector con las probabilidades de saltar a otro nodo. Por lo tanto, el vector $u$
 nos permite definir con qué probabilidades un equipo invicto perdería contra el
@@ -207,3 +207,58 @@ a que no exista un perdedor y por ende no se modifica el peso de ningún nodo.
 Para deportes donde el empate no es algo frecuente esto no sería un problema,
 pero si tomamos como ejemplo el fútbol, donde los empates son algo mucho más
 común, el ignorar estos partidos afecta notablemente el ranking.
+
+Podemos tomar como ejemplo los Torneos Argentinos de Primera División y
+observar el porcentaje de partidos empatados sobre el total que se jugaron.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|cccc|}
+		\hline
+		Campeonato de Primera División & Partidos & Empates &  Empates/Partidos \\ \hline
+		2015 & 390 & 126 & 0.32 \\ \hline
+		2014 & 190 & 45 & 0.23 \\ \hline
+		2013/14 & 380 & 117 & 0.31 \\ \hline
+	\end{tabular}
+	\caption*{Relación entre partidos jugados y empates totales}
+\end{table}
+
+Como podemos ver, la proporción de partidos empatados no es menor, con lo cual
+analizaremos cómo impactaría esto en el método GeM. Como mencionamos en la
+definición del modelo, los pesos de las aristas en el grafo dependen en parte de la
+diferencia de puntaje con la que gana un equipo sobre otro.
+
+Al encontrarnos con un empate no existe diferencia alguna, por lo tanto no
+implica ningún cambio en el sistema. Esto podría defavorecer a los equipos que
+más empates tuvieran en la temporada, ya que sólo los partidos donde hubieran
+ganado o perdido afectarían su lugar en la tabla de puntajes. Además podría
+suceder que un equipo perdiese contra un contrincante que no tuviera mucho peso
+pero empatara contra un puntero, y esto debería verse reflejado ya que de otra
+manera, sólo quedaría registrado su partido perdido.
+
+Una posible forma de representar los empates aprovechando la estructura del
+modelo actual sería cuando se produce uno, reflejar en el grafo el equivalente a
+que ambos equipos hubieran perdido entre si, asignando como diferencia de
+puntaje el valor con el que empataron. De esta forma no solo incluiríamos este
+escenario al cálculo del ranking final, si no que además el puntaje con el que
+empataron tendría peso.
+
+\subsubsection{Puntaje AFA}
+
+A modo de comparación con el método GeM, siendo que trabajaremos sobre los
+resultados del Torneo de Primera División, utilizaremos también el sistema de
+puntajes que propone la
+AFA\footnote{\url{http://www.afa.org.ar/upload/reglamento/Reglamento\_PrimeraDivision\_2015.pdf}}.
+El mismo es bastante sencillo, donde lo que establece es que todos los equipos
+comienzan con puntaje \textbf{0} y se les suma \textbf{1} punto en caso de
+empate, \textbf{3} por victoria y \textbf{0} por derrota.
+
+A primera vista, dada que la modalidad de este torneo es de todos contra todos,
+donde cada equipo juega una vez contra el resto, el resultado debería reflejar
+de forma justa el desempeño de cada participante. Sin embargo, para este torneo
+en particular se aplicó una fecha adicional de \textit{clásicos}, donde cada
+equipo vuelve a jugar contra su respectivo clásico. Este es un punto donde se
+desequilibran un tanto las cosas ya que un participante podría tener asignado
+como clásico un puntero, mientras que otro al último en la tabla de posiciones.
+Para este sistema de puntuación ambos partidos serían tratados al igual quel
+resto del torneo.
