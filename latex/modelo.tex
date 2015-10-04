@@ -414,18 +414,37 @@ Por definicion sabemos que
 Por otro lado, el Algoritmo 1 nos dice que:
 \begin{equation*}
           \begin{aligned}
-            x^{(k+1)} &= cPx^{(k)} + (||x^{(k)}||_1 + ||cPx^{(k)}||_1)v  \\
+            x^{(k+1)} &= cPx^{(k)} + (||x^{(k)}||_1 - ||cPx^{(k)}||_1)v  \\
           \end{aligned}
 \end{equation*}
 Luego basta ver que:
 \begin{equation*}
           \begin{aligned}
             cPx^{(k)} + (||x^{(k)}||_1 + ||cPx^{(k)}||_1)v &= cPx^{(k)} + cvd^{t}x^{(k)} +(1-c)v1^{t}x^{(k)}  \\
-            (||x^{(k)}||_1 + ||cPx^{(k)}||_1)v &= cvd^{t}x^{(k)} +(1-c)v1^{t}x^{(k)}  \\
-            ||x^{(k)}||_1v + ||cPx^{(k)}||_1v &= cvd^{t}x^{(k)} +v1^{t}x^{(k)} - cv1^{t}x^{(k)}  \\
+            (||x^{(k)}||_1 - ||cPx^{(k)}||_1)v &= cvd^{t}x^{(k)} +(1-c)v1^{t}x^{(k)}  \\
+            ||x^{(k)}||_1v - ||cPx^{(k)}||_1v &= cvd^{t}x^{(k)} +v1^{t}x^{(k)} - cv1^{t}x^{(k)}  \\
           \end{aligned}
 \end{equation*}
-
+Sabemos que $\forall\ 1\leq i\leq n\ x^{(k)}_{i} \geq 0$, ya que $x$ es un vector de probabilidades. Entonces $||x^{(k)}||_1$ = $\sum\limits_{i=1}^{n}{x^{(k)}_{i}}$. Tambien sabemos que $1^{t}x^{(k)} = \sum\limits_{i=1}^{n}{1x^{(k)}_{i}}$, por lo tanto
+$||x^{(k)}||_1 = 1^{t}x^{(k)}$.
+\newline
+Por otro lado sabemos que $0\leq c\leq 1$, lo que implica que $|c| = c$.
+\newline
+Teniendo en cuenta estas informacion, la igualdad nos queda de la siguiente forma:
+\begin{equation*}
+          \begin{aligned}
+            - c||Px^{(k)}||_1v &= cvd^{t}x^{(k)} - cv1^{t}x^{(k)}  \\
+          \end{aligned}
+\end{equation*}
+Tomando como factor comun $v$ y $c$:
+\begin{equation*}
+          \begin{aligned}
+            - c||Px^{(k)}||_1v &= cv(d^{t}x^{(k)} - 1^{t}x^{(k)})  \\
+            - ||Px^{(k)}||_1 &= d^{t}x^{(k)} - 1^{t}x^{(k)}  \\
+            - ||Px^{(k)}||_1 &= (d^{t} - 1^{t})x^{(k)}  \\
+          \end{aligned}
+\end{equation*}
+algo
 \end{proof}
 
 Sabemos que la unica operacion que vamos a realizar con la matriz esparsa es multiplicarla por un vector. Tambien sabemos que la construccion de la matriz es de forma dinamica, ya que vamos leyendo los links salientes de cada pagina de forma secuencial.
