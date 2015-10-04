@@ -131,7 +131,7 @@ function save_solution(equipos, S, out_filename, team_codes_filename)
 	endif
 
 	# Escribo la solución
-	fid = fopen(out_filename, 'a');
+	fid = fopen(out_filename, 'w');
 
 	if(has_team_codes)
 		for i = 0:equipos - 1
