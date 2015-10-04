@@ -220,7 +220,6 @@ void exp_prank_tiempos() {
 	exp_prank_tiempos_aux("exp/p2p-Gnutella31.txt", file, 0.85, 0.00001);
     exp_prank_tiempos_aux("exp/p2p-Gnutella31.txt", file, 0.85, 0.0000001);
 
-    cout << "STANFORD BITCH" << endl;
     offset = 1;
     // ~ 280000 nodos
     exp_prank_tiempos_aux("exp/web-Stanford.txt", file, 0.85, 0.001);
