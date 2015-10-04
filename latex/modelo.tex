@@ -1,3 +1,98 @@
+\subsection{Rankings de Páginas Web}
+
+Hoy en día la cantidad de páginas web en todo el mundo asciende a una cantidad de
+4.79 billones (sólo las indexadas). Es por esta razón que los buscadores
+(Search Engines) cumplen un rol tan importante en el uso diario de internet desde
+hace muchos años.
+
+Dichos buscadores nos permiten realizar busquedas de páginas web mediante distintos
+criterios, facilitando el acceso a la información.
+
+Un posible criterio (bastante utilizado) es considerar que las páginas web populares
+son las más buscadas. De esta forma, el buscador puede ofrecernos en orden descendiente
+de popularidad los resultados obtenidos, esperando que encontremos más rápido lo
+ que buscamos.
+
+ Siguiendo esta intuición, se han elaborado diferentes algoritmos para ``rankear''
+ las páginas web. A continuación presentaremos el famoso método PageRank, utilizado
+ por Google en sus comienzos.
+
+\subsubsection{PageRank}
+
+El algoritmo de PageRank\footnote{Kurt Bryan and Tanya Leise. The linear algebra
+behind google. SIAM Review, 48(3):569–581, 2006.} se define para un conjunto de
+páginas Web $ = \{ 1,\dots, n \}$ de forma tal de asignar a cada una de ellas un
+ puntaje que determine la importancia relativa de la página respecto de las demás.
+
+Llamemos $x_j$ al puntaje asignado a la página $j\in\ Web$, que es lo que buscamos
+calcular.
+
+Ahora, un link saliente de la página $j$ a la página $i$ puede significar que $i$
+ es una página importante. Pero bien podría ser que $j$ sea una página muy poco
+ importante, por lo que deberíamos ponderar sus links salientes para decidir
+ la importancia de las páginas a las que apunta.
+
+Luego, vamos a considerar que la importancia de la página $i$ obtenida mediante el
+link de $j$ es proporcional a la importancia de $j$ e inversamente proporcional
+al grado de $j$. Entonces, si $L_k \in\ Web$ es el conjunto de páginas web que
+apuntan a la página $k$:
+
+\begin{equation} \label{eq:puntajes_page_rank}
+    x_k = \sum\limits_{j \in\ L_k}{\frac{x_j}{n_j}},\quad k=1,\dots,n
+\end{equation}
+
+En este algoritmo, hallaramos los $x_k$ modelando el problema como una cadena de
+ Markov, a la cual llamaremos Matriz de Transición, y que construiremos de la siguiente forma:
+
+\begin{enumerate}
+	\item Sea $G$ el grafo de la Web, dónde cada vértice es una página web y un
+		eje de $v$ a $u$ significa que la página $v$ tiene link saliente hacia $u$.
+	\item Luego, sea $W\in\{0,1\}^{n \times n}$ la \textit{matriz de conectividad} de $G$, tal
+        que la celda $\{i,j\}$ tiene un 1 si hay un link saliente de la $j$-ésima página
+        a la $i$-ésima página (los \textit{autolinks} son ignorados, o lo que es lo mismo,
+        $\forall\ 1\leq i\leq n\ W_{i,i}$).
+	\item Si definimos $n_j = \sum\limits_{i=1}^{n}{W_{i,j}}$ como el grado de $j$
+        (la cantida de links salientes), entonces podemos definir la matriz
+        $P\in\mathbb{R}^{n \times n}$, tal que la $P_{i,j} = 1/n_{j} * W_{i,j} $, y
+        $P$ es estocástica por columnas.
+
+        Además, notese que resolver el sistema dado por \ref{eq:puntajes_page_rank}
+        es equivalente a encontrar un $x\in\mathbb{R}^n$ tal que $Px=x$.
+        Es decir, encontrar el autovector asociado al autovalor 1 de $P$ tal que
+        $x_i > 0$ y $\sum\limits_{i=1}^{n}{x_i} = 1$.
+    \item Ahora, puede pasar que para algún $j$, $n_j = 0$ lo que indicaría que
+        la página $j$ no tiene ningún link saliente. Para remediar
+        estos casos, vamos a modificar $P$ utilizando la idea del  \textit{navegante
+        aleatorio}, de forma tal que para un $j$ sin links salientes, la probabilidad
+        de que el navegante salte a cualquier otra página $i$ es $1/n$.
+
+        Entonces, $P_{1} = P + D$, dónde $D = vd^{t}$, $d\in\{0,1\}^{n}$ tal que
+        $d_j = 1$ si $n_j = 0$, y $d_j = 0$ en caso contrario, y $v\in\mathbb{R}^n$
+         tal que $v_j = 1/n$.
+    \item Entonces, $P_{1}$ es estocástica por columnas, pero puede que no sea regular.
+        Para que sí lo sea, extendemos el concepto anterior a todas las páginas
+        (fenómeno de \textit{teletransportación}).
+
+        Luego, $P_{2} = c*P_{1} + (1-c)*E$, donde $\forall\ 1\leq i,j\leq n,\ E_{i,j} = 1/n$,
+        y $c\in(0,1)$. Llamamos a $c$ coeficiente de teletransportación.
+
+        Lo que nos queda es un matriz $P_{2}$ estocástica por columnas y $\forall\ 1\leq i,j\leq n,\ (P_{2})_{i,j} > 0$.
+\end{enumerate}
+
+Una vez que tenemos la Matriz de Transición, generaremos el puntaje para cada página
+ buscando el autovector $w$ del autovalor 1 de $P_{2}$, tal que $P_{2}w = w$ y
+$w$ sea un vector de probabilidades (normalizado con norma 1).
+
+Es decir, generar el ranking de páginas equivale a aplicar el método de la potencia
+a la matriz $P_{2}$ y una vez hallado el $w$ mencionado, ordenar los puntajes de
+mayor a menor:
+
+\begin{equation} \label{eq:ranking_page_rank}
+    ranking = \{ p_1, \dots, p_n \}, \text{donde } \forall\ i=1,\dots,n-1,\ w_{p_{i}} \geq w_{p_{i+1}}
+\end{equation}
+
+\subsubsection{PageRank con matriz Esparsa}
+
 \subsection{Rankings en competencias deportivas}
 
 Elegir un sistema de puntos que sea justo para todos los participantes en un
