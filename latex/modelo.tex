@@ -166,6 +166,7 @@ El dictionary of keys que representa a $B$ es:
 \newline
 Esta claro que intercambiando columnas por filas, como posiciones del vector contenedor, y filas por columnas como keys, representamos la misma matriz.
 \newline
+\newline
 Las ventajas de usar esta estructura de datos son las siguientes:
 \begin{enumerate}
   \item Facilidad para crearse de forma dinamicamente, es decir si a priori no conocemos la forma de la matriz a representar.
@@ -380,12 +381,12 @@ Por otro lado, sus desventajas son:
 \paragraph{Contexto de Uso}
 
 Antes de definir que estructura de datos vamos a utilizar para representar matrices esparsas, debemos definir el contexto de uso de la misma.
-Sabemos que el algoritmo de PageRank utiliza el metodo de la Potencia, usando la matriz $P_2$ definida previamente. Sin embargo la $P_2$ no es esparsa, inclusive todos sus valores son distintos de 0, por lo cual utilizar la implementacion del Page Rank descripta en la Seccion \ref{PageRank}.
+Sabemos que el algoritmo de PageRank utiliza el metodo de la Potencia, usando la matriz $P_2$ definida previamente. Sin embargo la $P_2$ no es esparsa, inclusive todos sus valores son distintos de 0, por lo cual utilizar la implementacion del Page Rank descripta en la Seccion \ref{PageRank} no es posible .
 
 Para poder hacer frente a esta dificultad, utilizamos el algoritmo propuesto por Kamvar et al.[Algoritmo 1]\footnote{Sepandar D. Kamvar, Taher H. Haveliwala, Christopher D. Manning, and Gene H. Golub.
 Extrapolation methods for accelerating pagerank computations. In Proceedings of the 12th
 international conference on World Wide Web, WWW ’03, pages 261–270, New York, NY,
-USA, 2003. ACM.} para calcular $x^{(k+1)} = P_2^{(k)}$, cuyos pasos son los siguientes:
+USA, 2003. ACM.} para calcular $x^{(k+1)} = P_2x^{k}$, cuyos pasos son los siguientes:
 \begin{enumerate}
     \item $y = cPx$
     \item $w = ||x||_1 + ||y||_1$
@@ -394,8 +395,38 @@ USA, 2003. ACM.} para calcular $x^{(k+1)} = P_2^{(k)}$, cuyos pasos son los sigu
 
 donde $c$, $P$ y $v$ corresponden al escalar, la matriz y el vector descriptos en la Seccion \ref{PageRank}.
 
-La demostracion de que el algortimo descripto calcula efectivamente $x^{(k+1)} = P_2^{(k)}$ es la siguiente:
-TODO
+Tenemos que ver que el algortimo descripto calcula efectivamente $x^{(k+1)} = P_2^{(k)}x^{k}$:
+\begin{proposition}
+    El Algoritmo 1 calcula $x^{(k+1)} = P_2x^{(k)}$
+\end{proposition}
+\begin{proof}
+Por definicion sabemos que
+  \begin{equation*}
+            \begin{aligned}
+              x^{(k+1)} &= P_2x^{(k)} \\
+               &= (cP_1 +(1-c)E)x^{(k)} \\
+               &= (cP + cD +(1-c)E)x^{(k)} \\
+               &= (cP + cD +(1-c)E)x^{(k)} \\
+               &= (cP + cvd^{t} +(1-c)v1^{t})x^{(k)} \\
+               &= cPx^{(k)} + cvd^{t}x^{(k)} +(1-c)v1^{t}x^{(k)} \\
+            \end{aligned}
+\end{equation*}
+Por otro lado, el Algoritmo 1 nos dice que:
+\begin{equation*}
+          \begin{aligned}
+            x^{(k+1)} &= cPx^{(k)} + (||x^{(k)}||_1 + ||cPx^{(k)}||_1)v  \\
+          \end{aligned}
+\end{equation*}
+Luego basta ver que:
+\begin{equation*}
+          \begin{aligned}
+            cPx^{(k)} + (||x^{(k)}||_1 + ||cPx^{(k)}||_1)v &= cPx^{(k)} + cvd^{t}x^{(k)} +(1-c)v1^{t}x^{(k)}  \\
+            (||x^{(k)}||_1 + ||cPx^{(k)}||_1)v &= cvd^{t}x^{(k)} +(1-c)v1^{t}x^{(k)}  \\
+            ||x^{(k)}||_1v + ||cPx^{(k)}||_1v &= cvd^{t}x^{(k)} +v1^{t}x^{(k)} - cv1^{t}x^{(k)}  \\
+          \end{aligned}
+\end{equation*}
+
+\end{proof}
 
 Sabemos que la unica operacion que vamos a realizar con la matriz esparsa es multiplicarla por un vector. Tambien sabemos que la construccion de la matriz es de forma dinamica, ya que vamos leyendo los links salientes de cada pagina de forma secuencial.
 A partir de esta informacion concluimos que la estructura de datos que mas se adecua a nuestras necesidades es el \textit{Dictionary of Keys (dok)}, en donde las posiciones del vector representan las filas y las keys de los diccionarios las columnas. Esta eleccion se debe al hecho de que podemos actualizar la matriz de forma sencilla a medida de que vamos leyendo los datos de entrada, y a su vez la multiplicacion por un vector se realiza de forma sencilla, vease Seccion Implementacion Esparsa (CAMBIAR CON LA REF).
