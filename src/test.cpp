@@ -192,7 +192,7 @@ void exp_prank_tiempos_aux(const char * in, FILE * out, double tel, double pres)
 	start_timer();
 	resolver(0, tel, 0, in, pres);
 	double tiempo = stop_timer();
-	fprintf(out, "%s %.6f %.6f %.6f\n", in, tiempo, tel, pres);
+	fprintf(out, "%s %.2f %.3f %.9f\n", in, tiempo, tel, pres);
 }
 
 void exp_prank_tiempos() {
@@ -200,31 +200,32 @@ void exp_prank_tiempos() {
 	fprintf(file, "instancia tiempo tel precision\n");
 
     offset = 0;
-	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", file, 0.3, 0.001);
-	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", file, 0.6, 0.001);
+    // ~ 6000 nodos
 	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", file, 0.85, 0.001);
-
-	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", file, 0.3, 0.001);
-	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", file, 0.6, 0.001);
-	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", file, 0.85, 0.001);
-
-	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", file, 0.3, 0.00001);
-	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", file, 0.6, 0.00001);
 	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", file, 0.85, 0.00001);
+    exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", file, 0.85, 0.0000001);
 
-	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", file, 0.3, 0.00001);
-	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", file, 0.6, 0.00001);
+    // ~ 10000 nodos
+	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", file, 0.85, 0.001);
 	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", file, 0.85, 0.00001);
+    exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", file, 0.85, 0.0000001);
+
+    // ~ 36000 nodos
+	exp_prank_tiempos_aux("exp/p2p-Gnutella30.txt", file, 0.85, 0.001);
+	exp_prank_tiempos_aux("exp/p2p-Gnutella30.txt", file, 0.85, 0.00001);
+    exp_prank_tiempos_aux("exp/p2p-Gnutella30.txt", file, 0.85, 0.0000001);
+
+    // ~ 62000 nodos
+	exp_prank_tiempos_aux("exp/p2p-Gnutella31.txt", file, 0.85, 0.001);
+	exp_prank_tiempos_aux("exp/p2p-Gnutella31.txt", file, 0.85, 0.00001);
+    exp_prank_tiempos_aux("exp/p2p-Gnutella31.txt", file, 0.85, 0.0000001);
 
     cout << "STANFORD BITCH" << endl;
     offset = 1;
-    exp_prank_tiempos_aux("exp/web-Stanford.txt", file, 0.3, 0.001);
-    exp_prank_tiempos_aux("exp/web-Stanford.txt", file, 0.6, 0.001);
+    // ~ 280000 nodos
     exp_prank_tiempos_aux("exp/web-Stanford.txt", file, 0.85, 0.001);
-
-    exp_prank_tiempos_aux("exp/web-Stanford.txt", file, 0.3, 0.00001);
-    exp_prank_tiempos_aux("exp/web-Stanford.txt", file, 0.6, 0.00001);
     exp_prank_tiempos_aux("exp/web-Stanford.txt", file, 0.85, 0.00001);
+    exp_prank_tiempos_aux("exp/web-Stanford.txt", file, 0.85, 0.0000001);
 
 	fclose(file);
 }
