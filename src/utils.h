@@ -66,7 +66,15 @@ namespace utils {
 	static double norma1(const vector<double> &x) {
 		double sum = 0;
 		for (unsigned int i = 0; i < x.size(); i++) {
-			sum += abs(x[i]);
+			sum += fabs(x[i]);
+		}
+		return sum;
+	}
+
+	static double normaManhattan(const vector<double> &x, const vector<double> &y) {
+		double sum = 0;
+		for (unsigned int i = 0; i < x.size(); i++) {
+			sum += fabs(x[i]-y[i]);
 		}
 		return sum;
 	}
