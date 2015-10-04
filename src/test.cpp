@@ -14,6 +14,7 @@ using namespace std;
 using namespace utils;
 
 static chrono::time_point<chrono::high_resolution_clock> start_time;
+static int offset = 0;
 
 void start_timer() {
     start_time = chrono::high_resolution_clock::now();
@@ -83,7 +84,7 @@ void resolver(int algoritmo, double tele, int tipo_instancia, const char* path, 
 		// Resolver con PageRank
 		if (tipo_instancia == 0) {
 			// la instancia es de paginas web
-			PageRankEsparso page_rank(cargarSNAPEsparso(path, 0));
+			PageRankEsparso page_rank(cargarSNAPEsparso(path, offset));
 			page_rank.set_precision(tolerancia);
 			set_teletransportacion(tele);
 			vector< PageRankEsparso::rankeable > ranking = page_rank.rankear();
@@ -142,7 +143,7 @@ void exp_prank_manhattan_aux(const char * in, const char * out, double tel) {
 	fprintf(file, "instancia l1\n");
 
 	vector< map<int, double> > A = cargarSNAPEsparso(in,0);
-	
+
 	int n = A.size();
 
 	vector<double> x(n, 0);
@@ -198,6 +199,7 @@ void exp_prank_tiempos() {
 	FILE *file = fopen("exp/pr-tiempos-1-1.out", "w+");
 	fprintf(file, "instancia tiempo tel precision\n");
 
+    offset = 0;
 	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", file, 0.3, 0.001);
 	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", file, 0.6, 0.001);
 	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", file, 0.85, 0.001);
@@ -213,6 +215,16 @@ void exp_prank_tiempos() {
 	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", file, 0.3, 0.00001);
 	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", file, 0.6, 0.00001);
 	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", file, 0.85, 0.00001);
+
+    cout << "STANFORD BITCH" << endl;
+    offset = 1;
+    exp_prank_tiempos_aux("exp/web-Stanford.txt", file, 0.3, 0.001);
+    exp_prank_tiempos_aux("exp/web-Stanford.txt", file, 0.6, 0.001);
+    exp_prank_tiempos_aux("exp/web-Stanford.txt", file, 0.85, 0.001);
+
+    exp_prank_tiempos_aux("exp/web-Stanford.txt", file, 0.3, 0.00001);
+    exp_prank_tiempos_aux("exp/web-Stanford.txt", file, 0.6, 0.00001);
+    exp_prank_tiempos_aux("exp/web-Stanford.txt", file, 0.85, 0.00001);
 
 	fclose(file);
 }
