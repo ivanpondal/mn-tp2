@@ -209,7 +209,7 @@ namespace utils {
 		return P2;
 	}
 
-	static vector< vector<int> > cargarSNAP(const char* entrada) {
+	static vector< vector<int> > cargarSNAP(const char* entrada, int offset = 1) {
 		ifstream datos;
 		datos.open(entrada);
 		if (!datos.good()) {
@@ -235,14 +235,14 @@ namespace utils {
 		for (int e = 0; e < edges; e++) {
 			int i, j;
 			datos >> i >> j;
-			A[j-1][i-1] = 1;
+			A[j-offset][i-offset] = 1;
 		}
 		datos.close();
 
 		return A;
 	}
 
-	static vector< map<int, double> > cargarSNAPEsparso(const char* entrada) {
+	static vector< map<int, double> > cargarSNAPEsparso(const char* entrada, int offset = 1) {
 		ifstream datos;
 		datos.open(entrada);
 		if (!datos.good()) {
@@ -269,8 +269,8 @@ namespace utils {
 		for (int e = 0; e < edges; e++) {
 			int i, j;
 			datos >> i >> j;
-			A[j-1].insert(pair<int,double>(i-1,1));
-			links_salientes[i-1]++;
+			A[j-offset].insert(pair<int,double>(i-offset,1));
+			links_salientes[i-offset]++;
 		}
 		datos.close();
 
