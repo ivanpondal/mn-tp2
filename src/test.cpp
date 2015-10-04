@@ -187,35 +187,40 @@ void exp_prank_manhattan() {
 	exp_prank_manhattan_aux("exp/pr-1-2-p2p-Gnutella04.txt", "exp/pr-1-2-3.out", 0.9);
 }
 
-void exp_prank_tiempos_aux(const char * in, double tel, double pres) {
+void exp_prank_tiempos_aux(const char * in, FILE * out, double tel, double pres) {
 	start_timer();
 	resolver(0, tel, 0, in, pres);
 	double tiempo = stop_timer();
-	cout  << "Tiempo para: "<< in << " (precision: "  << pres << ") -> " << tiempo << " ns" << endl;
+	fprintf(out, "%s %.6f %.6f %.6f\n", in, tiempo, tel, pres);
 }
 
 void exp_prank_tiempos() {
-	cout << endl << "Experimentacion tiempos PageRank Esparso" << endl;
-	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.3, 0.001);
-	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.6, 0.001);
-	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.85, 0.001);
+	FILE *file = fopen("exp/pr-tiempos-1-1.out", "w+");
+	fprintf(file, "instancia tiempo tel precision\n");
 
-	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.3, 0.001);
-	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.6, 0.001);
-	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.85, 0.001);
+	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", file, 0.3, 0.001);
+	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", file, 0.6, 0.001);
+	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", file, 0.85, 0.001);
 
-	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.3, 0.00001);
-	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.6, 0.00001);
-	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.85, 0.00001);
+	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", file, 0.3, 0.001);
+	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", file, 0.6, 0.001);
+	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", file, 0.85, 0.001);
 
-	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.3, 0.00001);
-	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.6, 0.00001);
-	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.85, 0.00001);
+	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", file, 0.3, 0.00001);
+	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", file, 0.6, 0.00001);
+	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", file, 0.85, 0.00001);
+
+	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", file, 0.3, 0.00001);
+	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", file, 0.6, 0.00001);
+	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", file, 0.85, 0.00001);
+
+	fclose(file);
 }
 
 // para correr un test: ./test test.in test.expected {0: EG, 1: LU}
 int main(int argc, char *argv[])
 {
+	srand (time(0));
 	// si no hay argumentos corro tests unitarios, si no los de la cátedra
 	if(argc == 4){
 		int a;
