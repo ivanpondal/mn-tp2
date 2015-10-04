@@ -1,0 +1,4 @@
+# Directed graph (each unordered pair of nodes is saved once):
+# Ejemplo grafo sin ejes
+# Nodes: 5 Edges: 0 
+# FromNodeId	ToNodeId

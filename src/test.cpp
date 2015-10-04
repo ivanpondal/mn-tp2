@@ -217,6 +217,43 @@ void exp_prank_tiempos() {
 	fclose(file);
 }
 
+void exp_prank_calidad_aux(const char * in, const char * out) {
+	FILE *file = fopen(out, "w+");
+	set_teletransportacion(0.85);
+
+	vector< vector<int> > A = cargarSNAP(in,0);
+	vector< vector<double> > M = matrizTransicion(A);
+
+	fprintf(file, "Matriz Adyacencia\n");
+	for (int i = 0; i < A.size(); ++i) { for (int j = 0; j < A.size(); ++j) {fprintf(file, "%d ", A[i][j]);} fprintf(file, "\n"); }
+	fprintf(file, "\n");
+
+	fprintf(file, "Matriz Transicion\n");
+	for (int i = 0; i < A.size(); ++i) { for (int j = 0; j < A.size(); ++j) {fprintf(file, "%.6f ", M[i][j]);} fprintf(file, "\n"); }
+	fprintf(file, "\n");
+	
+	fprintf(file, "Ranking InDeg:\n");
+	fprintf(file, "rank nodo valor\n");
+	InDeg indeg(A);
+	vector< InDeg::rankeable > ranking1 = indeg.rankear();
+	for (int i = 0; i < A.size(); ++i) { fprintf(file, "%d %d %.6f ", i, ranking1[i].posicion, ranking1[i].valor); }
+	fprintf(file, "\n");
+
+	fprintf(file, "Ranking PageRank:\n");
+	fprintf(file, "rank nodo valor\n");
+	PageRank page_rank(M);
+	vector< PageRank::rankeable > ranking2 = page_rank.rankear();
+	for (int i = 0; i < A.size(); ++i) { fprintf(file, "%d %d %.6f ", i, ranking2[i].posicion, ranking2[i].valor); }
+	fprintf(file, "\n");
+	
+}
+
+void exp_prank_calidad() {
+	exp_prank_calidad_aux("exp/pr-2-1-generated.txt","exp/pr-2-1.out");
+	exp_prank_calidad_aux("exp/pr-2-2-no-edges.txt","exp/pr-2-2.out");
+	exp_prank_calidad_aux("exp/pr-2-3-complete.txt","exp/pr-2-3.out");
+}
+
 // para correr un test: ./test test.in test.expected {0: EG, 1: LU}
 int main(int argc, char *argv[])
 {
@@ -234,6 +271,7 @@ int main(int argc, char *argv[])
 		test_page_rank_esparso_1();
 		exp_prank_manhattan();
 		exp_prank_tiempos();
+		exp_prank_calidad();
 	}
 	return 0;
 }
