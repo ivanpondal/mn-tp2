@@ -83,7 +83,7 @@ void resolver(int algoritmo, double tele, int tipo_instancia, const char* path, 
 		// Resolver con PageRank
 		if (tipo_instancia == 0) {
 			// la instancia es de paginas web
-			PageRankEsparso page_rank(cargarSNAPEsparso(path));
+			PageRankEsparso page_rank(cargarSNAPEsparso(path, 0));
 			page_rank.set_precision(tolerancia);
 			set_teletransportacion(tele);
 			vector< PageRankEsparso::rankeable > ranking = page_rank.rankear();
@@ -191,17 +191,26 @@ void exp_prank_tiempos_aux(const char * in, double tel, double pres) {
 	start_timer();
 	resolver(0, tel, 0, in, pres);
 	double tiempo = stop_timer();
-	cout << "Tiempo para: "<< in << " -> " << tiempo << "ns" << endl;
+	cout  << "Tiempo para: "<< in << " (precision: "  << pres << ") -> " << tiempo << " ns" << endl;
 }
 
 void exp_prank_tiempos() {
-	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.3, 0.85);
-	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.6, 0.85);
-	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.9, 0.85);
+	cout << endl << "Experimentacion tiempos PageRank Esparso" << endl;
+	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.3, 0.001);
+	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.6, 0.001);
+	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.85, 0.001);
 
-	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.3, 0.85);
-	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.6, 0.85);
-	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.9, 0.85);
+	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.3, 0.001);
+	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.6, 0.001);
+	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.85, 0.001);
+
+	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.3, 0.00001);
+	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.6, 0.00001);
+	exp_prank_tiempos_aux("exp/pr-1-1-p2p-Gnutella08.txt", 0.85, 0.00001);
+
+	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.3, 0.00001);
+	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.6, 0.00001);
+	exp_prank_tiempos_aux("exp/pr-1-2-p2p-Gnutella04.txt", 0.85, 0.00001);
 }
 
 // para correr un test: ./test test.in test.expected {0: EG, 1: LU}
