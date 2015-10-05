@@ -8,15 +8,42 @@
 \imagenB}
 % -----------------------------------------
 
-En esta sección, se detallan los diferentes experimentos que realizamos para medir la eficiencia y resultados de los algoritmos implementados.
+En esta sección, se detallan los diferentes experimentos que realizamos para medir la eficiencia y calidad de resultados de los algoritmos implementados.
 
 \subsection{Page Rank}
 
 \subsubsection{Instancias de prueba}
 
-Para generar grafos sobre los cuales experimentar tuvimos que obtener varias muestras.
-Por un lado, se utilizaron recursos de SNAP (http://snap.stanford.edu/) para las instancias mas grandes de grafos que utilizamos para medir tiempo y la convergencia del algoritmo Page Rank.
-Además, generamos instancias originales mediante las herramientas provistas por la cátedra otras extra generadas por nosotros.
+%Para generar grafos sobre los cuales experimentar tuvimos que obtener varias muestras.
+Las instancias de prueba utilizadas para la experimentación pueden dividirse en dos grupos:
+\begin{itemize}
+    \item Instancias medianas-grandes, que fueron utilizadas para medir tiempo y la convergencia del algoritmo Page Rank.
+        Estas instancias se obtuvieron de la base de datos de SNAP \footnote{Stanford Large Network Dataset Collection:
+        \url{http://snap.stanford.edu/data}} y se detallan a continuación:
+
+        \begin{table}[H]
+            \begin{center}
+                \begin{tabular}{| l | c | c | l |}
+                    \hline
+                    Nombre          &Nodos      &Ejes       & Descripción \\ \hline
+                    p2p-Gnutella08 	&6,301  	&20,777 	& Gnutella peer to peer network from August 8 2002 \\
+                    p2p-Gnutella04 	&10,876  	&39,994 	& Gnutella peer to peer network from August 4 2002 \\
+                    p2p-Gnutella30 	&36,682  	&88,328 	& Gnutella peer to peer network from August 30 2002 \\
+                    p2p-Gnutella31 	&62,586  	&147,892 	& Gnutella peer to peer network from August 31 2002 \\
+                    web-Stanford 	&281,903  	&2,312,497 	& Web graph of Stanford.edu \\
+                    \hline
+                \end{tabular}
+                \captionsetup{justification=centering}
+                \caption{Recursos utilizados de SNAP}
+                \label{recursos_snap}
+            \end{center}
+        \end{table}
+
+
+    \item Instancias chicas, que fueron utilizadas para analizar la calidad de los resultados de PageRank.
+        Estas instancias fueron generedas utilizando las herramientas provistas por la cátedra y otras extra generadas por nosotros.
+        Los detalles particulares se desarrollan en la sección \textbf{Calidad de los resultados}.
+\end{itemize}
 
 \subsubsection{Convergencia del algoritmo}
 
@@ -107,11 +134,11 @@ Los resultados fueron los siguientes:
     title=Precisión 0.001,
     xlabel=cantidad de nodos,
     ylabel=tiempo (nanosegundos),
-    height=4.5cm, 
-    width=8cm, 
-    ybar, 
+    height=4.5cm,
+    width=8cm,
+    ybar,
     bar width=5]
-\addplot 
+\addplot
     coordinates {(6301,22337932.00) (10876,43180579.00) (36682,127379816.00) (62586,232454818.00)};
 
 \end{axis}
@@ -121,11 +148,11 @@ Los resultados fueron los siguientes:
     title=Precisión 0.00001,
     xlabel=cantidad de nodos,
     ylabel=tiempo (nanosegundos),
-    height=4.5cm, 
-    width=8cm, 
-    ybar, 
+    height=4.5cm,
+    width=8cm,
+    ybar,
     bar width=5]
-\addplot 
+\addplot
     coordinates {(6301,22896544.00) (10876,43770720.00) (36682,242562037.00) (62586,140004295.00)};
 
 \end{axis}
@@ -136,11 +163,11 @@ Los resultados fueron los siguientes:
     title=Precisión 0.0000001,
     xlabel=cantidad de nodos,
     ylabel=tiempo (nanosegundos),
-    height=4.5cm, 
-    width=8cm, 
-    ybar, 
+    height=4.5cm,
+    width=8cm,
+    ybar,
     bar width=5]
-\addplot 
+\addplot
     coordinates {(6301,23884365.00) (10876,47676087.00) (36682,145804117.00) (62586,263878991.00)};
 
 \end{axis}
@@ -152,11 +179,11 @@ Los resultados fueron los siguientes:
     ylabel=tiempo (nanosegundos),
     xtick={1,2,3},
     xticklabels={0.001,0.00001,0.0000001},
-    height=4.5cm, 
-    width=8cm, 
-    ybar, 
+    height=4.5cm,
+    width=8cm,
+    ybar,
     bar width=10]
-\addplot 
+\addplot
     coordinates {(1,3972349908.00) (2,5478391283.00) (3,7771818462.00)};
 
 \end{axis}
@@ -195,7 +222,7 @@ Instancia 1
             ]{datos/pr-2-1-1.out}
       \end{center}
     \end{subfigure}%
-    ~ 
+    ~
     \begin{subfigure}[t]{0.5\textwidth}
       \begin{center}
         Page Rank(c = 0.6)\\
@@ -222,7 +249,7 @@ Instancia 1
             ]{datos/pr-2-1-3.out}
       \end{center}
     \end{subfigure}%
-    ~ 
+    ~
     \begin{subfigure}[t]{0.5\textwidth}
       \begin{center}
         InDeg\\
@@ -260,7 +287,7 @@ Instancia 2
             ]{datos/pr-2-2-1.out}
       \end{center}
     \end{subfigure}%
-    ~ 
+    ~
     \begin{subfigure}[t]{0.5\textwidth}
       \begin{center}
         Page Rank(c = 0.6)\\
@@ -287,7 +314,7 @@ Instancia 2
             ]{datos/pr-2-2-3.out}
       \end{center}
     \end{subfigure}%
-    ~ 
+    ~
     \begin{subfigure}[t]{0.5\textwidth}
       \begin{center}
         InDeg\\
@@ -323,7 +350,7 @@ Instancia 3
             ]{datos/pr-2-3-1.out}
       \end{center}
     \end{subfigure}%
-    ~ 
+    ~
     \begin{subfigure}[t]{0.5\textwidth}
       \begin{center}
         InDeg\\
@@ -546,4 +573,3 @@ las hipotesis planteadas.
     \end{axis}
     \end{tikzpicture}
 \end{center}
-
