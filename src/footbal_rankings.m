@@ -135,7 +135,7 @@ function AFA(in_filename, out_filename, team_codes_filename = '', date_limit = 0
 	save_solution(teams, S, out_filename, team_codes_filename);
 endfunction
 
-function AFA_evolution(in_filename, out_filename, matches_per_date)
+function AFA_evolution(in_filename, out_filename, matches_per_date, normalize_score = 1)
 	fid = fopen(in_filename, 'r');
 	[teams, matches] = fscanf(fid, '%u %u' ,"C");
 
@@ -161,7 +161,11 @@ function AFA_evolution(in_filename, out_filename, matches_per_date)
 
 		matches--;
 		if (mod(matches, matches_per_date) == 0)
-			season_dates{f} = S;
+			X = S;
+			if (normalize_score == 1)
+				X(:, 2) = X(:, 2)/sum(X(:, 2));
+			endif
+			season_dates{f} = X;
 		endif
 	endwhile
 	fclose(fid);
@@ -173,7 +177,7 @@ function AFA_evolution(in_filename, out_filename, matches_per_date)
 		S = season_dates{i};
 		% Imprimo el ranking de cada equipo en esa fecha
 		for j = 1:teams
-			fprintf(fid, ' %u', S(j,2));
+			fprintf(fid, ' %f', S(j,2));
 		endfor
 		fprintf(fid, '\n');
 	endfor

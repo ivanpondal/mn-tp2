@@ -8,15 +8,42 @@
 \imagenB}
 % -----------------------------------------
 
-En esta sección, se detallan los diferentes experimentos que realizamos para medir la eficiencia y resultados de los algoritmos implementados.
+En esta sección, se detallan los diferentes experimentos que realizamos para medir la eficiencia y calidad de resultados de los algoritmos implementados.
 
 \subsection{Page Rank}
 
 \subsubsection{Instancias de prueba}
 
-Para generar grafos sobre los cuales experimentar tuvimos que obtener varias muestras.
-Por un lado, se utilizaron recursos de SNAP (http://snap.stanford.edu/) para las instancias mas grandes de grafos que utilizamos para medir tiempo y la convergencia del algoritmo Page Rank.
-Además, generamos instancias originales mediante las herramientas provistas por la cátedra otras extra generadas por nosotros.
+%Para generar grafos sobre los cuales experimentar tuvimos que obtener varias muestras.
+Las instancias de prueba utilizadas para la experimentación pueden dividirse en dos grupos:
+\begin{itemize}
+    \item Instancias medianas-grandes, que fueron utilizadas para medir tiempo y la convergencia del algoritmo Page Rank.
+        Estas instancias se obtuvieron de la base de datos de SNAP \footnote{Stanford Large Network Dataset Collection:
+        \url{http://snap.stanford.edu/data}} y se detallan a continuación:
+
+        \begin{table}[H]
+            \begin{center}
+                \begin{tabular}{| l | c | c | l |}
+                    \hline
+                    Nombre          &Nodos      &Ejes       & Descripción \\ \hline
+                    p2p-Gnutella08 	&6,301  	&20,777 	& Gnutella peer to peer network from August 8 2002 \\
+                    p2p-Gnutella04 	&10,876  	&39,994 	& Gnutella peer to peer network from August 4 2002 \\
+                    p2p-Gnutella30 	&36,682  	&88,328 	& Gnutella peer to peer network from August 30 2002 \\
+                    p2p-Gnutella31 	&62,586  	&147,892 	& Gnutella peer to peer network from August 31 2002 \\
+                    web-Stanford 	&281,903  	&2,312,497 	& Web graph of Stanford.edu \\
+                    \hline
+                \end{tabular}
+                \captionsetup{justification=centering}
+                \caption{Recursos utilizados de SNAP}
+                \label{recursos_snap}
+            \end{center}
+        \end{table}
+
+
+    \item Instancias chicas, que fueron utilizadas para analizar la calidad de los resultados de PageRank.
+        Estas instancias fueron generedas utilizando las herramientas provistas por la cátedra y otras extra generadas por nosotros.
+        Los detalles particulares se desarrollan en la sección \textbf{Calidad de los resultados}.
+\end{itemize}
 
 \subsubsection{Convergencia del algoritmo}
 
@@ -28,7 +55,7 @@ Con estos datos, medimos la Norma Manhattan (L1) entre las soluciones de cada pa
 $L_1(x,y) = \sum\limits_{i=1}^n | x[i] - y[i] | $
 \end{center}
 
-Siendo $n$ la cantidad de nodos del grafo siendo estudiado, $x \in \mathbb{R}^{n}$ la solución del algoritmo en una iteración $j$ e $y \in \mathbb{R}^{n}$ la de la iteración $j+1$.\\
+Siendo $n$ la cantidad de nodos del grafo siendo estudiado, $x \in \mathbb{R}^{n}$ la solución del algoritmo en una iteración $k$ e $y \in \mathbb{R}^{n}$ la de la iteración $k+1$.\\
 Esta es una forma intuitiva y logica de estudiar la convergencia, ya que al tomar la suma de los valores absolutos entre los componentes de cada vector, lo que realmente estamos haciendo es calcular cuanto varia la solución que estamos calculando a través de las iteraciones. Además, podemos asegurar que por el procedimiento de nuestro algoritmo esta diferencia va a ir disminuyendo, y cuando sea lo suficientemente chica el algoritmo va a terminar.
 
 Estudiamos la convergencia a través de dos instancias de tamaño mediano-grande obtenidos de SNAP, mas precisamente:
@@ -37,21 +64,22 @@ Estudiamos la convergencia a través de dos instancias de tamaño mediano-grande
     \item Instancia 2: 10876 nodos y 39994 ejes.
 \end{itemize}
 Por lo que podemos decir que son considerables y relativamente esparsas (por ejemplo, el primero podria tener cerca de 40 millones de ejes si fuera completo, teniendo en cuenta que es un grafo dirigido).\\
-A su vez, fuimos variando el componente $c$ del algoritmo Page Rank entre 0.3, 0.6 y 0.9, el cual controla la importancia del viajero aleatorio, es decir, a menor $c$ aumenta la probabilidad de que el usuario vaya a una página aleatoria desde la actual.\\
+A su vez, fuimos variando el componente $c$ del algoritmo Page Rank entre 0.3, 0.6 y 0.9, el cual controla la importancia del \textit{navegante aleatorio}, es decir, a menor $c$ aumenta la probabilidad de que el usuario vaya a una página aleatoria desde la actual.\\
 Veamos los resultados:
 
 \begin{center}
     \begin{tikzpicture}
     \begin{axis}[
         title={Instancia 1},
-        xlabel={Iteraci\'on $i$},
-        ylabel={$L_1(x_i,x_{i+1})$},
+        xlabel={Iteraci\'on $k$},
+        ylabel={$L_1(x_k,x_{k+1})$},
+        ylabel absolute,
+        ylabel style={yshift=.3cm},
         scaled x ticks=false,
         scaled y ticks=false,
         enlargelimits=0.05,
-        width=0.5\textwidth,
-        height=0.5\textwidth,
-        legend pos=north west
+        width=0.45\textwidth,
+        height=0.45\textwidth
     ]
     \addplot[color=black] table[x=instancia,y=l1]{datos/pr-1-1-1.out};
     \addplot[color=red] table[x=instancia,y=l1]{datos/pr-1-1-2.out};
@@ -62,14 +90,16 @@ Veamos los resultados:
     \begin{tikzpicture}
     \begin{axis}[
         title={Instancia 2},
-        xlabel={Iteraci\'on $i$},
-        ylabel={$L1(x_i,x_i+1)$},
+        xlabel={Iteraci\'on $k$},
+        ylabel={$L1(x_k,x_{k+1})$},
+        ylabel absolute,
+        ylabel style={yshift=.3cm},
+        %ylabel shift={3cm},
         scaled x ticks=false,
         scaled y ticks=false,
         enlargelimits=0.05,
-        width=0.5\textwidth,
-        height=0.5\textwidth,
-        legend pos=north west
+        width=0.45\textwidth,
+        height=0.45\textwidth
     ]
     \addplot[color=black] table[x=instancia,y=l1]{datos/pr-1-2-1.out};
     \addplot[color=red] table[x=instancia,y=l1]{datos/pr-1-2-2.out};
@@ -79,7 +109,7 @@ Veamos los resultados:
     \end{tikzpicture}
 \end{center}
 
-Siendo $L1(x_i,x_i+1)$ (el eje y del gráfico) la distancia Manhattan entre los autovectores generados por el algoritmo entre las iteraciones $i$ e $i+1$.\\
+Siendo $L1(x_k,x_{k+1})$ (el eje y del gráfico) la distancia Manhattan entre los autovectores generados por el algoritmo entre las iteraciones $k$ e $k+1$.\\
 Como podemos ver el algoritmo converge rápidamente, tomando a lo sumo 9 iteraciones para terminar de procesar instancias de datos relativamente grandes. Los resultados son parecidos para ambas instancias.\\
 Adicionalmente, vemos que Page Rank converge de forma más rápida para valores de $c$ más chicos, es decir, casos en los cuales es más probable que el usuario vaya a una página cualquiera desde la actual. Cuando esto sucede, la matriz de transición tiene valores más parejos dentro de cada columna y podemos decir entonces que el algoritmo soluciona el problema más rápido porque el sistema es más estable.
 
@@ -107,27 +137,26 @@ Los resultados fueron los siguientes:
     title=Precisión 0.001,
     xlabel=cantidad de nodos,
     ylabel=tiempo (nanosegundos),
-    height=4.5cm, 
-    width=8cm, 
-    ybar, 
+    height=4.5cm,
+    width=8cm,
+    ybar,
     bar width=5]
-\addplot 
+\addplot
     coordinates {(6301,22337932.00) (10876,43180579.00) (36682,127379816.00) (62586,232454818.00)};
-
 \end{axis}
 \end{tikzpicture}
+
 \begin{tikzpicture}
 \begin{axis}[
     title=Precisión 0.00001,
     xlabel=cantidad de nodos,
     ylabel=tiempo (nanosegundos),
-    height=4.5cm, 
-    width=8cm, 
-    ybar, 
+    height=4.5cm,
+    width=8cm,
+    ybar,
     bar width=5]
-\addplot 
+\addplot
     coordinates {(6301,22896544.00) (10876,43770720.00) (36682,242562037.00) (62586,140004295.00)};
-
 \end{axis}
 \end{tikzpicture}
 
@@ -136,15 +165,15 @@ Los resultados fueron los siguientes:
     title=Precisión 0.0000001,
     xlabel=cantidad de nodos,
     ylabel=tiempo (nanosegundos),
-    height=4.5cm, 
-    width=8cm, 
-    ybar, 
+    height=4.5cm,
+    width=8cm,
+    ybar,
     bar width=5]
-\addplot 
+\addplot
     coordinates {(6301,23884365.00) (10876,47676087.00) (36682,145804117.00) (62586,263878991.00)};
-
 \end{axis}
 \end{tikzpicture}
+
 \begin{tikzpicture}
 \begin{axis}[
     title=Variando la precisión (misma cantidad de nodos),
@@ -152,13 +181,12 @@ Los resultados fueron los siguientes:
     ylabel=tiempo (nanosegundos),
     xtick={1,2,3},
     xticklabels={0.001,0.00001,0.0000001},
-    height=4.5cm, 
-    width=8cm, 
-    ybar, 
+    height=4.5cm,
+    width=8cm,
+    ybar,
     bar width=10]
-\addplot 
+\addplot
     coordinates {(1,3972349908.00) (2,5478391283.00) (3,7771818462.00)};
-
 \end{axis}
 \end{tikzpicture}
 
@@ -168,10 +196,41 @@ Los resultados fueron los siguientes:
 Para evaluar la calidad de las soluciones provistas por Page Rank las comparamos contra el algoritmo InDeg, que ordena las páginas según la cantidad de links que van hacia ellas.\\
 Por el lado de Page Rank, no utilizamos la versión Esparsa del algoritmo, ya que el tamaño de la entrada no lo requiere.\\
 Las instancias que usamos para hacer estas comparaciones fueron:
+
 \begin{itemize}
     \item Instancia 1: 13 nodos y 18 ejes.
+        \begin{center}
+            \begin{tikzpicture}
+                \GraphInit[vstyle=Normal]
+                \SetGraphUnit{2.5}
+                \begin{scope}
+                    \Vertices{circle}{1,2,3,4,5,6,7,8,9,10,11,12,13}
+                \end{scope}
+                \Edges(2,8,2,9,2,10,2,3,3,8,3,9,3,10,3,2,4,6,4,7,6,4,7,6,7,4,8,10,8,2,9,2,10,2,10,8)
+            \end{tikzpicture}
+        \end{center}
     \item Instancia 2: 13 nodos y 31 ejes.
-    \item Instancia 3: 5 nodos y 20 ejes (grafo completo).
+        \begin{center}
+            \begin{tikzpicture}
+                \GraphInit[vstyle=Normal]
+                \SetGraphUnit{2.5}
+                \begin{scope}
+                    \Vertices{circle}{1,2,3,4,5,6,7,8,9,10,11,12,13}
+                \end{scope}
+                \Edges(1,4,1,5,1,6,1,7,1,8,2,1,2,8,2,9,2,10,2,3,3,1,3,8,3,9,3,10,3,2,4,1,4,6,4,7,6,4,6,7,6,8,6,9,7,6,7,4,8,10,8,2,9,2,10,2,10,8,11,1,12,1)
+            \end{tikzpicture}
+        \end{center}
+    \item Instancia 3: 5 nodos y 10 ejes (grafo completo).
+        \begin{center}
+            \begin{tikzpicture}
+                \GraphInit[vstyle=Normal]
+                \SetGraphUnit{2.5}
+                \begin{scope}
+                    \Vertices{circle}{1,2,3,4,5}
+                \end{scope}
+                \Edges(5,1,5,2,5,3,5,4,1,5,1,2,1,3,1,4,2,5,2,1,2,3,2,4,3,5,3,1,3,2,3,4,4,5,4,1,4,2,4,3)
+            \end{tikzpicture}
+        \end{center}
 \end{itemize}
 De forma de poder analizar los resultados facilmente, nos limitamos a instancias chicas.\\
 
@@ -195,7 +254,7 @@ Instancia 1
             ]{datos/pr-2-1-1.out}
       \end{center}
     \end{subfigure}%
-    ~ 
+    ~
     \begin{subfigure}[t]{0.5\textwidth}
       \begin{center}
         Page Rank(c = 0.6)\\
@@ -222,7 +281,7 @@ Instancia 1
             ]{datos/pr-2-1-3.out}
       \end{center}
     \end{subfigure}%
-    ~ 
+    ~
     \begin{subfigure}[t]{0.5\textwidth}
       \begin{center}
         InDeg\\
@@ -260,7 +319,7 @@ Instancia 2
             ]{datos/pr-2-2-1.out}
       \end{center}
     \end{subfigure}%
-    ~ 
+    ~
     \begin{subfigure}[t]{0.5\textwidth}
       \begin{center}
         Page Rank(c = 0.6)\\
@@ -287,7 +346,7 @@ Instancia 2
             ]{datos/pr-2-2-3.out}
       \end{center}
     \end{subfigure}%
-    ~ 
+    ~
     \begin{subfigure}[t]{0.5\textwidth}
       \begin{center}
         InDeg\\
@@ -323,7 +382,7 @@ Instancia 3
             ]{datos/pr-2-3-1.out}
       \end{center}
     \end{subfigure}%
-    ~ 
+    ~
     \begin{subfigure}[t]{0.5\textwidth}
       \begin{center}
         InDeg\\
@@ -521,7 +580,7 @@ las hipotesis planteadas.
 		xmin=1,
 		xmax=26,
 		ymin=0,
-		ymax=60,
+		ymax=0.08,
         width=0.8\textwidth,
         height=0.5\textwidth,
 		xtick={1,...,26},
@@ -546,4 +605,3 @@ las hipotesis planteadas.
     \end{axis}
     \end{tikzpicture}
 \end{center}
-
