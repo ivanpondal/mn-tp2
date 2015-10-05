@@ -274,6 +274,12 @@ void exp_prank_calidad() {
 	exp_prank_calidad_aux("exp/pr-2-1-generated.txt","exp/pr-2-1-2.out");
 	set_teletransportacion(0.9);
 	exp_prank_calidad_aux("exp/pr-2-1-generated.txt","exp/pr-2-1-3.out");
+	set_teletransportacion(0.1);
+	exp_prank_calidad_aux("exp/pr-2-1-generated2.txt","exp/pr-2-2-1.out");
+	set_teletransportacion(0.5);
+	exp_prank_calidad_aux("exp/pr-2-1-generated2.txt","exp/pr-2-2-2.out");
+	set_teletransportacion(0.9);
+	exp_prank_calidad_aux("exp/pr-2-1-generated2.txt","exp/pr-2-2-3.out");
 	exp_prank_calidad_aux("exp/pr-2-2-no-edges.txt","exp/pr-2-2.out");
 	exp_prank_calidad_aux("exp/pr-2-3-complete.txt","exp/pr-2-3.out");
 }

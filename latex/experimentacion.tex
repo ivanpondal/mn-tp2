@@ -85,10 +85,88 @@ Adicionalmente, vemos que Page Rank converge de forma más rápida para valores 
 
 \subsubsection{Tiempo de ejecución}
 
+En esta sección, analizamos el tiempo de cómputo que emplea Page Rank.\\
+Para tomar los tiempos, utilizamos la libreria chronos de C++ y pasamos las mediciones a nanosegundos. Todos las medidas fueron hechas bajo las mismas condiciones (procesos abiertos, computadora, alimentación y nivel de optimizaciones del compilador).\\
+Con este fin, tomamos varias instancias de SNAP con distinta cantidad de nodos y vértices de forma que podamos ver la evolución de los tiempos en función del tamaño de la entrada.\\
+Adicionalmente fuimos variando la precisión utilizada por el algoritmo, es decir, la cota que controla cuando la diferencia entre dos iteraciones del algoritmo sucesivas son lo suficientemente cercanas como para dejar de correrlo.\\
+El factor $c$ de Page Rank fue configurado en 0.85, ya que no afecta el tiempo de cómputo.\\
+Las instancias utilizadas fueron:
+
+\begin{itemize}
+    \item Instancia 1: 6301 nodos y 20777 ejes.
+    \item Instancia 2: 10876 nodos y 39994 ejes.
+    \item Instancia 3: 36682 nodos y 88328 ejes.
+    \item Instancia 4: 62586 nodos y 147892 ejes.
+    \item Instancia 5: 281903 nodos y 2312497 ejes.
+\end{itemize}
+
+Los resultados fueron los siguientes:
+
+\begin{tikzpicture}
+\begin{axis}[
+    title=Precisión 0.001,
+    xlabel=cantidad de nodos,
+    ylabel=tiempo (nanosegundos),
+    height=4.5cm, 
+    width=8cm, 
+    ybar, 
+    bar width=5]
+\addplot 
+    coordinates {(6301,22337932.00) (10876,43180579.00) (36682,127379816.00) (62586,232454818.00)};
+
+\end{axis}
+\end{tikzpicture}
+\begin{tikzpicture}
+\begin{axis}[
+    title=Precisión 0.00001,
+    xlabel=cantidad de nodos,
+    ylabel=tiempo (nanosegundos),
+    height=4.5cm, 
+    width=8cm, 
+    ybar, 
+    bar width=5]
+\addplot 
+    coordinates {(6301,22896544.00) (10876,43770720.00) (36682,242562037.00) (62586,140004295.00)};
+
+\end{axis}
+\end{tikzpicture}
+
+\begin{tikzpicture}
+\begin{axis}[
+    title=Precisión 0.0000001,
+    xlabel=cantidad de nodos,
+    ylabel=tiempo (nanosegundos),
+    height=4.5cm, 
+    width=8cm, 
+    ybar, 
+    bar width=5]
+\addplot 
+    coordinates {(6301,23884365.00) (10876,47676087.00) (36682,145804117.00) (62586,263878991.00)};
+
+\end{axis}
+\end{tikzpicture}
+\begin{tikzpicture}
+\begin{axis}[
+    title=Variando la precisión (misma cantidad de nodos),
+    xlabel=nivel de precisión,
+    ylabel=tiempo (nanosegundos),
+    xtick={1,2,3},
+    xticklabels={0.001,0.00001,0.0000001},
+    height=4.5cm, 
+    width=8cm, 
+    ybar, 
+    bar width=10]
+\addplot 
+    coordinates {(1,3972349908.00) (2,5478391283.00) (3,7771818462.00)};
+
+\end{axis}
+\end{tikzpicture}
+
 
 \subsubsection{Calidad de los resultados}
 
 Para evaluar la calidad de las soluciones provistas por Page Rank las comparamos contra el algoritmo InDeg, que ordena las páginas según la cantidad de links que van hacia ellas.\\
+Por el lado de Page Rank, no utilizamos la versión Esparsa del algoritmo, ya que el tamaño de la entrada no lo requiere.\\
 Las instancias que usamos para hacer estas comparaciones fueron:
 \begin{itemize}
     \item Instancia 1: 13 nodos y 18 ejes.
