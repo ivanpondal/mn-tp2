@@ -9,6 +9,7 @@
 #include <math.h>
 #include <ctime>
 #include <chrono>
+#include <random>
 
 using namespace std;
 using namespace utils;
@@ -204,22 +205,120 @@ void exp_prank_tiempos_aux(const char * in, FILE * out, double tel, double pres)
 }
 
 void exp_prank_tiempos_nodos() {
-	for (int i = 10; i*=5; i < 100000) {
-		vector< map< int , double > > A(i);
-		vector<int> links_salientes(nodes);
-		for (int e = 0; e < 2*i;) {
-			int a = random_in_range(0,i);
-			int b = random_in_range(0,i);
-			if (A[a][b]==0 && a!=b) {
+	random_device rd;
+    mt19937 gen(rd());
+	uniform_int_distribution<> dis(0, 100000);
+	FILE *file = fopen("exp/pr-tiempos-nodos.out", "w+");
+	fprintf(file, "nodos tiempo\n");
+	for (int nodos = 1000; nodos < 100000; nodos+=2000) {
+		vector< map< int , double > > A(nodos);
+		vector<int> links_salientes(nodos);
+		for (int e = 0; e < 2*nodos ;) {
+			int a = dis(gen) % nodos;
+			int b = dis(gen) % nodos;
+			if (a!=b && A[b].find(a) == A[b].end()) {
 				A[b].insert(pair<int,double>(a,1));
 				links_salientes[a]++;
+				e++;
+			}
+		}
+		for (int i = 0; i < nodos; i++) {
+			typedef map<int, double>::iterator it_type;
+			for(it_type iterator = A[i].begin(); iterator != A[i].end(); iterator++) {
+				int j = iterator->first;
+				iterator->second = double(1)/double(links_salientes[j]);
 			}
 		}
 		PageRankEsparso page_rank(A);
-		page_rank.set_precision(tolerancia);
-		set_teletransportacion(tele);
+		page_rank.set_precision(0.00001);
+		set_teletransportacion(0.85);
+
+		start_timer();
 		vector< PageRankEsparso::rankeable > ranking = page_rank.rankear();
+		double tiempo = stop_timer();
+		fprintf(file, "%d %.6f\n", nodos, tiempo);
+		cout<<nodos<<endl;
 	}
+	fclose(file);
+}
+
+void exp_prank_tiempos_ejes() {
+	random_device rd;
+    mt19937 gen(rd());
+	uniform_int_distribution<> dis(0, 100000);
+	FILE *file = fopen("exp/pr-tiempos-ejes.out", "w+");
+	fprintf(file, "ejes tiempo\n");
+	int nodos = 3000;
+	for (int ejes = 1000; ejes < 8000000; ejes+=500000) {
+		vector< map< int , double > > A(nodos);
+		vector<int> links_salientes(nodos);
+		for (int e = 0; e < ejes ;) {
+			int a = dis(gen) % nodos;
+			int b = dis(gen) % nodos;
+			if (a!=b && A[b].find(a) == A[b].end()) {
+				A[b].insert(pair<int,double>(a,1));
+				links_salientes[a]++;
+				e++;
+			}
+		}
+		for (int i = 0; i < nodos; i++) {
+			typedef map<int, double>::iterator it_type;
+			for(it_type iterator = A[i].begin(); iterator != A[i].end(); iterator++) {
+				int j = iterator->first;
+				iterator->second = double(1)/double(links_salientes[j]);
+			}
+		}
+		PageRankEsparso page_rank(A);
+		page_rank.set_precision(0.00001);
+		set_teletransportacion(0.85);
+
+		start_timer();
+		vector< PageRankEsparso::rankeable > ranking = page_rank.rankear();
+		double tiempo = stop_timer();
+		fprintf(file, "%d %.6f\n", ejes, tiempo);
+		cout<<ejes<<endl;
+	}
+	fclose(file);
+}
+
+void exp_prank_tiempos_precision() {
+	random_device rd;
+    mt19937 gen(rd());
+	uniform_int_distribution<> dis(0, 100000);
+	FILE *file = fopen("exp/pr-tiempos-precision.out", "w+");
+	fprintf(file, "precision tiempo\n");
+	int nodos = 3000;
+	int ejes = 1000000;
+	for (double prec = 0.1 ; prec > 0.000000000000001 ; prec /= 10) {
+		vector< map< int , double > > A(nodos);
+		vector<int> links_salientes(nodos);
+		for (int e = 0; e < ejes ;) {
+			int a = dis(gen) % nodos;
+			int b = dis(gen) % nodos;
+			if (a!=b && A[b].find(a) == A[b].end()) {
+				A[b].insert(pair<int,double>(a,1));
+				links_salientes[a]++;
+				e++;
+			}
+		}
+		for (int i = 0; i < nodos; i++) {
+			typedef map<int, double>::iterator it_type;
+			for(it_type iterator = A[i].begin(); iterator != A[i].end(); iterator++) {
+				int j = iterator->first;
+				iterator->second = double(1)/double(links_salientes[j]);
+			}
+		}
+		PageRankEsparso page_rank(A);
+		page_rank.set_precision(prec);
+		set_teletransportacion(0.85);
+
+		start_timer();
+		vector< PageRankEsparso::rankeable > ranking = page_rank.rankear();
+		double tiempo = stop_timer();
+		fprintf(file, "%.15f %.6f\n", prec, tiempo);
+		cout<<prec<<endl;
+	}
+	fclose(file);
 }
 
 void exp_prank_tiempos() {
@@ -320,7 +419,7 @@ void exp_gem_resultados() {
 // para correr un test: ./test test.in test.expected {0: EG, 1: LU}
 int main(int argc, char *argv[])
 {
-	srand (time(0));
+	srand(time(NULL));
 	// si no hay argumentos corro tests unitarios, si no los de la cátedra
 	if(argc == 4){
 		int a;
@@ -335,7 +434,10 @@ int main(int argc, char *argv[])
 
 		// exp_prank_manhattan();
 		// exp_prank_tiempos();
-		exp_prank_calidad();
+		// exp_prank_tiempos_nodos();
+		// exp_prank_tiempos_ejes();
+		exp_prank_tiempos_precision();
+		// exp_prank_calidad();
 
         // exp_gem_resultados();
 	}
