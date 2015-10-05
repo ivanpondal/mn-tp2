@@ -7,599 +7,258 @@
 \catcode`\_=12
 \imagenB}
 % -----------------------------------------
-\subsection{Instancias de prueba}\label{instancias}
 
-Para ser lo más realista posible, se investigó\footnote{\url{http://www.britannica.com/technology/blast-furnace}} acerca de los diferentes tamaños de Altos Hornos, así como de las temperaturas que alcanzan.
-En base a esto, se armaron 3 instancias de prueba distintas (las discretizaciones se eligen después):
+En esta sección, se detallan los diferentes experimentos que realizamos para medir la eficiencia y resultados de los algoritmos implementados.
+
+\subsection{Page Rank}
+
+\subsubsection{Instancias de prueba}
+
+Para generar grafos sobre los cuales experimentar tuvimos que obtener varias muestras.
+Por un lado, se utilizaron recursos de SNAP (http://snap.stanford.edu/) para las instancias mas grandes de grafos que utilizamos para medir tiempo y la convergencia del algoritmo Page Rank.
+Además, generamos instancias originales mediante las herramientas provistas por la cátedra otras extra generadas por nosotros.
+
+\subsubsection{Convergencia del algoritmo}
+
+Realizamos una serie de experimentos con el propósito de analizar la convergencia de la solución provista por el algoritmo a través de las iteraciones que el mismo realiza en su ciclo principal.\\
+Para hacer esto, modificamos el algoritmo (no su procedimiento) con el fin de ir guardando las soluciones temporales en cada paso.\\
+Con estos datos, medimos la Norma Manhattan (L1) entre las soluciones de cada par de iteraciones sucesivas, definida como:
+
+\begin{center}
+$L_1(x,y) = \sum\limits_{i=1}^n | x[i] - y[i] | $
+\end{center}
+
+Siendo $n$ la cantidad de nodos del grafo siendo estudiado, $x \in \mathbb{R}^{n}$ la solución del algoritmo en una iteración $j$ e $y \in \mathbb{R}^{n}$ la de la iteración $j+1$.\\
+Esta es una forma intuitiva y logica de estudiar la convergencia, ya que al tomar la suma de los valores absolutos entre los componentes de cada vector, lo que realmente estamos haciendo es calcular cuanto varia la solución que estamos calculando a través de las iteraciones. Además, podemos asegurar que por el procedimiento de nuestro algoritmo esta diferencia va a ir disminuyendo, y cuando sea lo suficientemente chica el algoritmo va a terminar.
+
+Estudiamos la convergencia a través de dos instancias de tamaño mediano-grande obtenidos de SNAP, mas precisamente:
 \begin{itemize}
-    \item Alto Horno de Plomo:
-        \begin{itemize}
-            \item Radio pared interna: $r_i = 5$
-            \item Radio pared externa: $r_e = 6$
-            \item Temperatura pared interna: $T(r_i, \theta_j) = 327\ Cº$, $\forall\ 1 \leq j \leq n$
-            \item Temperatura pared externa: $T(r_e, \theta_j) = 20\ Cº$, $\forall\ 1 \leq j \leq n$
-        \end{itemize}
-    \item Alto Horno de Zinc:
-        \begin{itemize}
-            \item Radio pared interna: $r_i = 7$
-            \item Radio pared externa: $r_e = 9$
-            \item Temperatura pared interna: $T(r_i, \theta_j) = 419.5\ Cº$, $\forall\ 1 \leq j \leq n$
-            \item Temperatura pared externa: $T(r_e, \theta_j) = 20\ Cº$, $\forall\ 1 \leq j \leq n$
-        \end{itemize}
-    \item Alto Horno de Hierro:
-        \begin{itemize}
-            \item Radio pared interna: $r_i = 11$
-            \item Radio pared externa: $r_e = 15$
-            \item Temperatura pared interna: $T(r_i, \theta_j) = 1538\ Cº$, $\forall\ 1 \leq j \leq n$
-            \item Temperatura pared externa: $T(r_e, \theta_j) = 20\ Cº$, $\forall\ 1 \leq j \leq n$
-        \end{itemize}
+    \item Instancia 1: 6301 nodos y 20777 ejes.
+    \item Instancia 2: 10876 nodos y 39994 ejes.
 \end{itemize}
+Por lo que podemos decir que son considerables y relativamente esparsas (por ejemplo, el primero podria tener cerca de 40 millones de ejes si fuera completo, teniendo en cuenta que es un grafo dirigido).\\
+A su vez, fuimos variando el componente $c$ del algoritmo Page Rank entre 0.3, 0.6 y 0.9, el cual controla la importancia del viajero aleatorio, es decir, a menor $c$ aumenta la probabilidad de que el usuario vaya a una página aleatoria desde la actual.\\
+Veamos los resultados:
 
-\subsection{Número de condición}
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={Instancia 1},
+        xlabel={Iteraci\'on $i$},
+        ylabel={$L_1(x_i,x_{i+1})$},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west
+    ]
+    \addplot[color=black] table[x=instancia,y=l1]{datos/pr-1-1-1.out};
+    \addplot[color=red] table[x=instancia,y=l1]{datos/pr-1-1-2.out};
+    \addplot[color=green] table[x=instancia,y=l1]{datos/pr-1-1-3.out};
+    \legend{c = 0.3, c = 0.6, c = 0.9}
+    \end{axis}
+    \end{tikzpicture}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={Instancia 2},
+        xlabel={Iteraci\'on $i$},
+        ylabel={$L1(x_i,x_i+1)$},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.5\textwidth,
+        height=0.5\textwidth,
+        legend pos=north west
+    ]
+    \addplot[color=black] table[x=instancia,y=l1]{datos/pr-1-2-1.out};
+    \addplot[color=red] table[x=instancia,y=l1]{datos/pr-1-2-2.out};
+    \addplot[color=green] table[x=instancia,y=l1]{datos/pr-1-2-3.out};
+    \legend{c = 0.3, c = 0.6, c = 0.9}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
 
-Antes de empezar a experimentar, queremos saber para cada instancia de prueba que tamaño de discretizaciones son aceptables, en términos del Número de Condición ($K$).
-En el caso de que este fuera muy grande, al resolver el sistema no tendríamos garantía de que la solución hallada fuera efectivamente buena. Esta medida se calcula de la forma:
+Siendo $L1(x_i,x_i+1)$ (el eje y del gráfico) la distancia Manhattan entre los autovectores generados por el algoritmo entre las iteraciones $i$ e $i+1$.\\
+Como podemos ver el algoritmo converge rápidamente, tomando a lo sumo 9 iteraciones para terminar de procesar instancias de datos relativamente grandes. Los resultados son parecidos para ambas instancias.\\
+Adicionalmente, vemos que Page Rank converge de forma más rápida para valores de $c$ más chicos, es decir, casos en los cuales es más probable que el usuario vaya a una página cualquiera desde la actual. Cuando esto sucede, la matriz de transición tiene valores más parejos dentro de cada columna y podemos decir entonces que el algoritmo soluciona el problema más rápido porque el sistema es más estable.
 
-$$K(A) = ||A||_{\infty} * ||A^{-1}||_{\infty} = \left( \max\limits_{1\leq i \leq n\times(m+1)}\sum_{j=1}^{n\times(m+1)}{|a_{i,j}|} \right) * \left( \max\limits_{1\leq i \leq n\times(m+1)}\sum_{j=1}^{n\times(m+1)}{|a_{i,j}^{-1}|} \right)$$
+\subsubsection{Tiempo de ejecución}
 
-Tomando una discretización inicial de 30 ángulos ($n = 30$) y 30 radios ($m = 30$), tenemos que:
+
+\subsubsection{Calidad de los resultados}
+
+Para evaluar la calidad de las soluciones provistas por Page Rank las comparamos contra el algoritmo InDeg, que ordena las páginas según la cantidad de links que van hacia ellas.\\
+Las instancias que usamos para hacer estas comparaciones fueron:
 \begin{itemize}
-    \item Para el Alto Horno de Plomo, el número de condición es: 1678.42
-    \item Para el Alto Horno de Zinc, el número de condición es: 419.448
-    \item Para el Alto Horno de Hierro, el número de condición es: 104.844
+    \item Instancia 1: 13 nodos y 18 ejes.
+    \item Instancia 2: 13 nodos y 31 ejes.
+    \item Instancia 3: 5 nodos y 20 ejes (grafo completo).
 \end{itemize}
+De forma de poder analizar los resultados facilmente, nos limitamos a instancias chicas.\\
 
-Pero observemos cual es el espesor del horno para cada instancia de prueba:
-\begin{itemize}
-    \item Para el Alto Horno de Plomo, el espesor de la pared es de $r_e - r_i = 1$.
-    \item Para el Alto Horno de Zinc, el espesor de la pared es de $r_e - r_i = 2$.
-    \item Para el Alto Horno de Hierro, el espesor de la pared es de $r_e - r_i = 4$.
-\end{itemize}
+Para la instancia 1, el valor $c$ del algoritmo Page Rank fue configurado en 0.3, 0.6 y luego en 0.9 con el fin de introducir la posibilidad de que el navegante salte a otra página de forma aleatoria y ver cuánto afecta al resultado final. Esto no es asi para la instancia 3 ya que al ser un grafo donde la probabilidad de ir a las demás páginas es igual para todas, el concepto de navegante aleatorio es irrelevante porque es igual de probable que vaya a cualquier página desde el principio.
 
-Luego, plantemos la siguiente \textbf{Hipótesis:} \textit{el número de condición
-aumenta con la cantidad de ecuaciones (relacionado a la cantidad de ángulos y
-radios) y disminuye al aumentar el espesor de la pared (diferencia entre el
-radio externo e interno).} Intuitivamente, podemos pensar el espesor de la pared
-como el espacio a resolver, y al aumentar las ecuaciones aumenta la redundancia
-(disminuye la independencia) del sistema.
+Los resultados fueron:\newpage
 
-Podemos entonces probar con una discretización de 60 ángulos ($n = 60$) y 60 radios ($m = 60$);
-\begin{itemize}
-    \item Para el Alto Horno de Plomo, el número de condición es: 6957.49
-    \item Para el Alto Horno de Zinc, el número de condición es: 1739.99
-    \item Para el Alto Horno de Hierro, el número de condición es: 435.281
-\end{itemize}
-
-Vemos que el resultado corrobora nuestra hipótesis.
-
-Más aún, el mayor número de condición (con las discretizaciones vistas) es 6957.49, que es relativamente aceptable\footnote{Fuente: \textit{Numerical Mathematics and Computing, by Cheney and Kincaid.}, con un número de condición de $10^k$, se pierde $k$ dígitos de precisión. Como el formato \textit{double} maneja una precisión de al menos 15 dígitos, los valores obtenidos son aceptables.}.
-
-\subsection{Calidad de las soluciones}
-
-Ahora que ya vimos que el Número de Condición para los hornos y discretizaciones propuestos es aceptable, podemos ver efectivamente cual es la calidad de la solución:
-
-Llamemos $\tilde{x}$ al resultado de resolver el sistema $Ax = b$, y $\tilde{b}$ al resultado de multiplicar $A$ por $\tilde{x}$, donde $A$ es la matriz del sistema y $b$ es el termino independiente, dado por las temperaturas de la pared exterior, la pared interior y el término independiente de la ecuación del calor.
-
-\medskip
-
-Luego, podemos definir $\Delta(b, \tilde{b}) = \max\limits_{1 \leq i \leq n\times(m+1)}|b[i] - \tilde{b}[i]|$.
-
-Al resolver los sistemas con el método de Eliminación Gaussiana obtenemos los siguientes resultados:
-
-\begin{table}[H]
-    \begin{center}
-        \begin{tabular}{| l | c | c | c |}
-            \hline
-            Instancia de prueba & $\Delta(b, \tilde{b})$ \\ \hline
-            H. Plomo - 30x30    & 1.74623e-10            \\
-            H. Plomo - 60x60    & 4.36557e-11            \\
-            H. Zinc - 30x30     & 5.82077e-11            \\
-            H. Zinc - 60x60     & 9.31323e-10            \\
-            H. Hierro - 30x30   & 2.32831e-10            \\
-            H. Hierro - 60x60   & 2.32831e-10            \\
-            \hline
-        \end{tabular}
-        \captionsetup{justification=centering}
-        \caption{Calidad de las soluciones para las distintas instancias de pruebas y discretizaciones.}
-    \end{center}
-\end{table}
-
-Viendo los distintos $\Delta(b, \tilde{b})$ podemos concluir que tenemos, en el peor caso, una precisión de $10^{-10}$, lo cual es muy aceptable.
-
-\subsection{Comportamiento del sistema}
-
-\subsubsection{Distintas discretizaciones}
-% Considerar al menos dos instancias de prueba, generando distintas discretizaciones para
-% cada una de ellas y comparando la ubicaci ́on de la isoterma buscada respecto de la pared
-% externa del horno. Se sugiere presentar gr ́aficos de temperatura o curvas de nivel para los
-% mismos, ya sea utilizando las herramientas provistas por la c ́atedra o implementando sus
-% propias herramientas de graficaci ́on.
-
-En primer lugar, para cada horno mencionado en las instancias de pruebas, vamos a definir una isoterma.
-\begin{itemize}
-    \item Para el Alto Horno de Plomo, la isoterma buscada será de: $200\ Cº$
-    \item Para el Alto Horno de Zinc, la isoterma buscada será de: $350\ Cº$
-    \item Para el Alto Horno de Hierro, la isoterma buscada será de: $1300\ Cº$
-\end{itemize}
-
-Luego, para cada horno se resolvió el sistema de ecuaciones mediante factorización LU, y se utilizaron los distintos métodos propuestos en la sección Implementación para hallar las isotermas correspondientes a partir de las soluciones de los sistemas.
-
-Los resultados obtenidos se muestran a continuación:
-
-\begin{table}[H]
-    \begin{center}
-        \begin{tabular}{| l | c | c | c |}
-            \hline
-            Instancia de prueba & Isoterma Promedio & Isoterma Regresión Lineal & Isoterma Búsqueda Binaria \\ \hline
-            H. Plomo - 30x30    & 5.3965            & 5.3988                    & 5.3916                    \\
-            H. Plomo - 60x60    & 5.3983            & 5.3986                    & 5.3916                    \\
-            H. Zinc - 30x30     & 7.3103            & 7.3060                    & 7.3126                    \\
-            H. Zinc - 60x60     & 7.3220            & 7.3053                    & 7.3127                    \\
-            H. Hierro - 30x30   & 11.4827           & 11.5226                   & 11.5477                   \\
-            H. Hierro - 60x60   & 11.5762           & 11.5208                   & 11.5479                   \\
-            \hline
-        \end{tabular}
-        \captionsetup{justification=centering}
-        \caption{Resultados obtenidos para las distintas instancias de prueba\\ y distintos métodos para hallar la isoterma.}
-        \label{tablaisoterma}
-    \end{center}
-\end{table}
-\textit{Nota: como las instancias de prueba tienen la misma temperatura de la pared interior para todos sus ángulos, y la misma temperatura de la pared exterior para todos sus ángulos, el radio de la isoterma tiene el mismo valor para todos los ángulos. Es por eso que solo se presenta un valor en el Cuadro \ref{tablaisoterma} y no $n$ valores.}
-
-\medskip
-
-Y, a modo de ejemplo, las figuras \ref{fig:solucion_hierro_1} y \ref{fig:isoterma_binaria_hierro_1} muestran para el Alto Horno de Hierro la ubicación de la isoterma con respecto a las paredes, y la evolución de la temperatura dentro de las mismas. Los gráficos para los otros Hornos son muy similares por lo que se omiten.
-
+\begin{center}
+Instancia 1
+\end{center}
 \begin{figure}[H]
-    \begin{center}
-        \imagen{0.7}{imagenes/test_horno_hierro1.png}
-        \caption{Evolución de las temperaturas para el Alto Horno de Hierro}
-        \label{fig:solucion_hierro_1}
-    \end{center}
+    \centering
+    \begin{subfigure}[t]{0.5\textwidth}
+      \begin{center}
+        Page Rank(c = 0.3)\\
+            \pgfplotstabletypeset[
+                columns={rank,nodo,valor},
+                columns/rank/.style={column name=Ranking},
+                columns/nodo/.style={column name=Página},
+                columns/valor/.style={column name=Importancia}
+            ]{datos/pr-2-1-1.out}
+      \end{center}
+    \end{subfigure}%
+    ~ 
+    \begin{subfigure}[t]{0.5\textwidth}
+      \begin{center}
+        Page Rank(c = 0.6)\\
+            \pgfplotstabletypeset[
+                columns={rank,nodo,valor},
+                columns/rank/.style={column name=Ranking},
+                columns/nodo/.style={column name=Página},
+                columns/valor/.style={column name=Importancia}
+            ]{datos/pr-2-1-2.out}
+      \end{center}
+    \end{subfigure}
 \end{figure}
 
 \begin{figure}[H]
-    \begin{center}
-        \imagen{0.50}{imagenes/test_isoterma_horno_hierro_1_binaria.png}
-        \captionsetup{justification=centering}
-        \caption{Ubicación de la isoterma para el Alto Horno de Hierro\\ (utilizando el método de Búsqueda Binaria)}
-        \label{fig:isoterma_binaria_hierro_1}
-    \end{center}
+    \centering
+    \begin{subfigure}[t]{0.5\textwidth}
+      \begin{center}
+        Page Rank(c = 0.9)\\
+            \pgfplotstabletypeset[
+                columns={rank,nodo,valor},
+                columns/rank/.style={column name=Ranking},
+                columns/nodo/.style={column name=Página},
+                columns/valor/.style={column name=Importancia}
+            ]{datos/pr-2-1-3.out}
+      \end{center}
+    \end{subfigure}%
+    ~ 
+    \begin{subfigure}[t]{0.5\textwidth}
+      \begin{center}
+        InDeg\\
+            \pgfplotstabletypeset[
+                columns={rank,nodo,valor},
+                columns/rank/.style={column name=Ranking},
+                columns/nodo/.style={column name=Página},
+                columns/valor/.style={column name=In Degree}
+            ]{datos/pr-2-1-4.out}
+      \end{center}
+    \end{subfigure}
 \end{figure}
 
-Analizando los valores obtenidos en el Cuadro \ref{tablaisoterma}:
-\begin{itemize}
-    \item En todas las instancias de pruebas, la diferencia entre la discretización de 30x30 y la discretización de 60x60 no supera nunca $0.1$, con lo que podemos concluir que el aumento en la discretización es significativo a nivel de 1 decimal. Esto es importante ya que en el Alto Horno de Plomo por ejemplo, el espesor es de 1 metro por lo que la isoterma hallada con una discretización de 30x30 podría variar $\pm 0.1m$, que en este espesor es exactamente $\pm 0.1\%$.
-    \item Teniendo en cuenta que al realizar la discretización de la ecuación del calor para construir la representación del sistema tenemos cierta perdida de precisión, y que la naturaleza misma de la aritmética finita que realiza el computador puede llevar a errores de precisión, no podemos garantizar que las isotermas halladas sean 100\% confiables.
+Por un lado, Page Rank obtiene un ranking con valores lógicos en el sentido de que el nodo con mas ejes hacia él es el de mayor importancia y los nodos con cantidad de links parecidos reciben un ranking similar.\\
+Como podemos ver, los resultados de Page Rank no varian mucho, sus valores son afectados pero los rankings varian muy levemente. Esto es debido a que la cantidad de ejes no es de un tamaño tan grande como para que la variación de $c$ afecte el ranking.\\
+A su vez, InDeg da los resultados que esperabamos, ordenando según la cantidad de links entrantes.\\
+En comparación, los algoritmos dan resultados parecidos de a secciones pero sí tiene diferencias en los primeros puestos. Esto se debe a que Page Rank detecta que por las probabilildades del recorrido que un navegante puede hacer, no necesariamente las páginas con mas links entrantes van a ser las más visitadas a futuro.\\
 
-        Sin embargo, al comparar los distintos métodos para hallar la isoterma, dentro del mismo error de precisión, podemos ver que el mejor método es el de \textit{Búsqueda Binaria}, ya que con una discretización de 30x30 obtiene unos resultados muy similares (mirando los primeros 4 decimales) que con una discretización de 60x60. En el otro extremo, tenemos que el método de \textit{Promedio} es el más burdo, teniendo una variación importante entre las diferentes discretizaciones. Esto último lo atribuimos que este método no tiene en cuenta la forma en la que se se resuelve el sistema original, realizando un simple promedio entre dos cotas de la isoterma, mientras que el método \textit{Búsqueda Binaria} utiliza internamente el método de Eliminación Gaussiana.
-
-        En un punto intermedio se encuentra el método de \textit{Regresión Lineal}, que varía al aumentar la discretización pero cada vez menos, estabilizándose en un valor a medida que se aumenta la discretización.
-\end{itemize}
-
-\subsubsection{Proximidad de la isoterma}
-
-% Estudiar la proximidad de la isoterma buscada respecto de la pared exterior del horno en
-% funci ́
-% on de distintas granularidades de discretizaci ́on y las condiciones de borde.
-
-Para estudiar la proximidad de la isoterma buscada respecto de la pared exterior del horno vamos a usar las siguientes instancias de prueba:
-\begin{itemize}
-    \item Alto Horno de Plomo, variando la temperatura de la pared externa a $180\ Cº$, con una discretización de 15 ángulos y 15 radios.
-    \item Alto Horno de Plomo, variando la temperatura de la pared externa a $180\ Cº$, con una discretización de 30 ángulos y 30 radios.
-    \item Alto Horno de Plomo, variando la temperatura de la pared externa a $180\ Cº$, con una discretización de 60 ángulos y 60 radios.
-\end{itemize}
-
-Se experimentará con los 3 métodos propuestos para hallar isotermas (Promedio, Regresión Lineal y Búsqueda Binaria) y con las 2 medidas de peligrosidad propuestas (Proximidad Porcentual Simple y Promediada).
-
-La siguiente tabla muestra los resultados obtenidos:
-
-\begin{table}[H]
-    \begin{center}
-        \begin{tabular}{| l | c | c | c |}
-            \hline
-            Instancia de prueba & Isoterma Promedio & Isoterma Regresión Lineal & Isoterma Búsqueda Binaria \\ \hline
-            H. Plomo - 15x15    & 5.8214            & 5.8500                    & 5.8529                    \\
-            H. Plomo - 30x30    & 5.8448            & 5.8495                    & 5.8529                    \\
-            H. Plomo - 60x60    & 5.8559            & 5.8493                    & 5.8529                    \\
-            \hline
-        \end{tabular}
-        \captionsetup{justification=centering}
-        \caption{Resultados obtenidos para las distintas instancias de prueba\\ y distintos métodos para hallar la isoterma.}
-        \label{tabla-isoterma-plomo}
-    \end{center}
-\end{table}
-
-Luego, si tomamos un $\varepsilon_C = 0.25$ tenemos que para todos lo métodos y discretizaciones la estructura se encuentra en peligro ($r_e - (r_e - r_i)*0.25 = 5.75$).
-Y tomando un $\varepsilon_C = 0.10$ tenemos que para todos lo métodos y discretizaciones la estructura \textbf{no} se encuentra en peligro ($r_e - (r_e - r_i)*0.10 = 5.90$).
-
-Por último, tomando un valor intermedio de $\varepsilon_C = 0.15$ ($r_e - (r_e - r_i)*0.15 = 5.85$) tenemos que:
-
-\begin{table}[H]
-    \begin{center}
-        \begin{tabular}{| l | c | c | c |}
-            \hline
-            Instancia de prueba & Isoterma Promedio  & Isoterma Regresión Lineal & Isoterma Búsqueda Binaria \\ \hline
-            H. Plomo - 15x15    & Fuera de peligro   & \textbf{Peligrosa}        & \textbf{Peligrosa}        \\
-            H. Plomo - 30x30    & Fuera de peligro   & Fuera de peligro          & \textbf{Peligrosa}        \\
-            H. Plomo - 60x60    & \textbf{Peligrosa} & Fuera de peligro          & \textbf{Peligrosa}        \\
-            \hline
-        \end{tabular}
-        \captionsetup{justification=centering}
-        \caption{Evaluación de la peligrosidad de la estructura con $\varepsilon_C = 0.15$}
-        \label{tabla-peligro-estructura-plomo}
-    \end{center}
-\end{table}
-
-\textit{Nota: en el Cuadro \ref{tabla-peligro-estructura-plomo} es indistinto si la medida de peligrosidad utilizada es la Proximidad Porcentual Simple o Promediada, ya que las instancias de prueba tienen la misma temperatura de la pared interior para todos sus ángulos, la misma temperatura de la pared exterior para todos sus ángulos,y por lo tanto el radio de la isoterma tiene el mismo valor para todos los ángulos, por lo que es equivalente realizar el promedio de todos los ángulos a evaluar cualquiera de los ángulos de la isoterma.}
-
-\medskip
-
-Analizando los valores obtenidos en el Cuadro \ref{tabla-isoterma-plomo}:
-\begin{itemize}
-    \item Para el método de \textit{Búsqueda Binaria} no influyó los primero 4 decimales que se varíe la discretización. Esto lo atribuimos a que éste método utiliza la misma mecánica que el método de Eliminación Gaussiana y continúa hasta que satisface una precisión determinada, por lo que es entendible que las distintas discretizaciones den resultados parecidos en los primeros decimales.
-    \item El método de \textit{Regresión Lineal} converge a medida que aumentamos la discretización, cada vez variando menos. Esto lo atribuimos a que a medida que aumentamos la discretización, también aumenta la cantidad de puntos que tiene en cuenta el método para cada ángulo, convergiendo en una función lineal en particular.
-    \item Para el método de \textit{Promedio}, la variación entre las distintas
-		discretizaciones es bastante, pero podemos ver que para la última discretización (60x60), este método calcula una isoterma muy similar al método de \textit{Búsqueda Binaria}.
-    \item En base a esto último, es interesante notar que lo que parece ser el valor más confiable de la isoterma ($5.85\dots$) es aproximado tanto utilizando \textit{Búsqueda Binaria} con discretización 15x15 como haciendo \textit{Promedio} con discretización 60x60. En este aspecto, podemos inferir que el primero de los dos, por la forma en la que funciona, puede partir de cualquier discretización y arribar a resultados parecidos.
-    \item Para finalizar, tomando el promedio de las distintas isotermas halladas para la discretización de 60x60 tenemos: $5.8527$, que usando un $\varepsilon_C = 0.15$ definiríamos como \textbf{Peligrosa}, lo que se corresponde con el promedio de la ``peligrosidad'': \textit{Promedio} y \textit{Búsqueda Binaria} dicen que la estructura es \textbf{Peligrosa} y \textit{Regresión Lineal} dice que está fuera de peligro.
-\end{itemize}
-
-% exp_isoterma_horno_plomo_3a...
-% 	Generando imagenes...
-%
-% 	Evaluando estructura...
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.25, iso_avg): true
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.25, iso_linear_fit): true
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.25, iso_binaria): true
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.15, iso_avg): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.15, iso_linear_fit): true
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.15, iso_binaria): true
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.1, iso_avg): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.1, iso_linear_fit): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.1, iso_binaria): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.05, iso_avg): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.05, iso_linear_fit): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.05, iso_binaria): false
-% ok
-% exp_isoterma_horno_plomo_3b...
-% 	Generando imagenes...
-%
-% 	Evaluando estructura...
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.25, iso_avg): true
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.25, iso_linear_fit): true
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.25, iso_binaria): true
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.15, iso_avg): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.15, iso_linear_fit): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.15, iso_binaria): true
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.1, iso_avg): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.1, iso_linear_fit): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.1, iso_binaria): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.05, iso_avg): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.05, iso_linear_fit): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.05, iso_binaria): false
-% ok
-% exp_isoterma_horno_plomo_3c...
-% 	Generando imagenes...
-%
-% 	Evaluando estructura...
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.25, iso_avg): true
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.25, iso_linear_fit): true
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.25, iso_binaria): true
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.15, iso_avg): true
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.15, iso_linear_fit): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.15, iso_binaria): true
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.1, iso_avg): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.1, iso_linear_fit): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.1, iso_binaria): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.05, iso_avg): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.05, iso_linear_fit): false
-% 	La estructura esta en peligro (SIMPLE, epsilon: 0.05, iso_binaria): false
-% ok
-
-\subsection{Evaluación de los métodos}
-
-\subsubsection{Tiempo de cómputo}
-
-En esta sección queremos evaluar los tiempos de cómputo de los métodos implementados, teniendo como hipótesis la complejidad teórica calculada para nuestras implementaciones,
-siendo la misma $\mathcal{O}(p^3)$ para ambos métodos, donde $p = n*(m+1)$. A su vez queremos ver si existen diferencias de tiempos de cómputo entre los métodos.
-\newline
-\newline
-Para concretar este objetivo, realizamos el siguiente experimento:
-\begin{itemize}
-    \item Generamos casos tests a partir de los valores del Alto Horno de Hierro, véase Sección \ref{instancias}, variando aleatoriamente la cantidad de puntos de la discretización y seteando el $ninst$ en 1.
-    \item El tamaño de la matriz generada, a partir de la entrada, varia de $9*9$ hasta $180*180$.
-    \item Los tiempos de ejecución se midieron con la biblioteca \texttt{chrono} y estos fueron convertidos a nanosegundos.
-    \item Para cada caso de test, se midió la ejecución de los métodos Eliminación Gaussiana y LU.
-    \item Para cada tamaño de la matriz, generamos $30$ muestras para las cuales se promediaron los resultados obtenidos para cada método.
-    \item No se tuvo en cuenta la optimización generada cuando se tiene en cuenta la característica de banda de la matriz.
-\end{itemize}
-
-
-Los resultados obtenidos fueron los siguientes:
+Aun asi, veamos otro ejemplo donde la cantidad de ejes sea un poco mayor:
 
 \begin{center}
-    \begin{tikzpicture}
-    \begin{axis}[
-        title={},
-        xlabel={Cantidad de filas o columnas ($p$)},
-        ylabel={Tiempos de ejecución (nanoseconds)},
-        scaled x ticks=false,
-        scaled y ticks=false,
-        enlargelimits=0.05,
-        width=0.5\textwidth,
-        height=0.5\textwidth,
-        legend pos=north west,
-        xmin=5
-    ]
-    \addplot[color=black] table[x index=0,y index=1]{datos/salida.txt};
-    \addplot[color=red] table[x index=0,y index=2]{datos/salida.txt};
-    \legend{GAUSS, LU}
-    \end{axis}
-    \end{tikzpicture}
+Instancia 2
 \end{center}
 
-A partir de la información suministrada por el gráfico precedente, estaríamos tentados a afirmar que la complejidad experimental de los métodos es $\mathcal{O}(p^3)$,
-debido a la formas de las curvas, y que Gauss es más rápido que LU, lo cual no es correcto en este estadio del análisis. Para poder concluir que, efectivamente, la complejidad experimental coincide con
-la teórica, debemos realizar un paso más en el análisis, que consiste en tomar los tiempos de la experimentación y dividirlos por su correspondiente $p$ elevado al cubo.
-\newline
-\newline
-En los siguientes gráficos mostramos este procedimiento:
-\begin{center}
-    \begin{tikzpicture}
-    \begin{axis}[
-        title={},
-        xlabel={Cantidad de filas o columnas ($p$)},
-        ylabel={Tiempos de ejecución (nanoseconds) / $p^2$},
-        scaled x ticks=false,
-        scaled y ticks=false,
-        enlargelimits=0.05,
-        width=0.5\textwidth,
-        height=0.5\textwidth,
-        legend pos=north west,
-        xmin=5
-    ]
-    \addplot[color=black] table[x index=0,y index=3]{datos/salida.txt};
-    \legend{GAUSS}
-    \end{axis}
-    \end{tikzpicture}
-    \begin{tikzpicture}
-    \begin{axis}[
-        title={},
-        xlabel={Cantidad de filas o columnas ($p$)},
-        ylabel={},
-        scaled x ticks=false,
-        scaled y ticks=false,
-        enlargelimits=0.05,
-        width=0.5\textwidth,
-        height=0.5\textwidth,
-        legend pos=north west,
-        xmin=5
-    ]
-    \addplot[color=black] table[x index=0,y index=4]{datos/salida.txt};
-    \legend{LU}
-    \end{axis}
-    \end{tikzpicture}
-    \caption{Dividiendo los tiempos por $p^2$}
-\end{center}
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[t]{0.5\textwidth}
+      \begin{center}
+        Page Rank(c = 0.3)\\
+            \pgfplotstabletypeset[
+                columns={rank,nodo,valor},
+                columns/rank/.style={column name=Ranking},
+                columns/nodo/.style={column name=Página},
+                columns/valor/.style={column name=Importancia}
+            ]{datos/pr-2-2-1.out}
+      \end{center}
+    \end{subfigure}%
+    ~ 
+    \begin{subfigure}[t]{0.5\textwidth}
+      \begin{center}
+        Page Rank(c = 0.6)\\
+            \pgfplotstabletypeset[
+                columns={rank,nodo,valor},
+                columns/rank/.style={column name=Ranking},
+                columns/nodo/.style={column name=Página},
+                columns/valor/.style={column name=Importancia}
+            ]{datos/pr-2-2-2.out}
+      \end{center}
+    \end{subfigure}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[t]{0.5\textwidth}
+      \begin{center}
+        Page Rank(c = 0.9)\\
+            \pgfplotstabletypeset[
+                columns={rank,nodo,valor},
+                columns/rank/.style={column name=Ranking},
+                columns/nodo/.style={column name=Página},
+                columns/valor/.style={column name=Importancia}
+            ]{datos/pr-2-2-3.out}
+      \end{center}
+    \end{subfigure}%
+    ~ 
+    \begin{subfigure}[t]{0.5\textwidth}
+      \begin{center}
+        InDeg\\
+            \pgfplotstabletypeset[
+                columns={rank,nodo,valor},
+                columns/rank/.style={column name=Ranking},
+                columns/nodo/.style={column name=Página},
+                columns/valor/.style={column name=In Degree}
+            ]{datos/pr-2-2-4.out}
+      \end{center}
+    \end{subfigure}
+\end{figure}
+
+En este caso ya podemos ver que el ranking varía más. Esto se debe a que ahora la cantidad de ejes es mayor con respecto a la cantidad de vértices. Por lo tanto, cuando vamos variando $c$, el algoritmo devuelve diferentes respuestas porque ahora la distribución de los links cobra más relevancia a comparación del factor "navegante aleatorio".\\
+A diferencia del caso anterior, los resultados ya no son tan parecidos a los del algoritmo InDeg. De hecho, en solo un caso coincide PageRank con InDeg en el primer puesto del ranking. Lo que sugiere que la distribución de los ejes y su cantidad afectan la impredecibilidad del resultado.\\
+Además, los ejes están distribuidos de tal manera que no haya grupos grandes aislados o grafos completos donde un grupo de vértices tenga una distribución de probabilidad muy pareja y nada de relación con otras componentes conexas.\\
+Para ilustrar este caso veamos el siguiente ejemplo de un grafo completo:
 
 \begin{center}
-    \begin{tikzpicture}
-    \begin{axis}[
-        title={},
-        xlabel={Cantidad de filas o columnas ($p$)},
-        ylabel={Tiempos de ejecución (nanoseconds) / $p^3$},
-        scaled x ticks=false,
-        scaled y ticks=false,
-        enlargelimits=0.05,
-        width=0.5\textwidth,
-        height=0.5\textwidth,
-        legend pos=north west,
-        xmin=5
-    ]
-    \addplot[color=black] table[x index=0,y index=5]{datos/salida.txt};
-    \legend{GAUSS, LU}
-    \end{axis}
-    \end{tikzpicture}
-    \begin{tikzpicture}
-    \begin{axis}[
-        title={},
-        xlabel={Cantidad de filas o columnas ($p$)},
-        ylabel={},
-        scaled x ticks=false,
-        scaled y ticks=false,
-        enlargelimits=0.05,
-        width=0.5\textwidth,
-        height=0.5\textwidth,
-        legend pos=north west,
-        xmin=5
-    ]
-    \addplot[color=black] table[x index=0,y index=6]{datos/salida.txt};
-    \legend{LU}
-    \end{axis}
-    \end{tikzpicture}
-    \caption{Dividiendo los tiempos por $p^3$}
+Instancia 3
 \end{center}
 
-Como podemos ver en los últimos gráficos, al dividir los tiempos por $p^3$, estos tienden a un número constante mayor a 0. Por lo tanto los métodos tendrían una complejidad
-de $\mathcal{O}(c_{1}*p^3)$ y $\mathcal{O}(c_{2}*p^3)$ para la Eliminación Gaussiana y LU respectivamente, donde $c_{1}$ y $c_{2}$ son las constantes a las cuales convergen los gráficos, y $c_{1} \leq c_{2}$.
-Por lo tanto podemos concluir que la complejidad experimental coincide con la complejidad teórica propuesta, corroborando la hipótesis planteada al inicio de la sección, y que no existen diferencias en términos asintóticos entre ambos métodos.
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[t]{0.5\textwidth}
+      \begin{center}
+        Page Rank\\
+            \pgfplotstabletypeset[
+                columns={rank,nodo,valor},
+                columns/rank/.style={column name=Ranking},
+                columns/nodo/.style={column name=Página},
+                columns/valor/.style={column name=Importancia}
+            ]{datos/pr-2-3-1.out}
+      \end{center}
+    \end{subfigure}%
+    ~ 
+    \begin{subfigure}[t]{0.5\textwidth}
+      \begin{center}
+        InDeg\\
+            \pgfplotstabletypeset[
+                columns={rank,nodo,valor},
+                columns/rank/.style={column name=Ranking},
+                columns/nodo/.style={column name=Página},
+                columns/valor/.style={column name=In Degree}
+            ]{datos/pr-2-3-2.out}
+      \end{center}
+    \end{subfigure}
+\end{figure}
 
-\paragraph{Utilizando que la matriz es Banda}
+Los resultados indican lo lógico, como es un grafo donde la probabilidad de ir a cualquier lado es igual, tanto Page Rank como InDeg resuelven el problema asignandole igual importancia a cada página.\\
+Por lo tanto concluimos que tanto la cantidad de ejes como la distribución son los factores que más contribuyen a los resultados de Page Rank.
 
-Como mostramos en la sección Implementación, se puede modificar el método de Eliminación Gaussiana para que utilize la propiedad de que la matriz es Banda.
-Intuitivamente, al usar esta propiedad evitamos tener que calcular elementos de la matriz en los cuales sabemos que ya hay ceros.
-
-Como nuestra matriz tiene tamaño $n\times(m+1)$ y las banda $p,q = n$, podemos calcular las secciones de la matriz que ya tienen ceros:
-\begin{itemize}
-    \item Viendo la parte triangular inferior: en la primer fila tenemos $n(m+1) - (n+1)$ ceros (más 1 por el elemento de la diagonal), en la segunda fila tenemos $n(m+1) - (n+2)$ ceros, \dots, en la anteúltima fila tenemos 1 cero.
-
-        Entonces, en total tenemos:
-        \begin{equation*}
-            \begin{aligned}
-            \sum\limits_{i = 1}^{n(m+1) - (n+1)}{i} &= \frac{(n(m+1) - (n+1) + 1)(n(m+1) - (n+1))}{2} \\
-                                                    &= \frac{(nm)(nm -1)}{2} \\
-                                                    &= \frac{(nm)^2 -nm}{2} \\
-            \end{aligned}
-        \end{equation*}
-        ceros, que no hacen falta computar.
-    \item Identicamente, en la parte triangular superior tenemos  $\frac{(nm)^2 -nm}{2}$ ceros, que no hacen falta computar.
-\end{itemize}
-
-Si sabemos que la cantidad total de elementos en la matriz es $(n(m+1))^2$ y la cantidad total de ceros fuera de la banda es: $\frac{2((nm)^2 -nm)}{2} = (nm)^2 -nm$, entonces en el algoritmo propuesto solo hacen falta calcular:
-
-\begin{equation*}
-    \begin{aligned}
-    (n(m+1))^2 - ((nm)^2 - nm) &= (nm + n)^2 - (nm)^2 + nm\\
-                               &= 2n^2m+n^2+nm \\
-                               &= n^2(2m + 1)+nm \\
-    \end{aligned}
-\end{equation*}
-
-elementos de la matriz. Notese que en esta cantidad ya no interfiere el $m$ de forma cuadrática, lo que es una gran mejora respecto al algoritmo original.
-
-Usando los mismos parametros de experimentación mencionados para comparar los métodos de Eliminación Gaussiana y Factorización LU, se tomaron los tiempos para el método de Eliminación Gaussiana aprovechando la propiedad Banda.
-Los resultados obtenidos se muestran a continuación:
-
-\begin{center}
-    \begin{tikzpicture}
-    \begin{axis}[
-        title={},
-        xlabel={Cantidad de filas o columnas ($p$)},
-        ylabel={Tiempos de ejecución (nanoseconds)},
-        scaled x ticks=false,
-        scaled y ticks=false,
-        enlargelimits=0.05,
-        width=0.5\textwidth,
-        height=0.5\textwidth,
-        legend pos=north west,
-        xmin=5
-    ]
-    \addplot[color=black] table[x index=0,y index=1]{datos/salida.txt};
-    \addplot[color=red] table[x index=0,y index=1]{datos/salidaBanda.txt};
-    \legend{GAUSS, GAUSS-BANDA}
-    \end{axis}
-    \end{tikzpicture}
-\end{center}
-
-En este gráfico ya puede verse una gran diferencia en los tiempos de cómputos entre los dos métodos. Al dividir los tiempos por su correspondiente $p^2$ tenemos que:
-
-\begin{center}
-    \begin{tikzpicture}
-    \begin{axis}[
-        title={},
-        xlabel={Cantidad de filas o columnas ($p$)},
-        ylabel={Tiempos de ejecución (nanoseconds) / $p^2$},
-        scaled x ticks=false,
-        scaled y ticks=false,
-        enlargelimits=0.05,
-        width=0.5\textwidth,
-        height=0.5\textwidth,
-        legend pos=north west,
-        xmin=5
-    ]
-    \addplot[color=black] table[x index=0,y index=3]{datos/salida.txt};
-    \legend{GAUSS}
-    \end{axis}
-    \end{tikzpicture}
-    \begin{tikzpicture}
-    \begin{axis}[
-        title={},
-        xlabel={Cantidad de filas o columnas ($p$)},
-        ylabel={},
-        scaled x ticks=false,
-        scaled y ticks=false,
-        enlargelimits=0.05,
-        width=0.5\textwidth,
-        height=0.5\textwidth,
-        legend pos=north west,
-        xmin=5
-    ]
-    \addplot[color=black] table[x index=0,y index=2]{datos/salidaBanda.txt};
-    \legend{GAUSS-BANDA}
-    \end{axis}
-    \end{tikzpicture}
-    \caption{Dividiendo los tiempos por $p^2$}
-\end{center}
-
-Como ya habíamos visto antes, los tiemps de cómputo del método de Eliminación Gaussiana al dividirlo por $p^2$ tienden a una función lineal.
-Lo que es muy interesante aquí es que la variación utilizando la propiedad Banda, tienda a un numero constante mayor a 0, sin tener que dividirlo por $p^3$, con lo que este método optimizado tendría una complejidad de $\mathcal{O}(c_{3}*p^2)$ donde $c_{3}$ es la constante a la cual converge el gráfico.
-
-Por lo tanto, viendo la complejidad experimental podemos concluir que esta optimización es una gran mejora con respecto al método de Eliminación Gaussiana sin optimizaciones, ya que nos permite resolver los mismos sistemas en un orden de tiempo menor.
-
-\subsubsection{Variación a lo largo del tiempo}
-
-En esta sección nos interesa comparar los métodos implementados con respecto al tiempo computacional que insumen para resolver sistemas en los cuales hay variación del $b$.
-La hipótesis que se busca corroborar es que el método LU es mas rápido en este tipo de instancias que la Eliminación Gaussiana, debido a la reutilización de las matrices L y U.
-\newline
-\newline
-En este caso, realizamos el siguiente experimento:
-\begin{itemize}
-    \item Fijamos el $p = n*(m+1)$ tal que el tamaño de la matriz generada es de $60*60$.
-    \item Variamos el $ninst$ de $2$ hasta $30$.
-    \item Utilizamos el $r_i$, $r_e$ e $iso$ del Alto Horno de Hierro, véase Sección \ref{instancias}.
-    \item Generamos los valores de $T_{i}$ y $T_{e}(\theta)$ para cada $ninst$ de forma aleatoria dentro de los siguientes intervalos:
-    \begin{itemize}
-      \item $600 \leq T_{i} \leq 2000$
-      \item $20 \leq T_{e}(\theta) \leq 100$
-    \end{itemize}
-    \item Los tiempos de ejecución se midieron con la biblioteca \texttt{chrono} y estos fueron convertidos a nanosegundos.
-    \item Para cada caso de test, se midió la ejecución de los métodos Eliminación Gaussiana y LU.
-    \item Para cada valor del $ninst$, generamos $30$ muestras para las cuales se promediaron los resultados obtenidos para cada método.
-    \item No se tuvo en cuenta la optimización generada cuando se tiene en cuenta la característica de banda de la matriz.
-	\item No se incluyó el tiempo de ejecución del cálculo de la isoterma ya que
-		el mismo se aplica sobre el sistema ya resuelto,
-		independientemente de si este se resolvió utilizando Eliminación
-		Gaussiana o LU, por ende su resultado no afecta el análisis de ambos
-		métodos.
-\end{itemize}
-
-Los resultados obtenidos fueron los siguientes:
-
-\begin{center}
-    \begin{tikzpicture}
-    \begin{axis}[
-        title={},
-        xlabel={$ninst$},
-        ylabel={Tiempos de ejecución (nanoseconds)},
-        scaled x ticks=false,
-        scaled y ticks=false,
-        enlargelimits=0.05,
-        width=0.5\textwidth,
-        height=0.5\textwidth,
-        legend pos=north west,
-        xmin=5
-    ]
-    \addplot[color=black] table[x index=0,y index=1]{datos/salidaVar.txt};
-    \addplot[color=red] table[x index=0,y index=2]{datos/salidaVar.txt};
-    \legend{GAUSS, LU}
-    \end{axis}
-    \end{tikzpicture}
-\end{center}
-
-Queda en evidencia la diferencia considerable entre Eliminación Gaussiana y LU, la cual se va acentuando a medida que aumenta el $ninst$.
-Podemos llevar al análisis un paso más y dividir los tiempos de cómputo por su respectivo $ninst$:
-
-\begin{center}
-    \begin{tikzpicture}
-    \begin{axis}[
-        title={},
-        xlabel={$ninst$},
-        ylabel={Tiempos de ejecución (nanoseconds) / $ninst$},
-        scaled x ticks=false,
-        scaled y ticks=false,
-        enlargelimits=0.05,
-        width=0.5\textwidth,
-        height=0.5\textwidth,
-        legend pos=north west,
-        xmin=5
-    ]
-    \addplot[color=black] table[x index=0,y index=3]{datos/salidaVar.txt};
-    \addplot[color=red] table[x index=0,y index=4]{datos/salidaVar.txt};
-    \legend{GAUSS, LU}
-    \end{axis}
-    \end{tikzpicture}
-\end{center}
-
-El gráfico muestra como, a medida que se aumenta el $ninst$, el costo promedio (o costo \textit{amortizado}) de resolver un sistema de ecuaciones para un $b$ en particular disminuye en el caso de LU, mientras que en Gauss se mantiene constante.
-A partir de estas afirmaciones, podemos concluir que, efectivamente, LU es más rápido que Gauss en este tipo de instancias dinámicas.

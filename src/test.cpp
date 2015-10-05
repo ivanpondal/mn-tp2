@@ -239,7 +239,6 @@ void exp_prank_tiempos() {
 
 void exp_prank_calidad_aux(const char * in, const char * out) {
 	FILE *file = fopen(out, "w+");
-	set_teletransportacion(0.85);
 
 	vector< vector<int> > A = cargarSNAP(in,0);
 	vector< vector<double> > M = matrizTransicion(A);
@@ -256,20 +255,25 @@ void exp_prank_calidad_aux(const char * in, const char * out) {
 	fprintf(file, "rank nodo valor\n");
 	InDeg indeg(A);
 	vector< InDeg::rankeable > ranking1 = indeg.rankear();
-	for (unsigned int i = 0; i < A.size(); ++i) { fprintf(file, "%d %d %.6f ", i, ranking1[i].posicion, ranking1[i].valor); }
+	for (unsigned int i = 0; i < A.size(); ++i) { fprintf(file, "%d %d %.6f \n", i, ranking1[i].posicion, ranking1[i].valor); }
 	fprintf(file, "\n");
 
 	fprintf(file, "Ranking PageRank:\n");
 	fprintf(file, "rank nodo valor\n");
 	PageRank page_rank(M);
 	vector< PageRank::rankeable > ranking2 = page_rank.rankear();
-	for (unsigned int i = 0; i < A.size(); ++i) { fprintf(file, "%d %d %.6f ", i, ranking2[i].posicion, ranking2[i].valor); }
+	for (unsigned int i = 0; i < A.size(); ++i) { fprintf(file, "%d %d %.6f \n", i, ranking2[i].posicion, ranking2[i].valor); }
 	fprintf(file, "\n");
 
 }
 
 void exp_prank_calidad() {
-	exp_prank_calidad_aux("exp/pr-2-1-generated.txt","exp/pr-2-1.out");
+	set_teletransportacion(0.1);
+	exp_prank_calidad_aux("exp/pr-2-1-generated.txt","exp/pr-2-1-1.out");
+	set_teletransportacion(0.5);
+	exp_prank_calidad_aux("exp/pr-2-1-generated.txt","exp/pr-2-1-2.out");
+	set_teletransportacion(0.9);
+	exp_prank_calidad_aux("exp/pr-2-1-generated.txt","exp/pr-2-1-3.out");
 	exp_prank_calidad_aux("exp/pr-2-2-no-edges.txt","exp/pr-2-2.out");
 	exp_prank_calidad_aux("exp/pr-2-3-complete.txt","exp/pr-2-3.out");
 }
@@ -302,7 +306,7 @@ int main(int argc, char *argv[])
 		// exp_prank_tiempos();
 		exp_prank_calidad();
 
-        exp_gem_resultados();
+        // exp_gem_resultados();
 	}
 	return 0;
 }
