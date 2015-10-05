@@ -12,7 +12,20 @@
 Este experimento consite en variar el parámetro $c$ y analizar como impacta esta
 variación en los resultados obtenidos al generar el ranking con GeM.
 
-Se muestran a continuación los resultados obtenidos para diferentes valores de $c$:
+Recordemos que $c$ es el coeficiente de amortiguación, que regula que tanto afecta
+el \textit{navegante aleatorio} al resultado final.
+
+Como es intuitivo de pensar, nuestra hipotesis en este experimento es que al tender
+$c$ a cero aumenta la influencia del \textit{navegante aleatorio} en el puntaje de
+cada página y, por lo tanto, más se parecen los puntajes de todas la páginas.
+Es decir, menos dejan de importar los links salientes de las distintas páginas
+del grafo original.
+
+Por otro lado, cuando $c$ tiende a uno se debilita la influencia del \textit{navegante
+aleatorio}, causando que el puntaje dependa solo de la matriz $H + au^{t}$, descrita
+en la sección \ref{sec:gem_model}.
+
+Se muestran a continuación dichos resultados para diferentes valores de $c$:
 
 \begin{table}[H]
     \begin{center}
@@ -106,6 +119,24 @@ Se muestran a continuación los resultados obtenidos para diferentes valores de 
         \end{tabular}
         \captionsetup{justification=centering}
         \caption{A izquierda: puntajes obtenidos con $c=0.85$, a derecha: puntajes obtenidos con $c=1$}
-        \label{exp_resultados_variar_c_1}
+        \label{exp_resultados_variar_c_2}
     \end{center}
 \end{table}
+
+Analizando los resultados tenemos que:
+
+\begin{itemize}
+    \item Para $c=0$, la tabla de puntajes se condice con la hipótesis planteada.
+        Los puntajes de los equipos no solo son parecidos, sino que son iguales.
+        Y dicho puntaje es $0.0\hat{3} = 1/30 = 1/n$, dónde $n$ es la cantidad de
+        equipos totales.
+    \item A medida que el $c$ aumenta (desde $0.3$ a $1$) las posiciones van convergiendo.
+        Ya con $c=0.3$, 6 de los 7 primeros equipos aparecen en los primeros 7 puestos con $c=1$,
+        y los últimos 7 equipos con $c=0.3$ aparecen en los últimos 7 puestos con $c=1$.
+    \item A su vez, la diferencia entre los resultados con $c=85$ y $c=1$ es muy chica:
+        de los 14 equipos mostrados en el Cuadro \ref{exp_resultados_variar_c_2} solo dos
+        de ellos cambian de posición (Crucero del Norte y Temperley).
+\end{itemize}
+
+En base a lo analizado, podemos concluir que los resultados del experimento corroboran
+las hipotesis planteadas.
