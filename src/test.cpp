@@ -203,6 +203,25 @@ void exp_prank_tiempos_aux(const char * in, FILE * out, double tel, double pres)
 	fprintf(out, "%s %.2f %.3f %.9f\n", in, tiempo, tel, pres);
 }
 
+void exp_prank_tiempos_nodos() {
+	for (int i = 10; i*=5; i < 100000) {
+		vector< map< int , double > > A(i);
+		vector<int> links_salientes(nodes);
+		for (int e = 0; e < 2*i;) {
+			int a = random_in_range(0,i);
+			int b = random_in_range(0,i);
+			if (A[a][b]==0 && a!=b) {
+				A[b].insert(pair<int,double>(a,1));
+				links_salientes[a]++;
+			}
+		}
+		PageRankEsparso page_rank(A);
+		page_rank.set_precision(tolerancia);
+		set_teletransportacion(tele);
+		vector< PageRankEsparso::rankeable > ranking = page_rank.rankear();
+	}
+}
+
 void exp_prank_tiempos() {
 	FILE *file = fopen("exp/pr-tiempos-1-1.out", "w+");
 	fprintf(file, "instancia tiempo tel precision\n");
@@ -316,7 +335,7 @@ int main(int argc, char *argv[])
 
 		// exp_prank_manhattan();
 		// exp_prank_tiempos();
-		// exp_prank_calidad();
+		exp_prank_calidad();
 
         // exp_gem_resultados();
 	}
