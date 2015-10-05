@@ -140,3 +140,75 @@ Analizando los resultados tenemos que:
 
 En base a lo analizado, podemos concluir que los resultados del experimento corroboran
 las hipotesis planteadas.
+
+\subsection{Evolución del ranking}
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={Evolución con GeM},
+		xlabel=Fecha,
+		ylabel=Puntaje,
+		xmin=1,
+		xmax=26,
+		ymin=0,
+		ymax=0.13,
+        width=0.8\textwidth,
+        height=0.5\textwidth,
+		xtick={1,...,26},
+		yticklabel style={/pgf/number format/fixed},
+		legend style={at={(1.015,1)},anchor=north west},
+		no markers,
+		thick,
+		cycle list name=exotic
+    ]
+    \addplot table[x index=0,y index=1]{../src/exp/gem-evolution-ranking.out};
+    \addplot table[x index=0,y index=7]{../src/exp/gem-evolution-ranking.out};
+    %\addplot table[x index=0,y index=17]{../src/exp/gem-evolution-ranking.out};
+    \addplot table[x index=0,y index=20]{../src/exp/gem-evolution-ranking.out};
+    \addplot table[x index=0,y index=21]{../src/exp/gem-evolution-ranking.out};
+    \addplot table[x index=0,y index=22]{../src/exp/gem-evolution-ranking.out};
+    \addplot table[x index=0,y index=23]{../src/exp/gem-evolution-ranking.out};
+    \addplot table[x index=0,y index=24]{../src/exp/gem-evolution-ranking.out};
+    \addplot table[x index=0,y index=25]{../src/exp/gem-evolution-ranking.out};
+    %\addplot table[x index=0,y index=30]{../src/exp/gem-evolution-ranking.out};
+	\legend{Aldosivi, Boca Juniors, Quilmes,
+	Racing Club, River Plate, Rosario Central, San Lorenzo, San Martín (SJ)}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={Evolución con Puntaje AFA},
+		xlabel=Fecha,
+		ylabel=Puntaje,
+		xmin=1,
+		xmax=26,
+		ymin=0,
+		ymax=60,
+        width=0.8\textwidth,
+        height=0.5\textwidth,
+		xtick={1,...,26},
+		yticklabel style={/pgf/number format/fixed},
+		legend style={at={(1.015,1)},anchor=north west},
+		no markers,
+		thick,
+		cycle list name=exotic
+    ]
+	\addplot table[x index=0,y index=1]{../src/exp/afa-evolution-ranking.out};
+    \addplot table[x index=0,y index=7]{../src/exp/afa-evolution-ranking.out};
+    %\addplot table[x index=0,y index=17]{../src/exp/afa-evolution-ranking.out};
+    \addplot table[x index=0,y index=20]{../src/exp/afa-evolution-ranking.out};
+    \addplot table[x index=0,y index=21]{../src/exp/afa-evolution-ranking.out};
+    \addplot table[x index=0,y index=22]{../src/exp/afa-evolution-ranking.out};
+    \addplot table[x index=0,y index=23]{../src/exp/afa-evolution-ranking.out};
+    \addplot table[x index=0,y index=24]{../src/exp/afa-evolution-ranking.out};
+    \addplot table[x index=0,y index=25]{../src/exp/afa-evolution-ranking.out};
+    %\addplot table[x index=0,y index=30]{../src/exp/afa-evolution-ranking.out};
+	\legend{Aldosivi, Boca Juniors, Quilmes,
+	Racing Club, River Plate, Rosario Central, San Lorenzo, San Martín (SJ)}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
