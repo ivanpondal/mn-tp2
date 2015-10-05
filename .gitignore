@@ -27,6 +27,7 @@
 *.exe
 *.out
 !src/exp/*
+!latex/datos/*
 *.app
 
 # Latex
