@@ -389,13 +389,13 @@ international conference on World Wide Web, WWW ’03, pages 261–270, New York
 USA, 2003. ACM.} para calcular $x^{(k+1)} = P_2x^{k}$, cuyos pasos son los siguientes:
 \begin{enumerate}
     \item $y = cPx$
-    \item $w = ||x||_1 + ||y||_1$
+    \item $w = ||x||_1 - ||y||_1$
     \item $y = y + wv$
 \end{enumerate}
 
 donde $c$, $P$ y $v$ corresponden al escalar, la matriz y el vector descriptos en la Seccion \ref{PageRank}.
 
-Tenemos que ver que el algortimo descripto calcula efectivamente $x^{(k+1)} = P_2^{(k)}x^{k}$:
+Tenemos que ver que el algortimo descripto calcula efectivamente $x^{(k+1)} = P_2x^{k}$:
 \begin{proposition}
     El Algoritmo 1 calcula $x^{(k+1)} = P_2x^{(k)}$
 \end{proposition}
@@ -414,18 +414,41 @@ Por definicion sabemos que
 Por otro lado, el Algoritmo 1 nos dice que:
 \begin{equation*}
           \begin{aligned}
-            x^{(k+1)} &= cPx^{(k)} + (||x^{(k)}||_1 + ||cPx^{(k)}||_1)v  \\
+            x^{(k+1)} &= cPx^{(k)} + (||x^{(k)}||_1 - ||cPx^{(k)}||_1)v  \\
           \end{aligned}
 \end{equation*}
 Luego basta ver que:
 \begin{equation*}
           \begin{aligned}
-            cPx^{(k)} + (||x^{(k)}||_1 + ||cPx^{(k)}||_1)v &= cPx^{(k)} + cvd^{t}x^{(k)} +(1-c)v1^{t}x^{(k)}  \\
-            (||x^{(k)}||_1 + ||cPx^{(k)}||_1)v &= cvd^{t}x^{(k)} +(1-c)v1^{t}x^{(k)}  \\
-            ||x^{(k)}||_1v + ||cPx^{(k)}||_1v &= cvd^{t}x^{(k)} +v1^{t}x^{(k)} - cv1^{t}x^{(k)}  \\
+            cPx^{(k)} - (||x^{(k)}||_1 + ||cPx^{(k)}||_1)v &= cPx^{(k)} + cvd^{t}x^{(k)} +(1-c)v1^{t}x^{(k)}  \\
+            (||x^{(k)}||_1 - ||cPx^{(k)}||_1)v &= cvd^{t}x^{(k)} +(1-c)v1^{t}x^{(k)}  \\
+            ||x^{(k)}||_1v - ||cPx^{(k)}||_1v &= cvd^{t}x^{(k)} +v1^{t}x^{(k)} - cv1^{t}x^{(k)}  \\
           \end{aligned}
 \end{equation*}
+Sabemos que $\forall\ 1\leq i\leq n\ x^{(k)}_{i} \geq 0$, ya que $x$ es un vector de probabilidades. Entonces $||x^{(k)}||_1$ = $\sum\limits_{i=1}^{n}{x^{(k)}_{i}}$. Tambien sabemos que $1^{t}x^{(k)} = \sum\limits_{i=1}^{n}{1x^{(k)}_{i}}$, por lo tanto
+$||x^{(k)}||_1 = 1^{t}x^{(k)}$.
+\newline
+Por otro lado sabemos que $0\leq c\leq 1$, lo que implica que $|c| = c$.
+\newline
+Teniendo en cuenta esta informacion, la igualdad nos queda de la siguiente forma:
+\begin{equation*}
+          \begin{aligned}
+            - c||Px^{(k)}||_1v &= cvd^{t}x^{(k)} - cv1^{t}x^{(k)}  \\
+          \end{aligned}
+\end{equation*}
+Tomando como factor comun $v$ y $c$:
+\begin{equation*}
+          \begin{aligned}
+            - c||Px^{(k)}||_1v &= cv(d^{t}x^{(k)} - 1^{t}x^{(k)})  \\
+            - ||Px^{(k)}||_1 &= d^{t}x^{(k)} - 1^{t}x^{(k)}  \\
+            - ||Px^{(k)}||_1 &= (d^{t} - 1^{t})x^{(k)}  \\
+          \end{aligned}
+\end{equation*}
+Sabemos, por definicion de $d$, que $d^{t}$ solo tiene $1$ y $0$ como valores, por lo tanto al realizar $(d^{t} - 1^{t})$ obtendremos un vector fila, llamemosle $z$, cuyos valores seran $0$ o $-1$. Lo que implica que $z_j = 0$ cuando $d^{t}_j = 1$, situacion que se da cuando, para ese $j$, $\sum\limits_{i=1}^{n}{P_{ij}} = 0$. Caso contrario $z_j = -1$ cuando $d^{t}_j = 0$, situacion que se da cuando, para ese $j$, $\sum\limits_{i=1}^{n}{P_{ij}} = 1$. Por lo tanto al mutiplicar $zx^{(k)}$ obtendremos un escalar que sera la suma de los opuestos de los $x^{(k)}_j$ que cumplan que, para ese $j$, $\sum\limits_{i=1}^{n}{P_{ij}} = 1$, ya que los otros seran mutiplicados por $0$.
 
+Por otro lado, partiendo del hecho de que $P$ es estocastica por columnas, sabemos que al realizar $Px^{(k)}$, aquellas columnas, $j$, que cumplan que $\sum\limits_{i=1}^{n}{P_{ij}} = 0$, forzaran a que los $x^{(k)}_j$ no sean parte de ninguna componente del vector resultante, ya que en todas las multiplicaciones de filas de $P$ por el vector $x^{(k)}$, estos $x^{(k)}_j$ seran multiplicados por $0$. Caso contrario cuando las columnas, $j$, cumplan que $\sum\limits_{i=1}^{n}{P_{ij}} = 1$, estas forzaran a que la suma de todos los $x^{(k)}_j$ presentes en las distintas componentes del vector resultante sea igual a $x^{(k)}_j$. Precisamente al aplicar $||.||_1$ al vector $Px^{(k)}$, el resultado sera un escalar que sera la suma de todas los $x^{(k)}_j$ que cumplan la condicion antes descripta. Por ultimo si al resultado de aplicar $||.||_1$ lo multiplicamos por $-1$ obtenemos un escalar que sera la suma de los opuestos de los $x^{(k)}_j$ que cumplan que, para ese $j$, $\sum\limits_{i=1}^{n}{P_{ij}} = 1$.
+
+Por todo lo expuesto anteriormente, podemos concluir que $- ||Px^{(k)}||_1 = (d^{t} - 1^{t})x^{(k)}$, lo que implica que El Algoritmo 1 calcula $x^{(k+1)} = P_2x^{(k)}$.
 \end{proof}
 
 Sabemos que la unica operacion que vamos a realizar con la matriz esparsa es multiplicarla por un vector. Tambien sabemos que la construccion de la matriz es de forma dinamica, ya que vamos leyendo los links salientes de cada pagina de forma secuencial.
