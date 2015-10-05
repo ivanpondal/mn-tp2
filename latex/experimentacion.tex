@@ -262,3 +262,210 @@ Instancia 3
 Los resultados indican lo lógico, como es un grafo donde la probabilidad de ir a cualquier lado es igual, tanto Page Rank como InDeg resuelven el problema asignandole igual importancia a cada página.\\
 Por lo tanto concluimos que tanto la cantidad de ejes como la distribución son los factores que más contribuyen a los resultados de Page Rank.
 
+\subsection{GeM}
+
+\subsubsection{Variando el parámetro $c$}\label{exp_gem_2}
+Este experimento consite en variar el parámetro $c$ y analizar como impacta esta
+variación en los resultados obtenidos al generar el ranking con GeM.
+
+Recordemos que $c$ es el coeficiente de amortiguación, que regula que tanto afecta
+el \textit{navegante aleatorio} al resultado final.
+
+Como es intuitivo de pensar, nuestra hipotesis en este experimento es que al tender
+$c$ a cero aumenta la influencia del \textit{navegante aleatorio} en el puntaje de
+cada página y, por lo tanto, más se parecen los puntajes de todas la páginas.
+Es decir, menos dejan de importar los links salientes de las distintas páginas
+del grafo original.
+
+Por otro lado, cuando $c$ tiende a uno se debilita la influencia del \textit{navegante
+aleatorio}, causando que el puntaje dependa solo de la matriz $H + au^{t}$, descrita
+en la sección \ref{sec:gem_model}.
+
+Se muestran a continuación dichos resultados para diferentes valores de $c$:
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{| c | l | c |}
+            \hline
+            Posicion & Equipo & Puntaje \\ \hline
+            1 & Vélez Sarsfield & 0.033333 \\
+            2 & Unión & 0.033333 \\
+            3 & Gimnasia y Esgrima (LP) & 0.033333 \\
+            4 & Estudiantes (LP) & 0.033333 \\
+            5 & Defensa y Justicia & 0.033333 \\
+            6 & Crucero del Norte & 0.033333 \\
+            7 & Colón & 0.033333 \\
+            \vdots & \quad\vdots & \vdots \\
+            24 & Lanús & 0.033333 \\
+            25 & San Lorenzo & 0.033333 \\
+            26 & Rosario Central & 0.033333 \\
+            27 & River Plate & 0.033333 \\
+            28 & Racing Club & 0.033333 \\
+            29 & Quilmes & 0.033333 \\
+            30 & Olimpo & 0.033333 \\
+            \hline
+        \end{tabular}
+        \begin{tabular}{| c | l | c |}
+            \hline
+            Posicion & Equipo & Puntaje \\ \hline
+            1 & Boca Juniors & 0.051301 \\
+            2 & San Lorenzo & 0.044563 \\
+            3 & River Plate & 0.044200 \\
+            4 & Racing Club & 0.040067 \\
+            5 & Aldosivi & 0.039451 \\
+            6 & Rosario Central & 0.039114 \\
+            7 & Quilmes & 0.036699 \\
+            \vdots & \quad\vdots & \vdots \\
+            24 & Godoy Cruz & 0.028356 \\
+            25 & Argentinos Juniors & 0.028208 \\
+            26 & Temperley & 0.027904 \\
+            27 & Crucero del Norte & 0.027353 \\
+            28 & Nueva Chicago & 0.026346 \\
+            29 & Atlético de Rafaela & 0.025776 \\
+            30 & Colón & 0.025577 \\
+            \hline
+        \end{tabular}
+        \captionsetup{justification=centering}
+        \caption{A izquierda: puntajes obtenidos con $c=0$, a derecha: puntajes obtenidos con $c=0.3$}
+        \label{exp_resultados_variar_c_1}
+    \end{center}
+\end{table}
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{| c | l | c |}
+            \hline
+            Posicion & Equipo & Puntaje \\ \hline
+            1 & Boca Juniors & 0.086019 \\
+            2 & Aldosivi & 0.065353 \\
+            3 & River Plate & 0.063500 \\
+            4 & San Lorenzo & 0.062035 \\
+            5 & Rosario Central & 0.048473 \\
+            6 & Racing Club & 0.047878 \\
+            7 & San Martín (SJ) & 0.043956 \\
+            \vdots & \quad\vdots & \vdots \\
+            24 & Godoy Cruz & 0.017516 \\
+            25 & Temperley & 0.016045 \\
+            26 & Crucero del Norte & 0.016039 \\
+            27 & Argentinos Juniors & 0.015398 \\
+            28 & Nueva Chicago & 0.014232 \\
+            29 & Atlético de Rafaela & 0.011388 \\
+            30 & Colón & 0.010276 \\
+            \hline
+        \end{tabular}
+        \begin{tabular}{| c | l | c |}
+            \hline
+            Posicion & Equipo & Puntaje \\ \hline
+            1 & Boca Juniors & 0.095290 \\
+            2 & Aldosivi & 0.075151 \\
+            3 & River Plate & 0.068142 \\
+            4 & San Lorenzo & 0.065265 \\
+            5 & Rosario Central & 0.050875 \\
+            6 & Racing Club & 0.048824 \\
+            7 & San Martín (SJ) & 0.047118 \\
+            \vdots & \quad\vdots & \vdots \\
+            24 & Godoy Cruz & 0.014148 \\
+            25 & Crucero del Norte & 0.013132 \\
+            26 & Temperley & 0.012487 \\
+            27 & Argentinos Juniors & 0.011286 \\
+            28 & Nueva Chicago & 0.011239 \\
+            29 & Atlético de Rafaela & 0.007559 \\
+            30 & Colón & 0.006003 \\
+            \hline
+        \end{tabular}
+        \captionsetup{justification=centering}
+        \caption{A izquierda: puntajes obtenidos con $c=0.85$, a derecha: puntajes obtenidos con $c=1$}
+        \label{exp_resultados_variar_c_2}
+    \end{center}
+\end{table}
+
+Analizando los resultados tenemos que:
+
+\begin{itemize}
+    \item Para $c=0$, la tabla de puntajes se condice con la hipótesis planteada.
+        Los puntajes de los equipos no solo son parecidos, sino que son iguales.
+        Y dicho puntaje es $0.0\hat{3} = 1/30 = 1/n$, dónde $n$ es la cantidad de
+        equipos totales.
+    \item A medida que el $c$ aumenta (desde $0.3$ a $1$) las posiciones van convergiendo.
+        Ya con $c=0.3$, 6 de los 7 primeros equipos aparecen en los primeros 7 puestos con $c=1$,
+        y los últimos 7 equipos con $c=0.3$ aparecen en los últimos 7 puestos con $c=1$.
+    \item A su vez, la diferencia entre los resultados con $c=85$ y $c=1$ es muy chica:
+        de los 14 equipos mostrados en el Cuadro \ref{exp_resultados_variar_c_2} solo dos
+        de ellos cambian de posición (Crucero del Norte y Temperley).
+\end{itemize}
+
+En base a lo analizado, podemos concluir que los resultados del experimento corroboran
+las hipotesis planteadas.
+
+\subsubsection{Evolución del ranking}
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={Evolución con GeM},
+		xlabel=Fecha,
+		ylabel=Puntaje,
+		xmin=1,
+		xmax=26,
+		ymin=0,
+		ymax=0.13,
+        width=0.8\textwidth,
+        height=0.5\textwidth,
+		xtick={1,...,26},
+		yticklabel style={/pgf/number format/fixed},
+		legend style={at={(1.015,1)},anchor=north west},
+		no markers,
+		thick,
+		cycle list name=exotic
+    ]
+    \addplot table[x index=0,y index=1]{../src/exp/gem-evolution-ranking.out};
+    \addplot table[x index=0,y index=7]{../src/exp/gem-evolution-ranking.out};
+    %\addplot table[x index=0,y index=17]{../src/exp/gem-evolution-ranking.out};
+    \addplot table[x index=0,y index=20]{../src/exp/gem-evolution-ranking.out};
+    \addplot table[x index=0,y index=21]{../src/exp/gem-evolution-ranking.out};
+    \addplot table[x index=0,y index=22]{../src/exp/gem-evolution-ranking.out};
+    \addplot table[x index=0,y index=23]{../src/exp/gem-evolution-ranking.out};
+    \addplot table[x index=0,y index=24]{../src/exp/gem-evolution-ranking.out};
+    \addplot table[x index=0,y index=25]{../src/exp/gem-evolution-ranking.out};
+    %\addplot table[x index=0,y index=30]{../src/exp/gem-evolution-ranking.out};
+	\legend{Aldosivi, Boca Juniors, Quilmes,
+	Racing Club, River Plate, Rosario Central, San Lorenzo, San Martín (SJ)}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={Evolución con Puntaje AFA},
+		xlabel=Fecha,
+		ylabel=Puntaje,
+		xmin=1,
+		xmax=26,
+		ymin=0,
+		ymax=60,
+        width=0.8\textwidth,
+        height=0.5\textwidth,
+		xtick={1,...,26},
+		yticklabel style={/pgf/number format/fixed},
+		legend style={at={(1.015,1)},anchor=north west},
+		no markers,
+		thick,
+		cycle list name=exotic
+    ]
+	\addplot table[x index=0,y index=1]{../src/exp/afa-evolution-ranking.out};
+    \addplot table[x index=0,y index=7]{../src/exp/afa-evolution-ranking.out};
+    %\addplot table[x index=0,y index=17]{../src/exp/afa-evolution-ranking.out};
+    \addplot table[x index=0,y index=20]{../src/exp/afa-evolution-ranking.out};
+    \addplot table[x index=0,y index=21]{../src/exp/afa-evolution-ranking.out};
+    \addplot table[x index=0,y index=22]{../src/exp/afa-evolution-ranking.out};
+    \addplot table[x index=0,y index=23]{../src/exp/afa-evolution-ranking.out};
+    \addplot table[x index=0,y index=24]{../src/exp/afa-evolution-ranking.out};
+    \addplot table[x index=0,y index=25]{../src/exp/afa-evolution-ranking.out};
+    %\addplot table[x index=0,y index=30]{../src/exp/afa-evolution-ranking.out};
+	\legend{Aldosivi, Boca Juniors, Quilmes,
+	Racing Club, River Plate, Rosario Central, San Lorenzo, San Martín (SJ)}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+

@@ -17,7 +17,7 @@ de popularidad los resultados obtenidos, esperando que encontremos más rápido 
  las páginas web. A continuación presentaremos el famoso método PageRank, utilizado
  por Google en sus comienzos.
 
-\subsubsection{PageRank}
+\subsubsection{PageRank}\label{PageRank}
 
 El algoritmo de PageRank\footnote{Kurt Bryan and Tanya Leise. The linear algebra
 behind google. SIAM Review, 48(3):569–581, 2006.} se define para un conjunto de
@@ -92,6 +92,424 @@ mayor a menor:
 \end{equation}
 
 \subsubsection{PageRank con matriz Esparsa}
+
+Partiendo del hecho de que, aproximadamente, cada pagina Web tiene 7 links salientes\footnote{Sepandar D. Kamvar, Taher H. Haveliwala, Christopher D. Manning, and Gene H. Golub.
+Extrapolation methods for accelerating pagerank computations. In Proceedings of the 12th
+international conference on World Wide Web, WWW ’03, pages 261–270, New York, NY,
+USA, 2003. ACM.} surge la posibilidad de optimizar la estructura que representa el Grafo dirigido de la Web, debido a la baja densidad de la matriz de conectividad, $W$, asociada a dicho Grafo.
+Esta optimizacion no es solo una posibilidad, sino una necesidad dado que la cantidad de Webs indexadas tiene un requerimiento prohibitivo en terminos de memoria si la representamos, ingenuamente, como un vector de vectores.
+Nuestra hipotesis es que, utilizando una estructura de datos optimizada, no solo obtendremos mejoras en terminos de complejidad espacial, sino tambien en terminos de complejidad temporal.
+
+A partir de este analisis, nos propusimo analizar tres estructuras de datos que representan matrices esparsas:
+\begin{enumerate}
+  \item \textit{Dictionary of Keys (dok)}
+  \item \textit{Compressed Sparse Row (CSR)}
+  \item \textit{Compressed Sparse Column (CSC)}
+\end{enumerate}
+
+Sea $A \in \mathbb{R}^{n \times n}$ una matriz esparsa, y sea $m$ es la cantidad de valores distintos de 0 de $A$.
+\paragraph{1. Dictionary of Keys (dok):}
+Esta estructura esta representada como un vector de diccionarios, en donde cada posicion, $i$, del vector puede considerarse como una fila, y la key del diccionario contenido dentro de esa posicion representa una columna, $j$, siendo el valor asociado a esa key, en el diccionario, el valor en la matriz contenido en esa fila y columna ($A_{ij}$). Solo aquellas $A_{ij}$ que tienen valores distintos de 0 tienen una key en los diccionarios.
+\newline
+\newline
+Veamos un ejemplo. Sea $B \in \mathbb{R}^{4 \times 4}$ la siguiente matriz:
+\[
+  B = \left(\begin{array}{*5{c}}
+    10 & 0 & 0 & -2\\
+    3  & 9 & 0 & 0 \\
+    0  & 7 & 8 & 0 \\
+    3  & 0 & 4 & 5
+  \end{array}\right)
+\]
+El dictionary of keys que representa a $B$ es:
+\def\leftbracket{[}
+\def\rightbracket{]}
+
+\begin{center}
+\tikzset{my arrow/.style={
+  blue!60!black,
+  -latex
+  }
+}
+
+\begin{tikzpicture}
+\matrix[matrix of math nodes, row sep=4mm] (M) {
+\leftbracket & 1 & 2 & 3 & 4 & \rightbracket \\
+\leftbracket & a_1 & a_2 & a_4 & a_3 & \rightbracket \\
+\leftbracket & a_1 & a_4 & a_2 & a_3 & \rightbracket \\
+};
+
+\draw[my arrow] (M-3-3) to (M-2-4);
+\draw[my arrow] (M-1-4) to (M-2-4);
+\end{tikzpicture}
+
+\end{center}
+
+\begin{tikzpicture}
+
+\tikzset{square matrix/.style={
+    matrix of nodes,
+    column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+    nodes={draw,
+      minimum height=#1,
+      anchor=center,
+      text width=#1,
+      align=center,
+      inner sep=0pt
+    },
+  },
+  square matrix/.default=1.2cm
+}
+
+\matrix[square matrix]
+{
+\text{[1;10] [5;-2]} & \text{[1;3] [2;9]} & 11 & 8 & 5 \\
+};
+\end{tikzpicture}
+\newline
+Esta claro que intercambiando columnas por filas, como posiciones del vector contenedor, y filas por columnas como keys, representamos la misma matriz.
+\newline
+\newline
+Las ventajas de usar esta estructura de datos son las siguientes:
+\begin{enumerate}
+  \item Facilidad para crearse de forma dinamicamente, es decir, si a priori no conocemos la forma de la matriz a representar.
+  \item La operacion matriz esparsa por vector es sencilla.
+\end{enumerate}
+Por otro lado, sus desventajas son:
+\begin{enumerate}
+  \item Los accesos a los valores no tienen complejidad temporal constante.
+  \item Las operaciones entre matrices esparsas, sea la suma o la multiplicacion, son engorrosas.
+\end{enumerate}
+
+\paragraph{2. Compressed Sparse Row (CSR):}
+
+Esta estructura utiliza tres vectores, dos de tamano $m$, llamemosles \textit{val} y \textit{col_ind} respectivamente, y uno de tamano $n+1$, llamemosle \textit{row_ptr}.
+\begin{itemize}
+    \item En \textit{val} guardamos los valores de $A$ distintos de 0, recorriendo $A$ por filas, es decir fijando las filas y avanzado por las columnas.
+    \item En la posicion $k$ de \textit{col_ind} guardamos el indice $j$ del valor $A_{ij}$ contenido en la posicion $k$ del vector \textit{val}.
+    \item Por ultimo en \textit{row_ptr} guardamos indices del vector \textit{val} en los cuales se encuentran el primera valor de cada fila, de tal
+     forma que para la fila $i$, el valor $k$ contenido en \textit{row_ptr[i]}, nos dice que \textit{val[k]} corresponde al primer valor de la fila
+      $i$ y el valor $k'$ contenido en \textit{row_ptr[i+1]}, nos dice que \textit{val[k'-1]} corresponde al ultimo valor de la fila $i$.
+      Vale la pena aclarar que si $k = k'$ entonces la fila no tiene valores distintos de 0.
+\end{itemize}
+
+Utilizemos $B$ como la matriz del punto anterior:
+\[
+  B = \left(\begin{array}{*5{c}}
+    10 & 0 & 0 & -2\\
+    3  & 9 & 0 & 0 \\
+    0  & 7 & 8 & 0 \\
+    3  & 0 & 4 & 5
+  \end{array}\right)
+\]
+
+La misma seria representado de la siguiente manera:
+\begin{itemize}
+  \item \textit{val:}
+\end{itemize}
+\begin{center}
+\begin{tikzpicture}
+\tikzset{square matrix/.style={
+    matrix of nodes,
+    column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+    nodes={draw,
+      minimum height=#1,
+      anchor=center,
+      text width=#1,
+      align=center,
+      inner sep=0pt
+    },
+  },
+  square matrix/.default=0.8cm
+}
+
+\matrix[square matrix]
+{
+10 & -2 & 3 & 9 & 7 & 8 & 3 & 4 & 5 \\
+};
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\begin{itemize}
+  \item \textit{col_ind:}
+\end{itemize}
+\begin{tikzpicture}
+
+\tikzset{square matrix/.style={
+    matrix of nodes,
+    column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+    nodes={draw,
+      minimum height=#1,
+      anchor=center,
+      text width=#1,
+      align=center,
+      inner sep=0pt
+    },
+  },
+  square matrix/.default=0.8cm
+}
+
+\matrix[square matrix]
+{
+1 & 5 & 1 & 2 & 2 & 3 & 1 & 3 & 5 \\
+};
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\begin{itemize}
+  \item \textit{row_ptr:}
+\end{itemize}
+
+\begin{tikzpicture}
+
+\tikzset{square matrix/.style={
+    matrix of nodes,
+    column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+    nodes={draw,
+      minimum height=#1,
+      anchor=center,
+      text width=#1,
+      align=center,
+      inner sep=0pt
+    },
+  },
+  square matrix/.default=0.8cm
+}
+
+\matrix[square matrix]
+{
+1 & 3 & 5 & 7 & 10 \\
+};
+\end{tikzpicture}
+\end{center}
+
+Las ventajas de usar esta estructura de datos son las siguientes:
+\begin{enumerate}
+  \item Eficiente a la hora de realizar operaciones aritmeticas entre matrices esparsas (suma, multiplicacion).
+  \item La operacion matriz esparsa por vector es sencilla.
+\end{enumerate}
+Por otro lado, sus desventajas son:
+\begin{enumerate}
+  \item Dificultad a la hora de crearse de forma dinamica, ya que debemos recalcular/redimensionar los tamanos de los vectores.
+  \item Cambios en la esparcidad son costosos, misma razon que el punto anterior.
+\end{enumerate}
+
+\paragraph{3. Compressed Sparse Column (CSC):}
+
+Muy parecidad a la \textit{Compressed Sparse Row (CSR)}.
+ Tambien utiliza tres vectores, dos de tamano $m$, llamemosles \textit{val} y \textit{row_ind} respectivamente, y uno de tamano $n+1$, llamemosle \textit{col_ptr}.
+
+ \begin{itemize}
+     \item En \textit{val} guardamos los valores de $A$ distintos de 0, recorriendo $A$ por columnas, es decir fijando las columnas y avanzado por las filas.
+     \item En la posicion $k$ de \textit{row_ind} guardamos el indice $i$ del valor $A_{ij}$ contenido en la posicion $k$ del vector \textit{val}.
+     \item Por ultimo en \textit{col_ptr} guardamos indices del vector \textit{val} en los cuales se encuentran el primera valor de cada columna, de tal forma que para la columna $j$, el valor $k$ contenido en \textit{col_ptr[j]}, nos dice que \textit{val[k]} corresponde al primer valor de la fila $j$ y el valor $k'$ contenido en \textit{col_ptr[j+1]}, nos dice que \textit{val[k'-1]} corresponde al ultimo valor de la col $j$. Vale la pena aclarar que si $k = k'$ entonces la columna no tiene valores distintos de 0.
+ \end{itemize}
+
+Nuevamente utilizemos $B$ como ejemplo:
+\[
+  B = \left(\begin{array}{*5{c}}
+    10 & 0 & 0 & -2\\
+    3  & 9 & 0 & 0 \\
+    0  & 7 & 8 & 0 \\
+    3  & 0 & 4 & 5
+  \end{array}\right)
+\]
+
+La misma seria representado de la siguiente manera:
+\begin{itemize}
+  \item \textit{val:}
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}
+\tikzset{square matrix/.style={
+    matrix of nodes,
+    column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+    nodes={draw,
+      minimum height=#1,
+      anchor=center,
+      text width=#1,
+      align=center,
+      inner sep=0pt
+    },
+  },
+  square matrix/.default=0.8cm
+}
+
+\matrix[square matrix]
+{
+10 & 3 & 3 & 9 & 7 & 8 & 4 & -2 & 5 \\
+};
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\begin{itemize}
+  \item \textit{row_ind:}
+\end{itemize}
+\begin{tikzpicture}
+
+\tikzset{square matrix/.style={
+    matrix of nodes,
+    column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+    nodes={draw,
+      minimum height=#1,
+      anchor=center,
+      text width=#1,
+      align=center,
+      inner sep=0pt
+    },
+  },
+  square matrix/.default=0.8cm
+}
+
+\matrix[square matrix]
+{
+1 & 2 & 4 & 2 & 3 & 3 & 4 & 1 & 4 \\
+};
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\begin{itemize}
+  \item \textit{col_ptr:}
+\end{itemize}
+
+\begin{tikzpicture}
+
+\tikzset{square matrix/.style={
+    matrix of nodes,
+    column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+    nodes={draw,
+      minimum height=#1,
+      anchor=center,
+      text width=#1,
+      align=center,
+      inner sep=0pt
+    },
+  },
+  square matrix/.default=0.8cm
+}
+
+\matrix[square matrix]
+{
+1 & 4 & 6 & 8 & 10 \\
+};
+\end{tikzpicture}
+\end{center}
+
+Las ventajas de usar esta estructura de datos son las siguientes:
+\begin{enumerate}
+  \item Eficiente a la hora de realizar operaciones aritmeticas entre matrices esparsas (suma, multiplicacion).
+  \item La operacion matriz esparsa por vector es sencilla.
+\end{enumerate}
+Por otro lado, sus desventajas son:
+\begin{enumerate}
+  \item Dificultad a la hora de crearse de forma dinamica, ya que debemos recalcular/redimensionar los tamanos de los vectores.
+  \item Cambios en la esparcidad son costosos, misma razon que el punto anterior.
+\end{enumerate}
+
+\paragraph{Contexto de Uso}
+
+Antes de definir que estructura de datos vamos a utilizar para representar matrices esparsas, debemos definir el contexto de uso de la misma.
+Sabemos que el algoritmo de PageRank utiliza el metodo de la Potencia, usando la matriz $P_2$ definida previamente. Sin embargo la $P_2$ no es esparsa, inclusive todos sus valores son distintos de 0, por lo cual utilizar la implementacion del Page Rank descripta en la Seccion \ref{PageRank} no es posible .
+
+Para poder hacer frente a esta dificultad, utilizamos el algoritmo propuesto por Kamvar et al.[Algoritmo 1]\footnote{Sepandar D. Kamvar, Taher H. Haveliwala, Christopher D. Manning, and Gene H. Golub.
+Extrapolation methods for accelerating pagerank computations. In Proceedings of the 12th
+international conference on World Wide Web, WWW ’03, pages 261–270, New York, NY,
+USA, 2003. ACM.} para calcular $x^{(k+1)} = P_2x^{k}$, cuyos pasos son los siguientes:
+\begin{enumerate}
+    \item $y = cPx$
+    \item $w = ||x||_1 - ||y||_1$
+    \item $y = y + wv$
+\end{enumerate}
+
+donde $c$, $P$ y $v$ corresponden al escalar, la matriz y el vector descriptos en la Seccion \ref{PageRank}.
+
+Tenemos que ver que el algortimo descripto calcula efectivamente $x^{(k+1)} = P_2x^{k}$:
+\begin{proposition}
+    El Algoritmo 1 calcula $x^{(k+1)} = P_2x^{(k)}$
+\end{proposition}
+\begin{proof}
+Por definicion sabemos que
+  \begin{equation*}
+            \begin{aligned}
+              x^{(k+1)} &= P_2x^{(k)} \\
+               &= (cP_1 +(1-c)E)x^{(k)} \\
+               &= (cP + cD +(1-c)E)x^{(k)} \\
+               &= (cP + cD +(1-c)E)x^{(k)} \\
+               &= (cP + cvd^{t} +(1-c)v1^{t})x^{(k)} \\
+               &= cPx^{(k)} + cvd^{t}x^{(k)} +(1-c)v1^{t}x^{(k)} \\
+            \end{aligned}
+\end{equation*}
+Por otro lado, el Algoritmo 1 nos dice que:
+\begin{equation*}
+          \begin{aligned}
+            x^{(k+1)} &= cPx^{(k)} + (||x^{(k)}||_1 - ||cPx^{(k)}||_1)v  \\
+          \end{aligned}
+\end{equation*}
+Luego basta ver que:
+\begin{equation*}
+          \begin{aligned}
+            cPx^{(k)} + (||x^{(k)}||_1 + ||cPx^{(k)}||_1)v &= cPx^{(k)} + cvd^{t}x^{(k)} +(1-c)v1^{t}x^{(k)}  \\
+            (||x^{(k)}||_1 - ||cPx^{(k)}||_1)v &= cvd^{t}x^{(k)} +(1-c)v1^{t}x^{(k)}  \\
+            ||x^{(k)}||_1v - ||cPx^{(k)}||_1v &= cvd^{t}x^{(k)} +v1^{t}x^{(k)} - cv1^{t}x^{(k)}  \\
+          \end{aligned}
+\end{equation*}
+Sabemos que $\forall\ 1\leq i\leq n\ x^{(k)}_{i} \geq 0$, ya que $x$ es un vector de probabilidades. Entonces $||x^{(k)}||_1$ = $\sum\limits_{i=1}^{n}{x^{(k)}_{i}}$. Tambien sabemos que $1^{t}x^{(k)} = \sum\limits_{i=1}^{n}{1x^{(k)}_{i}}$, por lo tanto
+$||x^{(k)}||_1 = 1^{t}x^{(k)}$.
+\newline
+Por otro lado sabemos que $0\leq c\leq 1$, lo que implica que $|c| = c$.
+\newline
+Teniendo en cuenta esta informacion, la igualdad nos queda de la siguiente forma:
+\begin{equation*}
+          \begin{aligned}
+            v1^{t}x^{(k)} - c||Px^{(k)}||_1v &= cvd^{t}x^{(k)} + v1^{t}x^{(k)} - cv1^{t}x^{(k)}  \\
+            - c||Px^{(k)}||_1v &= cvd^{t}x^{(k)} - cv1^{t}x^{(k)}  \\
+          \end{aligned}
+\end{equation*}
+Tomando como factor comun $v$ y $c$:
+\begin{equation*}
+          \begin{aligned}
+            - c||Px^{(k)}||_1v &= cv(d^{t}x^{(k)} - 1^{t}x^{(k)})  \\
+            - ||Px^{(k)}||_1 &= d^{t}x^{(k)} - 1^{t}x^{(k)}  \\
+            - ||Px^{(k)}||_1 &= (d^{t} - 1^{t})x^{(k)}  \\
+          \end{aligned}
+\end{equation*}
+
+Sabemos, por definicion de $d$, que $d^{t}$ solo tiene $1$ y $0$ como valores, por lo tanto al realizar $(d^{t} - 1^{t})$ obtendremos un vector fila,
+llamemosle $z$, cuyos valores seran $0$ o $-1$. Lo que implica que $z_j = 0$ cuando $d^{t}_j = 1$, situacion que se da cuando, para ese
+$j$, $\sum_{i=1}^{n}{P_{ij}} = 0$. Caso contrario $z_j = -1$ cuando $d^{t}_j = 0$, situacion que se da cuando, para ese $j$,
+ $\sum_{i=1}^{n}{P_{ij}} = 1$. Por lo tanto al mutiplicar $zx^{(k)}$ obtendremos un escalar que sera la suma de los opuestos de
+ los $x^{(k)}_j$ que cumplan que, para ese $j$, $\sum_{i=1}^{n}{P_{ij}} = 1$, ya que los otros seran mutiplicados por $0$.
+
+Por otro lado, partiendo del hecho de que $P$ es estocastica por columnas, sabemos que al realizar $Px^{(k)}$, aquellas columnas, $j$, que
+cumplan que $\sum_{i=1}^{n}{P_{ij}} = 0$, forzaran a que los $x^{(k)}_j$ no sean parte de ninguna componente del vector resultante,
+ya que en todas las multiplicaciones de filas de $P$ por el vector $x^{(k)}$, estos $x^{(k)}_j$ seran multiplicados por $0$. Caso contrario
+cuando las columnas, $j$, cumplan que $\sum_{i=1}^{n}{P_{ij}} = 1$, estas forzaran a que la suma de todos los $x^{(k)}_j$ presentes
+en las distintas componentes del vector resultante sea igual a $x^{(k)}_j$. Precisamente al aplicar $||.||_1$ al vector $Px^{(k)}$, el
+resultado sera un escalar que sera la suma de todas los $x^{(k)}_j$ que cumplan la condicion antes descripta. Por ultimo si al resultado
+de aplicar $||.||_1$ lo multiplicamos por $-1$ obtenemos un escalar que sera la suma de los opuestos de los $x^{(k)}_j$ que cumplan que,
+para ese $j$, $\sum_{i=1}^{n}{P_{ij}} = 1$.
+
+Por todo lo expuesto anteriormente, podemos concluir que $- ||Px^{(k)}||_1 = (d^{t} - 1^{t})x^{(k)}$, lo que implica que El Algoritmo 1
+calcula $x^{(k+1)} = P_2x^{(k)}$.
+\end{proof}
+
+Luego, sabemos que la unica operacion que vamos a realizar con la matriz esparsa es multiplicarla por un vector. Tambien sabemos que la
+construccion de la matriz es de forma dinamica, ya que vamos leyendo los links salientes de cada pagina de forma secuencial.
+
+A partir de esta informacion concluimos que la estructura de datos que mas se adecua a nuestras necesidades es el \textit{Dictionary
+of Keys (dok)}, en donde las posiciones del vector representan las filas y las keys de los diccionarios las columnas.
+
+Esta eleccion se debe al hecho de que podemos actualizar la matriz de forma sencilla a medida de que vamos leyendo los datos de entrada, y a su vez
+ la multiplicacion por un vector se realiza de forma sencilla, vease Seccion Implementacion Esparsa (CAMBIAR CON LA REF).
+
+
+
+
 
 \subsection{Rankings en competencias deportivas}
 

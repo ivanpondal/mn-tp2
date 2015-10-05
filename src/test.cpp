@@ -104,7 +104,7 @@ void resolver(int algoritmo, double tele, int tipo_instancia, const char* path, 
             string out_file(path);
 			out_file = remove_extension(out_file);
 			out_file.append(".out");
-            sprintf(command, "octave --eval \"source('footbal_rankings.m'); GeM('%s','%s', team_codes_filename='', c=%.3f, date_limit=0, pres=%.9f);\" >> /dev/null",
+            sprintf(command, "octave --eval \"source('footbal_rankings.m'); GeM('%s','%s', team_codes_filename='data/team_code.txt', c=%.3f, date_limit=0, pres=%.9f);\" >> /dev/null",
                 path, out_file.c_str(), tele, tolerancia);
             if(system(command)) { cout << "System failed" << endl; };
 		}
@@ -284,6 +284,12 @@ void exp_gem_resultados() {
     resolver(0, 0.6, 1, "exp/gem_resultados_1_3.txt", 0.0001);
     resolver(0, 0.85, 1, "exp/gem_resultados_1_4.txt", 0.0001);
     resolver(0, 1, 1, "exp/gem_resultados_1_5.txt", 0.0001);
+
+    resolver(0, 0, 1, "exp/gem_resultados_2_1.txt", 0.0001);
+    resolver(0, 0.3, 1, "exp/gem_resultados_2_2.txt", 0.0001);
+    resolver(0, 0.6, 1, "exp/gem_resultados_2_3.txt", 0.0001);
+    resolver(0, 0.85, 1, "exp/gem_resultados_2_4.txt", 0.0001);
+    resolver(0, 1, 1, "exp/gem_resultados_2_5.txt", 0.0001);
 }
 
 // para correr un test: ./test test.in test.expected {0: EG, 1: LU}
@@ -301,10 +307,10 @@ int main(int argc, char *argv[])
 		// test_page_rank_1();
 		// test_in_deg_1();
 		// test_page_rank_esparso_1();
-		
+
 		// exp_prank_manhattan();
 		// exp_prank_tiempos();
-		exp_prank_calidad();
+		// exp_prank_calidad();
 
         // exp_gem_resultados();
 	}

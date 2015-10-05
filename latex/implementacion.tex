@@ -115,5 +115,63 @@ Ahora explicaremos el código desarrollado:
 
 \end{enumerate}
 
-\subsubsection{AFA}
+\subsubsection{Puntaje AFA}
 
+Para el script utilizado para calcular el puntaje según el criterio de la AFA
+los parámetros son los siguientes:
+
+\begin{itemize}
+	\item \textbf{in_filename:} Dirección de archivo con datos de entrada.
+	\item \textbf{out_filename:} Dirección de archivo donde escribir el
+	resultado final.
+	\item \textbf{team_codes_filename:} Archivo opcional con el número de equipo
+	asociado a su nombre correspondiente.
+	\item \textbf{date_limit:} Campo opcional con la cantidad de fechas a tomar
+	en cuenta (Por defecto toma todas las fechas disponibles).
+\end{itemize}
+
+Pasamos a describir el código:
+
+\begin{enumerate}
+	\item Leemos la cantidad de equipos y partidos para después cargar todos los
+	partidos disponibles y generar nuestra matriz $S$.
+	\begin{lstlisting}
+	Cargar numero de partidos y equipos
+	Crear matriz S de tamanio equipos*2 llena de 0s
+	Mientras partidos > 0
+		Cargo numero de fecha del partido junto a los equipos y el resultado
+		Si habia limite de fecha y ya se cumplio
+			partidos = 0
+		Si no
+			Si hubo empate
+				S[numero primer equipo] += 1
+				S[numero segundo equipo] += 1
+			Si gano el primer equipo
+				S[numero primer equipo] += 3
+			Si gano el segundo equipo
+				S[numero segundo equipo] += 3
+			Fin si
+		Fin si
+		Decremento partidos en uno
+	Fin mientras
+	\end{lstlisting}
+
+	\item Ordeno y escribo la matriz solución.
+	\begin{lstlisting}
+	Ordenar crecientemente por segundo elemento de filas la matriz S (ranking)
+	Si tengo archivo con nombres de equipos
+		Creo mapa teamcodes con cada numero de equipo asociado a su nombre
+	Fin si
+
+	Si tengo nombres de equipos cargados
+		Para i de 0 a equipos - 1
+			Escribo numero, nombre y ranking del equipo numero equipos - i
+		Fin para
+	Si no
+		Para i de 0 a equipos - 1
+			Escribo numero y ranking del equipo numero equipos - i
+		Fin para
+	Fin si
+	\end{lstlisting}
+
+\end{enumerate}
