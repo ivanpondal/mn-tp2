@@ -15,7 +15,7 @@ En esta sección, se detallan los diferentes experimentos que realizamos para me
 \subsubsection{Instancias de prueba}
 
 %Para generar grafos sobre los cuales experimentar tuvimos que obtener varias muestras.
-Las instancias de prueba utilizadas para la experimentación pueden dividirse en dos grupos:
+Las instancias de prueba utilizadas para la experimentación pueden dividirse en tres grupos:
 \begin{itemize}
     \item Instancias medianas-grandes, que fueron utilizadas para medir tiempo y la convergencia del algoritmo Page Rank.
         Estas instancias se obtuvieron de la base de datos de SNAP \footnote{Stanford Large Network Dataset Collection:
@@ -43,6 +43,8 @@ Las instancias de prueba utilizadas para la experimentación pueden dividirse en
     \item Instancias chicas, que fueron utilizadas para analizar la calidad de los resultados de PageRank.
         Estas instancias fueron generedas utilizando las herramientas provistas por la cátedra y otras extra generadas por nosotros.
         Los detalles particulares se desarrollan en la sección \textbf{Calidad de los resultados}.
+
+    \item Instancias aleatorias, generadas mediante nuestros propios algoritmos. Estas son detalladas en la sección que analiza los Tiempos de Ejecución.
 \end{itemize}
 
 \subsubsection{Convergencia del algoritmo}
@@ -117,79 +119,87 @@ Adicionalmente, vemos que Page Rank converge de forma más rápida para valores 
 
 En esta sección, analizamos el tiempo de cómputo que emplea Page Rank.\\
 Para tomar los tiempos, utilizamos la libreria chronos de C++ y pasamos las mediciones a nanosegundos. Todos las medidas fueron hechas bajo las mismas condiciones (procesos abiertos, computadora, alimentación y nivel de optimizaciones del compilador).\\
-Con este fin, tomamos varias instancias de SNAP con distinta cantidad de nodos y vértices de forma que podamos ver la evolución de los tiempos en función del tamaño de la entrada.\\
-Adicionalmente fuimos variando la precisión utilizada por el algoritmo, es decir, la cota que controla cuando la diferencia entre dos iteraciones del algoritmo sucesivas son lo suficientemente cercanas como para dejar de correrlo.\\
-El factor $c$ de Page Rank fue configurado en 0.85, ya que no afecta el tiempo de cómputo.\\
-Las instancias utilizadas fueron:
-
+Los experimentos pasan por tres variables: la cantidad de nodos y la cantidad de ejes del grafo siendo analizado, y la precisión utlizada en Page Rank (es decir, la diferencia que tomamos como suficiente entre dos iteraciones para dar un resultado en el método de la potencia).\\
+Con este fin, generamos instancias de forma dinámica y aleatoria, es decir que dada una cantidad de nodos, asignamos los ejes aleatoriamente hasta llegar a cierta cantidad a través de la libreria Random de C++.\\
+Más precisamente, las instancias utilizadas en los experimentos consisten en:
 \begin{itemize}
-    \item Instancia 1: 6301 nodos y 20777 ejes.
-    \item Instancia 2: 10876 nodos y 39994 ejes.
-    \item Instancia 3: 36682 nodos y 88328 ejes.
-    \item Instancia 4: 62586 nodos y 147892 ejes.
-    \item Instancia 5: 281903 nodos y 2312497 ejes.
+    \item Nodos del grafo: variar la cantidad de nodos entre 1000 y 100,000 con tantos ejes como 2 veces la cantidad de nodos en cuestión.
+    \item Ejes del grafo: dado un grafo con 3000 nodos, vamos variando la cantidad de ejes entre 1000 y 8,000,000 (el grafo completo tendría 8,997,000 ejes).
+    \item Precisión: teniendo un grafo de 3000 nodos y 1,000,000 ejes, variamos la precisión entre 0.1 y 0.000000000000001 (dividiendola por 10 entre cada iteración).
 \end{itemize}
+El factor $c$ de Page Rank fue configurado en 0.85, ya que no afecta el tiempo de cómputo.\\
 
-Los resultados fueron los siguientes:
+Los resultados de los experimentos fueron los siguientes:
 
-\begin{tikzpicture}
-\begin{axis}[
-    title=Precisión 0.001,
-    xlabel=cantidad de nodos,
-    ylabel=tiempo (nanosegundos),
-    height=4.5cm,
-    width=8cm,
-    ybar,
-    bar width=5]
-\addplot
-    coordinates {(6301,22337932.00) (10876,43180579.00) (36682,127379816.00) (62586,232454818.00)};
-\end{axis}
-\end{tikzpicture}
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={Variando la cantidad de nodos},
+        xlabel={cantidad de nodos},
+        ylabel={tiempo (nanosegundos)},
+        ylabel absolute,
+        ylabel style={yshift=.3cm},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.85\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=black] table[x=nodos,y=tiempo]{datos/pr-tiempos-nodos.out};
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
 
-\begin{tikzpicture}
-\begin{axis}[
-    title=Precisión 0.00001,
-    xlabel=cantidad de nodos,
-    ylabel=tiempo (nanosegundos),
-    height=4.5cm,
-    width=8cm,
-    ybar,
-    bar width=5]
-\addplot
-    coordinates {(6301,22896544.00) (10876,43770720.00) (36682,242562037.00) (62586,140004295.00)};
-\end{axis}
-\end{tikzpicture}
+Como vemos, la cantidad de nodos del grafo afecta el rapidez del algoritmo Page Rank. A simple vista, se nota que la curva que sigue el eje 'y' del gráfico tiene pinta de superior a lineal, aun asi nos limitamos a decir que es polinomial. Mientras que vamos aumentando la cantidad de nodos, los ejes empleados pasa a ser el doble de la cantidad de nodos en la iteración. Entonces la duda que queda en cuestión es saber si es la cantidad de ejes el factor clave que hace escalar los tiempos o la cantidad de nodos, lo que analizamos a continuación:
 
-\begin{tikzpicture}
-\begin{axis}[
-    title=Precisión 0.0000001,
-    xlabel=cantidad de nodos,
-    ylabel=tiempo (nanosegundos),
-    height=4.5cm,
-    width=8cm,
-    ybar,
-    bar width=5]
-\addplot
-    coordinates {(6301,23884365.00) (10876,47676087.00) (36682,145804117.00) (62586,263878991.00)};
-\end{axis}
-\end{tikzpicture}
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={Variando la cantidad de ejes},
+        xlabel={cantidad de ejes},
+        ylabel={tiempo (nanosegundos)},
+        ylabel absolute,
+        ylabel style={yshift=.3cm},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.85\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=black] table[x=ejes,y=tiempo]{datos/pr-tiempos-ejes.out};
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
 
-\begin{tikzpicture}
-\begin{axis}[
-    title=Variando la precisión (misma cantidad de nodos),
-    xlabel=nivel de precisión,
-    ylabel=tiempo (nanosegundos),
-    xtick={1,2,3},
-    xticklabels={0.001,0.00001,0.0000001},
-    height=4.5cm,
-    width=8cm,
-    ybar,
-    bar width=10]
-\addplot
-    coordinates {(1,3972349908.00) (2,5478391283.00) (3,7771818462.00)};
-\end{axis}
-\end{tikzpicture}
+En este caso, la curva es más pronunciada. Esto es un fuerte indicador de que la cantidad de ejes afecta la rapidez del algoritmo de manera más critica que la cantidad de nodos empleados. Aun asi, la curva que sigue el gráfico parece ser polinomial.\\
 
+Esto resultados tienen sentido ya que por las operaciones del algoritmo, sabemos que la mayor parte de la complejidad recide en generar la matriz de transición, lo cual toma una complejidad cúbica derivada de multiplicar matrices (además de sumarlas y escalarlas, lo cuál es cuadrático). \\
+Adicionalmente, en los tests de convergencia, el algoritmo no toma muchas iteraciones en determinar el autovector que queremos como respuesta, por lo que restaría ver como afecta al algoritmo el tiempo que se toma en usar el método de la potencia.
+
+A continuación vemos como la precisión empleada afecta los tiempos del algoritmo:
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={Variando la precisión},
+        xlabel={precisión},
+        ylabel={tiempo (nanosegundos)},
+        ylabel absolute,
+        ylabel style={yshift=.3cm},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        xtick={1,...,15},
+        xticklabels={10e-1,,10e-3,,10e-5,,10e-7,,10e-9,,10e-11,,10e-13,,10e-15},
+        enlargelimits=0.05,
+        width=0.85\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=black] table[x=indice,y=tiempo]{datos/pr-tiempos-precision.out};
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+En base a esto, concluimos que la precisión también es un factor considerable al analizar la eficiencia de nuestro algoritmo. Esto era predecible porque cuanta más precisión es requerida en el cálculo del autovector generado por Page Rank, más iteraciones deberá tomar el algoritmo para dar una respuesta.
 
 \subsubsection{Calidad de los resultados}
 
@@ -305,7 +315,7 @@ De forma de poder analizar los resultados facilmente, nos limitamos a instancias
 
 Para la instancia 1, el valor $c$ del algoritmo Page Rank fue configurado en 0.3, 0.6 y luego en 0.9 con el fin de introducir la posibilidad de que el navegante salte a otra página de forma aleatoria y ver cuánto afecta al resultado final. Esto no es asi para la instancia 3 ya que al ser un grafo donde la probabilidad de ir a las demás páginas es igual para todas, el concepto de navegante aleatorio es irrelevante porque es igual de probable que vaya a cualquier página desde el principio.
 
-Los resultados fueron:\newpage
+Los resultados fueron:
 
 \begin{center}
 Instancia 1
