@@ -55,7 +55,7 @@ Con estos datos, medimos la Norma Manhattan (L1) entre las soluciones de cada pa
 $L_1(x,y) = \sum\limits_{i=1}^n | x[i] - y[i] | $
 \end{center}
 
-Siendo $n$ la cantidad de nodos del grafo siendo estudiado, $x \in \mathbb{R}^{n}$ la solución del algoritmo en una iteración $j$ e $y \in \mathbb{R}^{n}$ la de la iteración $j+1$.\\
+Siendo $n$ la cantidad de nodos del grafo siendo estudiado, $x \in \mathbb{R}^{n}$ la solución del algoritmo en una iteración $k$ e $y \in \mathbb{R}^{n}$ la de la iteración $k+1$.\\
 Esta es una forma intuitiva y logica de estudiar la convergencia, ya que al tomar la suma de los valores absolutos entre los componentes de cada vector, lo que realmente estamos haciendo es calcular cuanto varia la solución que estamos calculando a través de las iteraciones. Además, podemos asegurar que por el procedimiento de nuestro algoritmo esta diferencia va a ir disminuyendo, y cuando sea lo suficientemente chica el algoritmo va a terminar.
 
 Estudiamos la convergencia a través de dos instancias de tamaño mediano-grande obtenidos de SNAP, mas precisamente:
@@ -64,21 +64,22 @@ Estudiamos la convergencia a través de dos instancias de tamaño mediano-grande
     \item Instancia 2: 10876 nodos y 39994 ejes.
 \end{itemize}
 Por lo que podemos decir que son considerables y relativamente esparsas (por ejemplo, el primero podria tener cerca de 40 millones de ejes si fuera completo, teniendo en cuenta que es un grafo dirigido).\\
-A su vez, fuimos variando el componente $c$ del algoritmo Page Rank entre 0.3, 0.6 y 0.9, el cual controla la importancia del viajero aleatorio, es decir, a menor $c$ aumenta la probabilidad de que el usuario vaya a una página aleatoria desde la actual.\\
+A su vez, fuimos variando el componente $c$ del algoritmo Page Rank entre 0.3, 0.6 y 0.9, el cual controla la importancia del \textit{navegante aleatorio}, es decir, a menor $c$ aumenta la probabilidad de que el usuario vaya a una página aleatoria desde la actual.\\
 Veamos los resultados:
 
 \begin{center}
     \begin{tikzpicture}
     \begin{axis}[
         title={Instancia 1},
-        xlabel={Iteraci\'on $i$},
-        ylabel={$L_1(x_i,x_{i+1})$},
+        xlabel={Iteraci\'on $k$},
+        ylabel={$L_1(x_k,x_{k+1})$},
+        ylabel absolute,
+        ylabel style={yshift=.3cm},
         scaled x ticks=false,
         scaled y ticks=false,
         enlargelimits=0.05,
-        width=0.5\textwidth,
-        height=0.5\textwidth,
-        legend pos=north west
+        width=0.45\textwidth,
+        height=0.45\textwidth
     ]
     \addplot[color=black] table[x=instancia,y=l1]{datos/pr-1-1-1.out};
     \addplot[color=red] table[x=instancia,y=l1]{datos/pr-1-1-2.out};
@@ -89,14 +90,16 @@ Veamos los resultados:
     \begin{tikzpicture}
     \begin{axis}[
         title={Instancia 2},
-        xlabel={Iteraci\'on $i$},
-        ylabel={$L1(x_i,x_i+1)$},
+        xlabel={Iteraci\'on $k$},
+        ylabel={$L1(x_k,x_{k+1})$},
+        ylabel absolute,
+        ylabel style={yshift=.3cm},
+        %ylabel shift={3cm},
         scaled x ticks=false,
         scaled y ticks=false,
         enlargelimits=0.05,
-        width=0.5\textwidth,
-        height=0.5\textwidth,
-        legend pos=north west
+        width=0.45\textwidth,
+        height=0.45\textwidth
     ]
     \addplot[color=black] table[x=instancia,y=l1]{datos/pr-1-2-1.out};
     \addplot[color=red] table[x=instancia,y=l1]{datos/pr-1-2-2.out};
@@ -106,7 +109,7 @@ Veamos los resultados:
     \end{tikzpicture}
 \end{center}
 
-Siendo $L1(x_i,x_i+1)$ (el eje y del gráfico) la distancia Manhattan entre los autovectores generados por el algoritmo entre las iteraciones $i$ e $i+1$.\\
+Siendo $L1(x_k,x_{k+1})$ (el eje y del gráfico) la distancia Manhattan entre los autovectores generados por el algoritmo entre las iteraciones $k$ e $k+1$.\\
 Como podemos ver el algoritmo converge rápidamente, tomando a lo sumo 9 iteraciones para terminar de procesar instancias de datos relativamente grandes. Los resultados son parecidos para ambas instancias.\\
 Adicionalmente, vemos que Page Rank converge de forma más rápida para valores de $c$ más chicos, es decir, casos en los cuales es más probable que el usuario vaya a una página cualquiera desde la actual. Cuando esto sucede, la matriz de transición tiene valores más parejos dentro de cada columna y podemos decir entonces que el algoritmo soluciona el problema más rápido porque el sistema es más estable.
 
