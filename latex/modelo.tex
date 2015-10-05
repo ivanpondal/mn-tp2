@@ -655,12 +655,26 @@ suceder que un equipo perdiese contra un contrincante que no tuviera mucho peso
 pero empatara contra un puntero, y esto debería verse reflejado ya que de otra
 manera, sólo quedaría registrado su partido perdido.
 
-Una posible forma de representar los empates aprovechando la estructura del
-modelo actual sería cuando se produce uno, reflejar en el grafo el equivalente a
-que ambos equipos hubieran perdido entre si, asignando como diferencia de
-puntaje el valor con el que empataron. De esta forma no solo incluiríamos este
-escenario al cálculo del ranking final, si no que además el puntaje con el que
-empataron tendría peso.
+En base a esto, proponemos dos formas alternativas de modelar el empate:
+
+\begin{itemize}
+    \item Una posible forma de representar los empates aprovechando la estructura del
+        modelo actual sería que cuando se produce uno, reflejar en el grafo el equivalente a
+        que ambos equipos hubieran perdido entre si, asignando como diferencia de
+        puntaje el valor con el que empataron. De esta forma no solo incluiríamos este
+        escenario al cálculo del ranking final, si no que además el puntaje con el que
+        empataron tendría peso.
+    \item Otra posibilidad sería que en caso de empate, se utilizaran otras métricas
+        del deporte para definir el ganador, al cual luego se le podría asignar
+        el puntaje mínimo para ganar el partido. Por ejemplo, si tomamos el caso
+        del futbol, en caso de empate podríamos definir el ganador como el equipo
+        que tuvo mayor posesión del balon durante el partido, o el equipo que tuvo
+        menor cantidad de tarjetas, o una combinación de varios factores. Una vez
+        determinado el ganador, el score asignado sería 1-0.
+        De esta forma, rompemos el empate refinando el criterio de ganador, y como
+        asignamos el mínimo puntaje para ganar, el puntaje en el ranking que obtiene
+        el ganador no es altamente influenciado por el partido en cuestion.
+\end{itemize}
 
 \subsubsection{Puntaje AFA}
 
