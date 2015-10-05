@@ -206,7 +206,25 @@ Las instancias que usamos para hacer estas comparaciones fueron:
                 \begin{scope}
                     \Vertices{circle}{1,2,3,4,5,6,7,8,9,10,11,12,13}
                 \end{scope}
-                \Edges(2,8,2,9,2,10,2,3,3,8,3,9,3,10,3,2,4,6,4,7,6,4,7,6,7,4,8,10,8,2,9,2,10,2,10,8)
+                \SetUpEdge[style={<-},color=red]
+                \Edge(2)(8)
+                \Edge(2)(9)
+                \Edge(2)(10)
+                \Edge(2)(3)
+                \Edge(3)(8)
+                \Edge(3)(9)
+                \Edge(3)(10)
+                \Edge(3)(2)
+                \Edge[style={<-,bend left}](4)(6)
+                \Edge[style={<-,bend right}](6)(4)
+                \Edge[style={<-,bend left}](4)(7)
+                \Edge[style={<-,bend right}](7)(4)
+                \Edge(7)(6)
+                \Edge[style={<-,bend left}](8)(10)
+                \Edge(8)(2)
+                \Edge(9)(2)
+                \Edge(10)(2)
+                \Edge[style={<-,bend right}](10)(8)
             \end{tikzpicture}
         \end{center}
     \item Instancia 2: 13 nodos y 31 ejes.
@@ -217,10 +235,41 @@ Las instancias que usamos para hacer estas comparaciones fueron:
                 \begin{scope}
                     \Vertices{circle}{1,2,3,4,5,6,7,8,9,10,11,12,13}
                 \end{scope}
-                \Edges(1,4,1,5,1,6,1,7,1,8,2,1,2,8,2,9,2,10,2,3,3,1,3,8,3,9,3,10,3,2,4,1,4,6,4,7,6,4,6,7,6,8,6,9,7,6,7,4,8,10,8,2,9,2,10,2,10,8,11,1,12,1)
+                \SetUpEdge[style={<-},color=red]
+                \Edge(1)(4)
+                \Edge(1)(5)
+                \Edge(1)(6)
+                \Edge(1)(7)
+                \Edge(1)(8)
+                \Edge(2)(1)
+                \Edge(2)(8)
+                \Edge(2)(9)
+                \Edge(2)(10)
+                \Edge(2)(3)
+                \Edge(3)(1)
+                \Edge(3)(8)
+                \Edge(3)(9)
+                \Edge(3)(10)
+                \Edge(3)(2)
+                \Edge(4)(1)
+                \Edge[style={<-,bend left}](4)(6)
+                \Edge[style={<-,bend right}](6)(4)
+                \Edge[style={<-,bend left}](4)(7)
+                \Edge[style={<-,bend right}](7)(4)
+                \Edge(6)(7)
+                \Edge[style={<-,bend left}](6)(8)
+                \Edge[style={<-,bend left}](6)(9)
+                \Edge(7)(6)
+                \Edge[style={<-,bend left}](8)(10)
+                \Edge(8)(2)
+                \Edge(9)(2)
+                \Edge(10)(2)
+                \Edge[style={<-,bend right}](10)(8)
+                \Edge[style={<-,bend left}](11)(1)
+                \Edge[style={<-,bend left}](12)(1)
             \end{tikzpicture}
         \end{center}
-    \item Instancia 3: 5 nodos y 10 ejes (grafo completo).
+    \item Instancia 3: 5 nodos y 20 ejes (grafo completo).
         \begin{center}
             \begin{tikzpicture}
                 \GraphInit[vstyle=Normal]
@@ -228,7 +277,27 @@ Las instancias que usamos para hacer estas comparaciones fueron:
                 \begin{scope}
                     \Vertices{circle}{1,2,3,4,5}
                 \end{scope}
-                \Edges(5,1,5,2,5,3,5,4,1,5,1,2,1,3,1,4,2,5,2,1,2,3,2,4,3,5,3,1,3,2,3,4,4,5,4,1,4,2,4,3)
+                \SetUpEdge[style={<-},color=red]
+                \Edge(5)(1)
+                \Edge(5)(2)
+                \Edge(5)(3)
+                \Edge(5)(4)
+                \Edge(1)(5)
+                \Edge(1)(2)
+                \Edge(1)(3)
+                \Edge(1)(4)
+                \Edge(2)(5)
+                \Edge(2)(1)
+                \Edge(2)(3)
+                \Edge(2)(4)
+                \Edge(3)(5)
+                \Edge(3)(1)
+                \Edge(3)(2)
+                \Edge(3)(4)
+                \Edge(4)(5)
+                \Edge(4)(1)
+                \Edge(4)(2)
+                \Edge(4)(3)
             \end{tikzpicture}
         \end{center}
 \end{itemize}
