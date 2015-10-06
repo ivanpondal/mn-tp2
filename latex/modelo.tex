@@ -82,13 +82,17 @@ Una vez que tenemos la Matriz de Transición, generaremos el puntaje para cada p
  buscando el autovector $w$ del autovalor 1 de $P_{2}$, tal que $P_{2}w = w$ y
 $w$ sea un vector de probabilidades (normalizado con norma 1).
 
-Es decir, generar el ranking de páginas equivale a aplicar el método de la potencia
+Es decir, generar el ranking de páginas equivale a aplicar el Método de la Potencia
 a la matriz $P_{2}$ y una vez hallado el $w$ mencionado, ordenar los puntajes de
 mayor a menor:
 
 \begin{equation} \label{eq:ranking_page_rank}
     ranking = \{ p_1, \dots, p_n \}, \text{donde } \forall\ i=1,\dots,n-1,\ w_{p_{i}} \geq w_{p_{i+1}}
 \end{equation}
+
+Explicaremos en detalle el Método de la Potencia en la sección \ref{metodo_potencia}.
+
+FALTA DECIR PORQUE SE PUEDE USAR EL MÉTODO DE LA POTENCIA.
 
 \subsubsection{PageRank con matriz Esparsa}
 
@@ -410,7 +414,7 @@ Por otro lado, sus desventajas son:
 \paragraph{Contexto de Uso}
 
 Antes de definir que estructura de datos vamos a utilizar para representar matrices esparsas, debemos definir el contexto de uso de la misma.
-Sabemos que el algoritmo de PageRank utiliza el metodo de la Potencia, usando la matriz $P_2$ definida previamente. Sin embargo la $P_2$ no es esparsa, inclusive todos sus valores son distintos de 0, por lo cual utilizar la implementacion del Page Rank descripta en la Seccion \ref{PageRank} no es posible .
+Sabemos que el algoritmo de PageRank utiliza el Método de la Potencia, usando la matriz $P_2$ definida previamente. Sin embargo la $P_2$ no es esparsa, inclusive todos sus valores son distintos de 0, por lo cual utilizar la implementacion del Page Rank descripta en la Seccion \ref{PageRank} no es posible .
 
 Para poder hacer frente a esta dificultad, utilizamos el Aglrotimo 1 propuesto por Kamvar et al.\cite{Kamvar2003} para calcular $x^{(k+1)} = P_2x^{k}$, cuyos pasos son los siguientes:
 \begin{enumerate}
@@ -683,3 +687,82 @@ desequilibran un tanto las cosas ya que un participante podría tener asignado
 como clásico un puntero, mientras que otro al último en la tabla de posiciones.
 Para este sistema de puntuación ambos partidos serían tratados al igual quel
 resto del torneo.
+
+
+\subsection{Método de la potencia}\label{metodo_potencia}
+
+El Método de la Potencia es un método iterativo que calcula sucesivas aproximaciones a los autovectores y autovalores de una matriz.
+
+Sea $A\in\mathbb{R}^{n \times n}$ una matriz cuadradad y sean $\lambda_1,\lambda_2,...,\lambda_n$
+sus autovalores, con $v_1,v_2,...,v_n$ los autovalores asociados. Para poder aplicar el método a
+la matriz $A$, debe valer que:
+
+$$|\lambda_1| > |\lambda_2| \geq \dots \geq |\lambda_n|$$
+$$v_1, v_2, \dots, v_n \text{ son autovectores l.i.}$$
+
+A continuación demostraremos como funciona el método.
+
+\begin{proposition}
+    Sea $x_0 \in \mathbb{R}^{n}$. Luego, $x_{(k+1)} = \frac{Ax_k}{||Ax_k||} \xrightarrow{k \to \infty} v_1$.
+\end{proposition}
+\begin{proof}
+
+Como $\{v_1, \dots, v_n\}$ es una base de autovectores l.i., podemos escribir $x_0 = \sum\limits_{j=1}^{n}{\beta_j v_j}$.
+
+Entonces, $Ax = \sum\limits_{j=1}^{n}{\beta_j A v_j} = \sum\limits_{j=1}^{n}{\beta_j \lambda_j v_j}$.
+
+Si multiplicamos una vez más por A tenemos que: $A^2x = \sum\limits_{j=1}^{n}{\beta_j \lambda_j A v_j} = \sum\limits_{j=1}^{n}{\beta_j \lambda_j^2 v_j}$.
+
+Y generalizando:
+
+$$A^kx = \sum\limits_{j=1}^{n}{\beta_j \lambda_j^k v_j}$$
+
+Reescribiendo, tenemos que:
+\begin{equation*}
+        \begin{aligned}
+        A^kx &= \sum\limits_{j=1}^{n}{\beta_j \lambda_j^k v_j} \\
+             &= \beta_1 \lambda_1^k v_1 +\sum\limits_{j=2}^{n}{\beta_j \lambda_j^k v_j} \\
+             &= \lambda_1^k \left(\beta_1 v_1 +\sum\limits_{j=2}^{n}{\beta_j \frac{\lambda_j^k}{\lambda_1^k} v_j} \right) \\
+        \end{aligned}
+\end{equation*}
+
+Y es facil ver que $\lim\limits_{k \to \infty} \sum\limits_{j=2}^{n}{\beta_j \frac{\lambda_j^k}{\lambda_1^k} v_j} = 0$,
+ya que $\forall\ 2\leq j\leq n,\ |\lambda_1| > |\lambda_i|$.
+
+Luego, consideremos una función $\phi:\mathbb{R}^{n}\to \mathbb{R}$ tal que:
+\begin{itemize}
+    \item $\phi(\alpha x) = \alpha \phi(x)$
+    \item $\phi(0) = 0$
+    \item $\phi$ continua
+    \item $\phi(\beta_1 v_1) \neq 0 \iff \beta_1 v_1 \neq 0$
+\end{itemize}
+
+Entonces, podemos escribir:
+\begin{equation*}
+        \begin{aligned}
+        \frac{\phi(A^{k+1}x)}{\phi(A^kx)}
+            &= \frac{\lambda_1^{k+1} \phi\left(\beta_1 v_1 +\sum\limits_{j=2}^{n}{\beta_j \frac{\lambda_j^{k+1}}{\lambda_1^{k+1}} v_j} \right)}
+                {\lambda_1^k \phi\left(\beta_1 v_1 +\sum\limits_{j=2}^{n}{\beta_j \frac{\lambda_j^k}{\lambda_1^k} v_j} \right)}
+            &= \lambda_1\frac{\phi\left(\beta_1 v_1 +\sum\limits_{j=2}^{n}{\beta_j \frac{\lambda_j^{k+1}}{\lambda_1^{k+1}} v_j} \right)}
+                    {\phi\left(\beta_1 v_1 +\sum\limits_{j=2}^{n}{\beta_j \frac{\lambda_j^k}{\lambda_1^k} v_j} \right)}
+        \end{aligned}
+\end{equation*}
+
+Y tomando el límite con $k$ tendiendo a infinito:
+\begin{equation*}
+        \begin{aligned}
+        \lim\limits_{k \to \infty} \frac{\phi(A^{k+1}x)}{\phi(A^kx)}
+            &= \lambda_1 \lim\limits_{k \to \infty}
+                    \frac{\phi\left(\beta_1 v_1 +\sum\limits_{j=2}^{n}{\beta_j \frac{\lambda_j^{k+1}}{\lambda_1^{k+1}} v_j} \right)}
+                    {\phi\left(\beta_1 v_1 +\sum\limits_{j=2}^{n}{\beta_j \frac{\lambda_j^k}{\lambda_1^k} v_j} \right)}
+            &= \lambda_1 \frac{\phi\left(\beta_1 v_1\right)}{\phi\left(\beta_1 v_1 \right)}
+            &= \lambda_1
+        \end{aligned}
+\end{equation*}
+
+Finalmente,
+$$x_{(k+1)} = \frac{Ax_k}{||Ax_k||} = \frac{A^kx}{||A^kx||}$$
+
+TERMINAR
+
+\end{proof}
