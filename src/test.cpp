@@ -211,6 +211,7 @@ void exp_prank_tiempos_nodos() {
 	FILE *file = fopen("exp/pr-tiempos-nodos.out", "w+");
 	fprintf(file, "nodos tiempo\n");
 	for (int nodos = 1000; nodos < 100000; nodos+=2000) {
+		start_timer();
 		vector< map< int , double > > A(nodos);
 		vector<int> links_salientes(nodos);
 		for (int e = 0; e < 2*nodos ;) {
@@ -233,7 +234,6 @@ void exp_prank_tiempos_nodos() {
 		page_rank.set_precision(0.00001);
 		set_teletransportacion(0.85);
 
-		start_timer();
 		vector< PageRankEsparso::rankeable > ranking = page_rank.rankear();
 		double tiempo = stop_timer();
 		fprintf(file, "%d %.6f\n", nodos, tiempo);
@@ -250,6 +250,7 @@ void exp_prank_tiempos_ejes() {
 	fprintf(file, "ejes tiempo\n");
 	int nodos = 3000;
 	for (int ejes = 1000; ejes < 8000000; ejes+=500000) {
+		start_timer();
 		vector< map< int , double > > A(nodos);
 		vector<int> links_salientes(nodos);
 		for (int e = 0; e < ejes ;) {
@@ -272,7 +273,6 @@ void exp_prank_tiempos_ejes() {
 		page_rank.set_precision(0.00001);
 		set_teletransportacion(0.85);
 
-		start_timer();
 		vector< PageRankEsparso::rankeable > ranking = page_rank.rankear();
 		double tiempo = stop_timer();
 		fprintf(file, "%d %.6f\n", ejes, tiempo);
@@ -317,6 +317,53 @@ void exp_prank_tiempos_precision() {
 		double tiempo = stop_timer();
 		fprintf(file, "%.15f %.6f\n", prec, tiempo);
 		cout<<prec<<endl;
+	}
+	fclose(file);
+}
+
+void exp_prank_tiempos_esparsa() {
+	random_device rd;
+    mt19937 gen(rd());
+	uniform_int_distribution<> dis(0, 100000);
+	FILE *file = fopen("exp/pr-tiempos-esparsa.out", "w+");
+	fprintf(file, "nodos esp noesp\n");
+	for (int nodos = 10; nodos < 650; nodos+=50) {
+		vector< map< int , double > > A(nodos);
+		vector< vector<int> > A2(nodos, vector<int>(nodos));
+		vector<int> links_salientes(nodos);
+
+		start_timer();
+		for (int e = 0; e < 2*nodos ;) {
+			int a = dis(gen) % nodos;
+			int b = dis(gen) % nodos;
+			if (a!=b && A[b].find(a) == A[b].end()) {
+				A[b].insert(pair<int,double>(a,1));
+				A2[b][a] = 1;
+				links_salientes[a]++;
+				e++;
+			}
+		}
+		for (int i = 0; i < nodos; i++) {
+			typedef map<int, double>::iterator it_type;
+			for(it_type iterator = A[i].begin(); iterator != A[i].end(); iterator++) {
+				int j = iterator->first;
+				iterator->second = double(1)/double(links_salientes[j]);
+			}
+		}
+		PageRankEsparso page_rank(A);
+		page_rank.set_precision(0.00001);
+		set_teletransportacion(0.85);
+
+		vector< PageRankEsparso::rankeable > ranking = page_rank.rankear();
+		double tiempo = stop_timer();
+
+		start_timer();
+		PageRank page_rank2(matrizTransicion(A2));
+		vector< PageRank::rankeable > ranking2 = page_rank2.rankear();
+		double tiempo2 = stop_timer();
+
+		fprintf(file, "%d %.6f\n %.6f\n", nodos, tiempo, tiempo2);
+		cout<<nodos<<endl;
 	}
 	fclose(file);
 }
@@ -436,7 +483,8 @@ int main(int argc, char *argv[])
 		// exp_prank_tiempos();
 		// exp_prank_tiempos_nodos();
 		// exp_prank_tiempos_ejes();
-		exp_prank_tiempos_precision();
+		exp_prank_tiempos_esparsa();
+		// exp_prank_tiempos_precision();
 		// exp_prank_calidad();
 
         // exp_gem_resultados();
