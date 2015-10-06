@@ -172,6 +172,8 @@ continuación:
 	sección \ref{sec:gem_model} (Por defecto 0.85).
 	\item \textbf{date_limit:} Campo opcional con la cantidad de fechas a tomar
 	en cuenta (Por defecto toma todas las fechas disponibles).
+\item \textbf{precision:} Campo opcional con el nivel de precisión a utilizar en
+	las comparaciones (Por defecto 0.0001).
 \end{itemize}
 
 Ahora explicaremos el código desarrollado:
@@ -227,7 +229,7 @@ Ahora explicaremos el código desarrollado:
 	V es una matriz con autovectores como columnas
 	l es una matriz con autovalores en su diagonal
 	i = 1
-	Mientras valorAbsoluto(l[i][i] - 1) > 0.0001
+	Mientras valorAbsoluto(l[i][i] - 1) > precision
 		Incremento i en una unidad
 	Fin mientras
 	Crear vector x correspondiente a la columna i de la matriz V
