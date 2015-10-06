@@ -135,7 +135,7 @@ void resolver(int algoritmo, double tele, int tipo_instancia, const char* path, 
             string out_file(path);
 			out_file = remove_extension(out_file);
 			out_file.append(".out");
-            sprintf(command, "octave --eval \"source('footbal_rankings.m'); AFA('%s','%s', team_codes_filename='data/team_code.txt');\" >> /dev/null",
+            sprintf(command, "octave --eval \"source('footbal_rankings.m'); AFA('%s','%s','data/team_code.txt');\" >> /dev/null",
                 path, out_file.c_str());
             if(system(command)) { cout << "System failed" << endl; };
 		}
@@ -496,10 +496,11 @@ int main(int argc, char *argv[])
 {
 	srand(time(NULL));
 	// si no hay argumentos corro tests unitarios, si no los de la cátedra
-	if(argc >= 4){
+	if(argc > 3){
 		int metodo = 0;
 		int instancia = 0;
 		sscanf(argv[1], "%u", &metodo);
+		cout<<metodo<<endl;
 		if(metodo == 0){
 			// Page Rank o GeM
 			double c = 0;
