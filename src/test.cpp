@@ -511,12 +511,17 @@ int main(int argc, char *argv[])
 			sscanf(argv[5], "%lf", &tol_corte);
 
 			resolver(0, c, instancia, inputfile, tol_corte);
-		}
-		else{
+		} else {
 			// InDeg o AFA
-			sscanf(argv[2], "%u", &instancia);
-			char* inputfile = argv[3];
-			resolver(1, 0, instancia, inputfile, 0);
+			if (argc > 4) {
+				sscanf(argv[3], "%u", &instancia);
+				char* inputfile = argv[4];
+				resolver(1, 0, instancia, inputfile, 0);
+			} else {
+				sscanf(argv[2], "%u", &instancia);
+				char* inputfile = argv[3];
+				resolver(1, 0, instancia, inputfile, 0);
+			}
 		}
 	}
 	else{
@@ -530,7 +535,7 @@ int main(int argc, char *argv[])
 		// exp_prank_tiempos();
 		// exp_prank_tiempos_nodos();
 		// exp_prank_tiempos_ejes();
-		exp_prank_tiempos_esparsa();
+		// exp_prank_tiempos_esparsa();
 		// exp_prank_tiempos_precision();
 		// exp_prank_calidad();
 
