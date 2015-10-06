@@ -642,72 +642,176 @@ las hipótesis planteadas.
 
 \subsubsection{Evolución del ranking}
 
-\begin{center}
-    \begin{tikzpicture}
-    \begin{axis}[
-        title={Evolución con GeM},
-		xlabel=Fecha,
-		ylabel=Puntaje,
-		xmin=1,
-		xmax=26,
-		ymin=0,
-		ymax=0.13,
-        width=0.8\textwidth,
-        height=0.5\textwidth,
-		xtick={1,...,26},
-		yticklabel style={/pgf/number format/fixed},
-		legend style={at={(1.015,1)},anchor=north west},
-		no markers,
-		thick,
-		cycle list name=exotic
-    ]
-    \addplot table[x index=0,y index=1]{../src/exp/gem-evolution-ranking.out};
-    \addplot table[x index=0,y index=7]{../src/exp/gem-evolution-ranking.out};
-    %\addplot table[x index=0,y index=17]{../src/exp/gem-evolution-ranking.out};
-    \addplot table[x index=0,y index=20]{../src/exp/gem-evolution-ranking.out};
-    \addplot table[x index=0,y index=21]{../src/exp/gem-evolution-ranking.out};
-    \addplot table[x index=0,y index=22]{../src/exp/gem-evolution-ranking.out};
-    \addplot table[x index=0,y index=23]{../src/exp/gem-evolution-ranking.out};
-    \addplot table[x index=0,y index=24]{../src/exp/gem-evolution-ranking.out};
-    \addplot table[x index=0,y index=25]{../src/exp/gem-evolution-ranking.out};
-    %\addplot table[x index=0,y index=30]{../src/exp/gem-evolution-ranking.out};
-	\legend{Aldosivi, Boca Juniors, Quilmes,
-	Racing Club, River Plate, Rosario Central, San Lorenzo, San Martín (SJ)}
-    \end{axis}
-    \end{tikzpicture}
-\end{center}
+Una de las características que nos interesa estudiar con estos modelos de
+ranking es ver cómo evolucionan a lo largo del tiempo ya que es importanto
+analizar los casos donde se producen cambios abruptos como para que no exista
+ninguna anomalía en el resultado final. Es por esto que en el siguiente
+experimento lo que hicimos es tomar los dos modelos descritos y estudiar
+en paralelo su evolución a lo largo del tiempo.
 
-\begin{center}
-    \begin{tikzpicture}
-    \begin{axis}[
-        title={Evolución con Puntaje AFA},
-		xlabel=Fecha,
-		ylabel=Puntaje,
-		xmin=1,
-		xmax=26,
-		ymin=0,
-		ymax=0.08,
-        width=0.8\textwidth,
-        height=0.5\textwidth,
-		xtick={1,...,26},
-		yticklabel style={/pgf/number format/fixed},
-		legend style={at={(1.015,1)},anchor=north west},
-		no markers,
-		thick,
-		cycle list name=exotic
-    ]
-	\addplot table[x index=0,y index=1]{../src/exp/afa-evolution-ranking.out};
-    \addplot table[x index=0,y index=7]{../src/exp/afa-evolution-ranking.out};
-    %\addplot table[x index=0,y index=17]{../src/exp/afa-evolution-ranking.out};
-    \addplot table[x index=0,y index=20]{../src/exp/afa-evolution-ranking.out};
-    \addplot table[x index=0,y index=21]{../src/exp/afa-evolution-ranking.out};
-    \addplot table[x index=0,y index=22]{../src/exp/afa-evolution-ranking.out};
-    \addplot table[x index=0,y index=23]{../src/exp/afa-evolution-ranking.out};
-    \addplot table[x index=0,y index=24]{../src/exp/afa-evolution-ranking.out};
-    \addplot table[x index=0,y index=25]{../src/exp/afa-evolution-ranking.out};
-    %\addplot table[x index=0,y index=30]{../src/exp/afa-evolution-ranking.out};
-	\legend{Aldosivi, Boca Juniors, Quilmes,
-	Racing Club, River Plate, Rosario Central, San Lorenzo, San Martín (SJ)}
-    \end{axis}
-    \end{tikzpicture}
-\end{center}
+Para esto tomamos los que terminaron en los primeros 8 lugares según el modelo
+GeM utilizando un $c = 0.85$ (Cuadro \ref{fig:primeros8}). Los datos utilizados
+fueron los resultados de las primeras 26 fechas del Torneo de Primera División
+Argentino.
+
+La idea es no sólo ver cómo fueron modificándose las posiciones de los
+participantes si no además comparar entre GeM y el sistema establecido por AFA.
+Nuestra intuición es que probablemente veamos resultados que a primera vista
+resulten inesperados en el ranking provisto por GeM, ya que el hecho de
+brindarle pesos a cada equipo produce que no necesariamente el participante con
+más partidos ganados esté arriba en la tabla.
+
+A continuacion pasamos a mostrar los graficos reflejando el comportamiento de
+ambos modelos. Cabe destacar que para el sistema de puntaje de la AFA como este
+no trabaja asignando a cada equipo un peso cuya suma total da 1, para poder
+comparar los dos métodos, para cada fecha tomamos como puntaje el porcentaje del
+total de puntos para esa fecha en particular.
+
+\textbf{Ejemplo:} Si Boca Juniors acumuló un total de 58 puntos pero el total de
+puntos para esa fecha es 1044, entonces el puntaje ``normalizado'' será de
+0.0556.
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+				title={Evolución GeM $(c = 0.85)$},
+			xlabel=Fecha,
+			ylabel=Puntaje,
+			xmin=1,
+			xmax=26,
+			ymin=0,
+			ymax=0.13,
+			width=0.8\textwidth,
+			height=0.5\textwidth,
+			xtick={1,...,26},
+			yticklabel style={/pgf/number format/fixed},
+			legend style={at={(1.015,1)},anchor=north west},
+			no markers,
+			thick,
+			cycle list name=exotic
+		]
+		\addplot table[x index=0,y index=1]{../src/exp/gem-evolution-ranking.out};
+		\addplot table[x index=0,y index=7]{../src/exp/gem-evolution-ranking.out};
+		%\addplot table[x index=0,y index=17]{../src/exp/gem-evolution-ranking.out};
+		\addplot table[x index=0,y index=20]{../src/exp/gem-evolution-ranking.out};
+		\addplot table[x index=0,y index=21]{../src/exp/gem-evolution-ranking.out};
+		\addplot table[x index=0,y index=22]{../src/exp/gem-evolution-ranking.out};
+		\addplot table[x index=0,y index=23]{../src/exp/gem-evolution-ranking.out};
+		\addplot table[x index=0,y index=24]{../src/exp/gem-evolution-ranking.out};
+		\addplot table[x index=0,y index=25]{../src/exp/gem-evolution-ranking.out};
+		%\addplot table[x index=0,y index=30]{../src/exp/gem-evolution-ranking.out};
+		\legend{Aldosivi, Boca Juniors, Quilmes,
+		Racing Club, River Plate, Rosario Central, San Lorenzo, San Martín (SJ)}
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Evolución de los equipos que terminaron en los primeros 8 lugares
+	según GeM.}
+	\label{fig:gem_evo}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}
+		\begin{axis}[
+			title={Evolución ranking AFA},
+			xlabel=Fecha,
+			ylabel=Puntaje,
+			xmin=1,
+			xmax=26,
+			ymin=0,
+			ymax=0.08,
+			width=0.8\textwidth,
+			height=0.5\textwidth,
+			xtick={1,...,26},
+			yticklabel style={/pgf/number format/fixed},
+			scaled y ticks=false,
+			legend style={at={(1.015,1)},anchor=north west},
+			no markers,
+			thick,
+			cycle list name=exotic
+		]
+		\addplot table[x index=0,y index=1]{../src/exp/afa-evolution-ranking.out};
+		\addplot table[x index=0,y index=7]{../src/exp/afa-evolution-ranking.out};
+		%\addplot table[x index=0,y index=17]{../src/exp/afa-evolution-ranking.out};
+		\addplot table[x index=0,y index=20]{../src/exp/afa-evolution-ranking.out};
+		\addplot table[x index=0,y index=21]{../src/exp/afa-evolution-ranking.out};
+		\addplot table[x index=0,y index=22]{../src/exp/afa-evolution-ranking.out};
+		\addplot table[x index=0,y index=23]{../src/exp/afa-evolution-ranking.out};
+		\addplot table[x index=0,y index=24]{../src/exp/afa-evolution-ranking.out};
+		\addplot table[x index=0,y index=25]{../src/exp/afa-evolution-ranking.out};
+		%\addplot table[x index=0,y index=30]{../src/exp/afa-evolution-ranking.out};
+		\legend{Aldosivi, Boca Juniors, Quilmes,
+		Racing Club, River Plate, Rosario Central, San Lorenzo, San Martín (SJ)}
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Evolución de los mismos 8 equipos en el modelo que utiliza la AFA.}
+	\label{fig:afa_evo}
+\end{figure}
+
+Tenemos varios puntos para observar en los gráficos generados. Para empezar se
+puede ver cómo en el ranking que generó GeM hay mucha más variación que en el
+provisto por AFA, donde los cambios son mucho más graduales. Esto se debe a que
+el sistema de la AFA tiene un tope para el puntaje que cada participante puede
+ganar por fecha que serían los 3 puntos de ganar su partido correspondiente. Sin
+embargo, con GeM basta que un equipo derrote a otro de mayor peso para
+catapultarlo en la tabla de posiciones.
+
+Otro detalle que podemos notar, es en el resultado final cómo quedó el orden
+para la AFA con respecto a GeM (Cuadro \ref{fig:primeros8}). Acá tenemos que por
+un lado 5 de los 8 primeros equipos según GeM figuran dentro de los primeros 8
+para el puntaje de AFA. Esto en cierta forma nos indica que el resultado de GeM
+no es disparatado, incluso el orden de estos 5 equipos se mantiene bastante
+parecido. Sin embargo, notamos que existen algunas irregularidades, donde la que
+nos va interesar es la de Aldosivi.
+
+\begin{table}[H]
+	\centering
+    \begin{center}
+		\begin{tabular}{| c | l | c |}
+			\hline
+			Posicion & Equipo & Puntaje \\ \hline
+			1 & Boca Juniors & 0.086019 \\
+			2 & Aldosivi & 0.065353 \\
+			3 & River Plate & 0.063500 \\
+			4 & San Lorenzo & 0.062035 \\
+			5 & Rosario Central & 0.048473 \\
+			6 & Racing Club & 0.047878 \\
+			7 & San Martín (SJ) & 0.043956 \\
+			8 & Quilmes & 0.042382 \\
+			\hline
+		\end{tabular}
+		\begin{tabular}{| c | l | c |}
+			\hline
+			Posicion & Equipo & Puntaje \\ \hline
+			1 & Boca Juniors & 0.055556 \\
+			2 & San Lorenzo & 0.051723 \\
+			3 & Rosario Central & 0.049808 \\
+			4 & Racing Club & 0.046935 \\
+			5 & River Plate & 0.045977 \\
+			11 & Quilmes & 0.037356 \\
+			16 & San Martín (SJ) & 0.030651 \\
+			18 & Aldosivi & 0.028736 \\
+			\hline
+		\end{tabular}
+    \end{center}
+	\caption{A izquierda, primeros 8 lugares según GeM con $c = 0.85$. A derecha
+	la posición de los mismos equipos según el ranking de AFA.}
+	\label{fig:primeros8}
+\end{table}
+
+Aldosivi figura como segundo lugar en la primer tabla, mientras que para el
+ranking estándar está 18º. Si observamos en la Figura \ref{fig:gem_evo},
+Aldosivi pega un salto en la fecha 13, llegando incluso a estar por encima de
+Boca Juniors, pero luego se va estabilizando a lo largo de las fechas hasta
+quedar en su respectiva posición. Esta fecha da la casualidad de que Aldosivi
+jugó contra Boca Juniors, ganándole 3-0. Si observamos, en la fecha 12, Boca se
+encontraba primero, llevándole una diferencia apreciable en puntaje al
+segundo lugar, River Plate, por lo tanto como Aldosivi venció al puntero, sus
+goles tenían el mayor peso posible para una victoria, explicando su repentina
+escalada en la tabla.
+
+Por último, podemos analizar también el salto de Boca de la fecha 10 a la 11.
+Como era de esperarse, en la fecha 11, Boca jugó contra River, ganando 2-0.
+Nuevamente se ve como en la fecha 10 River se encontraba por encima del resto,
+por lo cual era el equipo que más puntos generaba al ganarle.
