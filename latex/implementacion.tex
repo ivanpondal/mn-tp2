@@ -1,3 +1,81 @@
+\subsection{Page Rank con matriz Esparsa}
+A la hora de implementar Page Rank con matriz Esparsa utilizamos \textsc{C++}, lenguaje que nos permite realizar mediciones temporales precisas, como asi tambien utilizar nuestras propias estructuras de datos.
+Recordemos que elegimos el \textit{Dictionary of Keys (dok)} para representar las matrices esparsas. El mismo consiste en un vector de diccionarios, en donde las posiciones del vector representan filas y las keys de los diccionarios las columnas.
+A su vez es necesario tener en cuenta que los datos de entrada nos son provistos de la siguiente forma:
+\begin{itemize}
+	\item Cantidad de nodos ($n$) y cantidad de links salientes ($m$).
+	\item $m$ lineas con pares $i$, $j$, donde $i$ tiene un link hacia $j$.
+\end{itemize}
+Los paso para realizar Page Rank son los siguientes:
+
+\begin{enumerate}
+	\item Leemos los datos de entrada y luego generamos $P$.
+	\begin{lstlisting}
+	Leer n, m del input
+	Crear un vector de diccionarios vacios, A, de tamano n
+	Crear un vector tamano n, links_salientes, inicializado en 0
+	Para k=0 hasta m-1 hacer:
+		Leer i,j del input
+		Crear la key i-1 con 1 como valor asociado en el diccionario de A[j-1]
+		Sumar 1 al contenido de links_salientes[i-1]
+	Fin Para
+	Para i=0 hasta n-1 hacer:
+		Iterar en el diccionario de A[i]:
+			Actualizar los valores asociados a las keys con el valor 1 / links_salientes[key]
+		Fin Iteracion
+	Fin Para
+	\end{lstlisting}
+	Vale la pena aclarar que utilizamos \textit{links_salientes} para calcular los $n_j$ necesarios para luego calcular los valores de $P$.
+
+	\item Calculamos el autovector asociado a 1 con el metodo de la Potencia con $P$, normalizando el autovector obtenido.
+	\begin{lstlisting}
+	Definir una precision
+	Definir c como el factor de teletransportacion
+	Crear un vector, x, con valores aleatorios de 1 a 50 de tamanio n
+	Crear un vector, v, con 1/n como valores de tamanio n
+	Crear un vector, y, igual a x
+	Crear dos numeros flotantes, delta y ultimo_delta, inicializados en INFINITY y 0 respectivamente.
+	Hacer:
+		x = y
+		y = esparsaPorVector(P, x)
+		y = escalarPorVector(y, c)
+		w = normaUno(x) - normaUno(y)
+		y = sumaVectores(y + escalarPorVector(w, v))
+		ultimo_delta = delta
+		delta = phi(x) / phi(y)
+	Mientras (delta - utimo_delta) > precision
+	Normalizar y
+	\end{lstlisting}
+	A continuacion describimos el procedimiento auxiliar esparsaPorVector:
+	\begin{lstlisting}
+	esparsaPorVector(matriz esparsa P, vector x):
+		Crear vector, y, de tamano n
+		Para i = 0 hasta n-1 hacer:
+			flotante, suma, inicializado en 0
+			Itero sobre las keys del diccionario en P[i]:
+				entero j = key
+				suma = (valor de la key)*x[j]
+			Fin de la Iteracion
+			y[i] = suma
+		Fin del Para
+		Devolver y
+	\end{lstlisting}
+	El procedimiento phi consiste en calcular la norma infinito del vector pasado por parametro, con la variacion de no tomar el modulo de las componentes del vector.
+	Los procedimientos auxiliares escalarPorVector, sumaVectores, normaUno y phi son procedimientos estandar, por lo cual no los detallamos.
+
+	\item Generamos el ranking a partir del autovector y calculado en el paso previo.
+	\begin{lstlisting}
+	Crear un vector de pares posicion y valor, llamado ranking, de tamano n
+	Para i=0 hasta n-1 hacer:
+		ranking[i] = par(i, y[i])
+	Fin Para
+	Ordenar ranking segun sus valores
+	\end{lstlisting}
+	Para ordenar el vector ranking utilizamos el procedimiento que nos provee \textit{C++},  \texttt{sort}\footnote{http://en.cppreference.com/w/cpp/algorithm/sort}
+
+
+\end{enumerate}
+
 \subsection{Scripts Rankings Deportivos}
 
 Para los dos modelos siendo estudiados, GeM y el sistema de puntaje de la AFA,
