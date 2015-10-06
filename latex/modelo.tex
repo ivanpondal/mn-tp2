@@ -217,7 +217,7 @@ La misma seria representado de la siguiente manera:
 
 \matrix[square matrix]
 {
-1 & 5 & 1 & 2 & 2 & 3 & 1 & 3 & 5 \\
+1 & 4 & 1 & 2 & 2 & 3 & 1 & 3 & 4 \\
 };
 \end{tikzpicture}
 \end{center}
@@ -381,7 +381,7 @@ Por otro lado, sus desventajas son:
 Antes de definir que estructura de datos vamos a utilizar para representar matrices esparsas, debemos definir el contexto de uso de la misma.
 Sabemos que el algoritmo de PageRank utiliza el Método de la Potencia, usando la matriz $P_2$ definida previamente. Sin embargo la $P_2$ no es esparsa, inclusive todos sus valores son distintos de 0, por lo cual utilizar la implementacion del Page Rank descripta en la Seccion \ref{PageRank} no es posible .
 
-Para poder hacer frente a esta dificultad, utilizamos el Aglrotimo 1 propuesto por Kamvar et al.\cite{Kamvar2003} para calcular $x^{(k+1)} = P_2x^{k}$, cuyos pasos son los siguientes:
+Para poder hacer frente a esta dificultad, utilizamos el Algoritmo 1 propuesto por Kamvar et al.\cite{Kamvar2003} para calcular $x^{(k+1)} = P_2x^{k}$, cuyos pasos son los siguientes:
 \begin{enumerate}
     \item $y = cPx$
     \item $w = ||x||_1 - ||y||_1$
