@@ -507,6 +507,11 @@ Por lo tanto concluimos que tanto la cantidad de ejes como la distribución son 
 
 \subsection{GeM}
 
+\subsubsection{Instancias de prueba}
+
+La instancia de prueba utilizada para la experimentación consistió en tomar los resultados de las primeras 26 fechas del Torneo de Primera División
+Argentino, con la salvedad los siguientes resultados para los partidos suspendidos: Fecha 19 - Defensa y Justicia 0:1 River Plate  y Fecha 22 - Godoy Cruz 0:1 Racing Club  
+
 \subsubsection{Variando el parámetro $c$}\label{exp_gem_2}
 Este experimento consiste en variar el parámetro $c$ y analizar como impacta esta
 variación en los resultados obtenidos al generar el ranking con GeM.
@@ -516,9 +521,9 @@ el \textit{navegante aleatorio} al resultado final.
 
 Como es intuitivo de pensar, nuestra hipótesis en este experimento es que al tender
 $c$ a cero aumenta la influencia del \textit{navegante aleatorio} en el puntaje de
-cada página y, por lo tanto, más se parecen los puntajes de todas la páginas.
-Es decir, menos dejan de importar los links salientes de las distintas páginas
-del grafo original.
+cada equipo y, por lo tanto, más se parecen los puntajes de todas los equipos.
+Es decir, los resultados anteriores entre de los distintas equipos
+dejan de importar.
 
 Por otro lado, cuando $c$ tiende a uno se debilita la influencia del \textit{navegante
 aleatorio}, causando que el puntaje dependa solo de la matriz $H + au^{t}$, descrita
@@ -650,9 +655,7 @@ experimento lo que hicimos es tomar los dos modelos descritos en la sección \re
  y estudiar en paralelo su evolución a lo largo del tiempo.
 
 Para esto tomamos los equipos que terminaron en los primeros 8 lugares según el modelo
-GeM utilizando un $c = 0.85$ (Cuadro \ref{fig:primeros8}). Los datos utilizados
-fueron los resultados de las primeras 26 fechas del Torneo de Primera División
-Argentino.
+GeM utilizando un $c = 0.85$ (Cuadro \ref{fig:primeros8}).
 
 La idea es no sólo ver cómo fueron modificándose las posiciones de los
 participantes si no además comparar entre GeM y el sistema establecido por AFA.
