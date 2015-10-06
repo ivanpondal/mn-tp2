@@ -83,8 +83,8 @@ string remove_extension(const std::string& filename) {
 
 void resolver(int algoritmo, double tele, int tipo_instancia, const char* path, double tolerancia) {
 	if (algoritmo == 0) {
-		// Resolver con PageRank
 		if (tipo_instancia == 0) {
+			// Page Rank
 			// la instancia es de paginas web
 			PageRankEsparso page_rank(cargarSNAPEsparso(path, offset));
 			page_rank.set_precision(tolerancia);
@@ -100,6 +100,7 @@ void resolver(int algoritmo, double tele, int tipo_instancia, const char* path, 
 				fprintf(file, "%d %5.f\n",ranking[i].posicion, ranking[i].valor);
 			}
 		} else {
+			// GeM
 			// la instancia es de deportes
             // octave --eval "source('footbal_rankings.m'); GeM(exp/gem_resultados_1.txt, exp/gem_resultados_1.out, c=0.85, pres=0.1)"
             char command[1024];
@@ -112,6 +113,32 @@ void resolver(int algoritmo, double tele, int tipo_instancia, const char* path, 
 		}
 	} else {
 		// Resolver con Método alternativo
+		if(tipo_instancia == 0){
+			// InDeg
+			// la instancia es de paginas web
+			vector< vector<int> > A = cargarSNAP(path);
+			InDeg inDeg(A);
+			vector< InDeg::rankeable > ranking = inDeg.rankear();
+			// imprimo el resultado
+			string out_file(path);
+			out_file = remove_extension(out_file);
+			out_file.append(".out");
+
+			FILE *file = fopen(out_file.c_str(), "w+");
+			for (unsigned int i = 0; i < ranking.size(); i++) {
+				fprintf(file, "%d %5.f\n",ranking[i].posicion, ranking[i].valor);
+			}
+		}
+		else{
+			// Ranking AFA
+			char command[1024];
+            string out_file(path);
+			out_file = remove_extension(out_file);
+			out_file.append(".out");
+            sprintf(command, "octave --eval \"source('footbal_rankings.m'); AFA('%s','%s', team_codes_filename='data/team_code.txt');\" >> /dev/null",
+                path, out_file.c_str());
+            if(system(command)) { cout << "System failed" << endl; };
+		}
 	}
 }
 
@@ -469,18 +496,27 @@ int main(int argc, char *argv[])
 {
 	srand(time(NULL));
 	// si no hay argumentos corro tests unitarios, si no los de la cátedra
-	if(argc == 6){
+	if(argc >= 4){
 		int metodo = 0;
 		int instancia = 0;
-		double c = 0;
-		double tol_corte = 0;
 		sscanf(argv[1], "%u", &metodo);
-		sscanf(argv[2], "%lf", &c);
-		sscanf(argv[3], "%u", &instancia);
-		char* inputfile = argv[4];
-		sscanf(argv[5], "%lf", &tol_corte);
+		if(metodo == 0){
+			// Page Rank o GeM
+			double c = 0;
+			double tol_corte = 0;
+			sscanf(argv[2], "%lf", &c);
+			sscanf(argv[3], "%u", &instancia);
+			char* inputfile = argv[4];
+			sscanf(argv[5], "%lf", &tol_corte);
 
-		resolver(metodo, c, instancia, inputfile, tol_corte);
+			resolver(0, c, instancia, inputfile, tol_corte);
+		}
+		else{
+			// InDeg o AFA
+			sscanf(argv[2], "%u", &instancia);
+			char* inputfile = argv[3];
+			resolver(1, 0, instancia, inputfile, 0);
+		}
 	}
 	else{
 		// test_cargar_SNAP();
