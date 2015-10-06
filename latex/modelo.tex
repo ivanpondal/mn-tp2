@@ -90,9 +90,21 @@ mayor a menor:
     ranking = \{ p_1, \dots, p_n \}, \text{donde } \forall\ i=1,\dots,n-1,\ w_{p_{i}} \geq w_{p_{i+1}}
 \end{equation}
 
-Explicaremos en detalle el Método de la Potencia en la sección \ref{metodo_potencia}.
+Falta ver que podemos utilizar el Método de la Potencia con $P_2$. Pero como $P_2$ es una matriz de transición regular, entonces se cumple que:
+\begin{itemize}
+  \item 1 es un autovalor de $P_2$.
+  \item Hay un único vector de probabilidades que es el autovector asociado al autovalor 1.
+  \item Los demás autovalores cumplen:
+ $$|\lambda_1| > |\lambda_2| \geq \dots \geq |\lambda_n|$$
+\end{itemize}
 
-FALTA DECIR PORQUE SE PUEDE USAR EL MÉTODO DE LA POTENCIA.
+Las condiciones que debe cumplir una matriz $A\in\mathbb{R}^{n \times n}$, con autovalores $\lambda_1,\lambda_2,...,\lambda_n$, y $v_1,v_2,...,v_n$ los autovalores asociados, para poder aplicar el método son:
+
+$$|\lambda_1| > |\lambda_2| \geq \dots \geq |\lambda_n|$$
+$$v_1, v_2, \dots, v_n \text{ son autovectores l.i.}$$
+
+Por lo visto, $P_2$ cumple los requisitos necesarios para utilizar el Método de la Potencia.
+Explicaremos en detalle el Método de la Potencia en la sección \ref{metodo_potencia}.
 
 \subsubsection{PageRank con matriz Esparsa}
 
@@ -140,10 +152,14 @@ Las ventajas de usar esta estructura de datos son las siguientes:
   \item Facilidad para crearse de forma dinámicamente, es decir, si a priori no conocemos la forma de la matriz a representar.
   \item La operación matriz esparsa por vector es sencilla.
 \end{enumerate}
-Por otro lado, sus desventajas son:
+Por otro lado, su principal desventaja es que:
 \begin{enumerate}
+<<<<<<< Updated upstream
   \item Los accesos a los valores no tienen complejidad temporal constante.
   \item Las operaciones entre matrices esparsas, sea la suma o la multiplicación, son engorrosas.
+=======
+  \item Las operaciones entre matrices esparsas, sea la suma o la multiplicación, son engorrosas.
+>>>>>>> Stashed changes
 \end{enumerate}
 
 \paragraph{2. Compressed Sparse Row (CSR):}
