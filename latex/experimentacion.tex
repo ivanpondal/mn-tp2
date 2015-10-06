@@ -643,13 +643,13 @@ las hipótesis planteadas.
 \subsubsection{Evolución del ranking}
 
 Una de las características que nos interesa estudiar con estos modelos de
-ranking es ver cómo evolucionan a lo largo del tiempo ya que es importanto
-analizar los casos donde se producen cambios abruptos como para que no exista
+ranking es ver cómo evolucionan a lo largo del tiempo ya que es importante
+analizar los casos donde se producen cambios abruptos, para que no exista
 ninguna anomalía en el resultado final. Es por esto que en el siguiente
-experimento lo que hicimos es tomar los dos modelos descritos y estudiar
-en paralelo su evolución a lo largo del tiempo.
+experimento lo que hicimos es tomar los dos modelos descritos en la sección \ref{rankings_deportivos}
+ y estudiar en paralelo su evolución a lo largo del tiempo.
 
-Para esto tomamos los que terminaron en los primeros 8 lugares según el modelo
+Para esto tomamos los equipos que terminaron en los primeros 8 lugares según el modelo
 GeM utilizando un $c = 0.85$ (Cuadro \ref{fig:primeros8}). Los datos utilizados
 fueron los resultados de las primeras 26 fechas del Torneo de Primera División
 Argentino.
@@ -662,10 +662,11 @@ brindarle pesos a cada equipo produce que no necesariamente el participante con
 más partidos ganados esté arriba en la tabla.
 
 A continuacion pasamos a mostrar los graficos reflejando el comportamiento de
-ambos modelos. Cabe destacar que para el sistema de puntaje de la AFA como este
-no trabaja asignando a cada equipo un peso cuya suma total da 1, para poder
-comparar los dos métodos, para cada fecha tomamos como puntaje el porcentaje del
-total de puntos para esa fecha en particular.
+ambos modelos. Cabe destacar que el sistema de puntaje de la AFA no trabaja
+asignando a cada equipo un peso dónde la suma total da 1. Para subsanar esto,
+y poder comparar los dos métodos, vamos a definir el puntaje de un equipo en una
+fecha particular como el porcentaje de sus puntos sobre el total de puntos en dicha
+fecha.
 
 \textbf{Ejemplo:} Si Boca Juniors acumuló un total de 58 puntos pero el total de
 puntos para esa fecha es 1044, entonces el puntaje ``normalizado'' será de
