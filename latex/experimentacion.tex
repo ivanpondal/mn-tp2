@@ -40,7 +40,7 @@ Las instancias de prueba utilizadas para la experimentación pueden dividirse en
 
 
     \item Instancias chicas, que fueron utilizadas para analizar la calidad de los resultados de PageRank.
-        Estas instancias fueron generedas utilizando las herramientas provistas por la cátedra y otras extra generadas por nosotros.
+        Estas instancias fueron generadas utilizando las herramientas provistas por la cátedra y otras extra generadas por nosotros.
         Los detalles particulares se desarrollan en la sección \textbf{Calidad de los resultados}.
 
     \item Instancias aleatorias, generadas mediante nuestros propios algoritmos. Estas son detalladas en la sección que analiza los \textbf{Tiempos de Ejecución}.
@@ -121,7 +121,7 @@ Para tomar los tiempos, utilizamos la librería chronos de C++ y pasamos las med
 Los experimentos pasan por tres variables: la cantidad de nodos y la cantidad de ejes del grafo siendo analizado, y la precisión utilizada en Page Rank (es decir, la diferencia que tomamos como suficiente entre dos iteraciones para dar un resultado en el método de la potencia).\\
 Además, comparamos la versión 'esparsa' del algoritmo Page Rank (donde la matriz se guarda de forma diferente) con la versión clásica del mismo algoritmo. En este caso, la precisión del algoritmo esta fija y se va variando la cantidad de vértices.\\
 Para los demás experimentos, cabe destacar que utilizamos la versión esparsa del algoritmo ya que por la cantidad de nodos y ejes, la versión normal es muy lenta para evaluar.\\
-Con este fin, generamos instancias de forma dinámica y aleatoria, es decir que dada una cantidad de nodos, asignamos los ejes aleatoriamente hasta llegar a cierta cantidad a través de la libreria Random de C++.\\
+Con este fin, generamos instancias de forma dinámica y aleatoria, es decir que dada una cantidad de nodos, asignamos los ejes aleatoriamente hasta llegar a cierta cantidad a través de la librería Random de C++.\\
 Más precisamente, los experimentos consisten en:
 \begin{itemize}
     \item Una comparación entre el algoritmo para matrices esparsas y Page Rank normal.
@@ -200,7 +200,7 @@ Como vemos, la cantidad de nodos del grafo afecta la rapidez del algoritmo Page 
 
 En este caso, la curva es más pronunciada. Esto es un fuerte indicador de que la cantidad de ejes afecta la rapidez del algoritmo de manera más critica que la cantidad de nodos empleados. Aun así, la curva que sigue el gráfico parece ser polinomial.\\
 
-Esto resultados tienen sentido ya que por las operaciones del algoritmo, sabemos que la mayor parte de la complejidad recide en generar la matriz de transición, lo cual toma una complejidad cúbica derivada de multiplicar matrices (además de sumarlas y escalarlas, lo cuál es cuadrático). \\
+Esto resultados tienen sentido ya que por las operaciones del algoritmo, sabemos que la mayor parte de la complejidad reside en generar la matriz de transición, lo cual toma una complejidad cúbica derivada de multiplicar matrices (además de sumarlas y escalarlas, lo cuál es cuadrático). \\
 Adicionalmente, en los tests de convergencia, el algoritmo no toma muchas iteraciones en determinar el autovector que queremos como respuesta, por lo que restaría ver como afecta al algoritmo el tiempo que se toma en usar el método de la potencia.
 
 A continuación vemos como la precisión empleada afecta los tiempos del algoritmo:
@@ -338,7 +338,7 @@ Las instancias que usamos para hacer estas comparaciones fueron:
             \end{tikzpicture}
         \end{center}
 \end{itemize}
-De forma de poder analizar los resultados facilmente, nos limitamos a instancias chicas.\\
+De forma de poder analizar los resultados fácilmente, nos limitamos a instancias chicas.\\
 
 Para la instancia 1, el valor $c$ del algoritmo Page Rank fue configurado en 0.3, 0.6 y luego en 0.9 con el fin de introducir la posibilidad de que el navegante salte a otra página de forma aleatoria y ver cuánto afecta al resultado final. Esto no es así para la instancia 3 ya que al ser un grafo donde la probabilidad de ir a las demás páginas es igual para todas, el concepto de navegante aleatorio es irrelevante porque es igual de probable que vaya a cualquier página desde el principio.
 
@@ -402,11 +402,11 @@ Instancia 1
 \end{figure}
 
 Por un lado, Page Rank obtiene un ranking con valores lógicos en el sentido de que el nodo con mas ejes hacia él es el de mayor importancia y los nodos con cantidad de links parecidos reciben un ranking similar.\\
-Como podemos ver, los resultados de Page Rank no varian mucho, sus valores son afectados pero los rankings varian muy levemente. Esto es debido a que la cantidad de ejes no es de un tamaño tan grande como para que la variación de $c$ afecte el ranking.\\
-A su vez, InDeg da los resultados que esperabamos, ordenando según la cantidad de links entrantes.\\
-En comparación, los algoritmos dan resultados parecidos de a secciones pero sí tiene diferencias en los primeros puestos. Esto se debe a que Page Rank detecta que por las probabilildades del recorrido que un navegante puede hacer, no necesariamente las páginas con mas links entrantes van a ser las más visitadas a futuro.\\
+Como podemos ver, los resultados de Page Rank no varían mucho, sus valores son afectados pero los rankings varían muy levemente. Esto es debido a que la cantidad de ejes no es de un tamaño tan grande como para que la variación de $c$ afecte el ranking.\\
+A su vez, InDeg da los resultados que esperábamos, ordenando según la cantidad de links entrantes.\\
+En comparación, los algoritmos dan resultados parecidos de a secciones pero sí tiene diferencias en los primeros puestos. Esto se debe a que Page Rank detecta que por las probabilidades del recorrido que un navegante puede hacer, no necesariamente las páginas con mas links entrantes van a ser las más visitadas a futuro.\\
 
-Aun asi, veamos otro ejemplo donde la cantidad de ejes sea un poco mayor:
+Aun así, veamos otro ejemplo donde la cantidad de ejes sea un poco mayor:
 
 \begin{center}
 Instancia 2
@@ -502,7 +502,7 @@ Instancia 3
     \end{subfigure}
 \end{figure}
 
-Los resultados indican lo lógico, como es un grafo donde la probabilidad de ir a cualquier lado es igual, tanto Page Rank como InDeg resuelven el problema asignandole igual importancia a cada página.\\
+Los resultados indican lo lógico, como es un grafo donde la probabilidad de ir a cualquier lado es igual, tanto Page Rank como InDeg resuelven el problema asignándole igual importancia a cada página.\\
 Por lo tanto concluimos que tanto la cantidad de ejes como la distribución son los factores que más contribuyen a los resultados de Page Rank.
 
 \subsection{GeM}
@@ -514,7 +514,7 @@ variación en los resultados obtenidos al generar el ranking con GeM.
 Recordemos que $c$ es el coeficiente de amortiguación, que regula que tanto afecta
 el \textit{navegante aleatorio} al resultado final.
 
-Como es intuitivo de pensar, nuestra hipotesis en este experimento es que al tender
+Como es intuitivo de pensar, nuestra hipótesis en este experimento es que al tender
 $c$ a cero aumenta la influencia del \textit{navegante aleatorio} en el puntaje de
 cada página y, por lo tanto, más se parecen los puntajes de todas la páginas.
 Es decir, menos dejan de importar los links salientes de las distintas páginas
@@ -530,7 +530,7 @@ Se muestran a continuación dichos resultados para diferentes valores de $c$:
     \begin{center}
         \begin{tabular}{| c | l | c |}
             \hline
-            Posicion & Equipo & Puntaje \\ \hline
+            Posición & Equipo & Puntaje \\ \hline
             1 & Vélez Sarsfield & 0.033333 \\
             2 & Unión & 0.033333 \\
             3 & Gimnasia y Esgrima (LP) & 0.033333 \\
@@ -550,7 +550,7 @@ Se muestran a continuación dichos resultados para diferentes valores de $c$:
         \end{tabular}
         \begin{tabular}{| c | l | c |}
             \hline
-            Posicion & Equipo & Puntaje \\ \hline
+            Posición & Equipo & Puntaje \\ \hline
             1 & Boca Juniors & 0.051301 \\
             2 & San Lorenzo & 0.044563 \\
             3 & River Plate & 0.044200 \\
@@ -578,7 +578,7 @@ Se muestran a continuación dichos resultados para diferentes valores de $c$:
     \begin{center}
         \begin{tabular}{| c | l | c |}
             \hline
-            Posicion & Equipo & Puntaje \\ \hline
+            Posición & Equipo & Puntaje \\ \hline
             1 & Boca Juniors & 0.086019 \\
             2 & Aldosivi & 0.065353 \\
             3 & River Plate & 0.063500 \\
@@ -598,7 +598,7 @@ Se muestran a continuación dichos resultados para diferentes valores de $c$:
         \end{tabular}
         \begin{tabular}{| c | l | c |}
             \hline
-            Posicion & Equipo & Puntaje \\ \hline
+            Posición & Equipo & Puntaje \\ \hline
             1 & Boca Juniors & 0.095290 \\
             2 & Aldosivi & 0.075151 \\
             3 & River Plate & 0.068142 \\
@@ -661,7 +661,7 @@ resulten inesperados en el ranking provisto por GeM, ya que el hecho de
 brindarle pesos a cada equipo produce que no necesariamente el participante con
 más partidos ganados esté arriba en la tabla.
 
-A continuacion pasamos a mostrar los graficos reflejando el comportamiento de
+A continuación pasamos a mostrar los gráficos reflejando el comportamiento de
 ambos modelos. Cabe destacar que el sistema de puntaje de la AFA no trabaja
 asignando a cada equipo un peso dónde la suma total da 1. Para subsanar esto,
 y poder comparar los dos métodos, vamos a definir el puntaje de un equipo en una
@@ -771,7 +771,7 @@ nos va interesar es la de Aldosivi.
     \begin{center}
 		\begin{tabular}{| c | l | c |}
 			\hline
-			Posicion & Equipo & Puntaje \\ \hline
+			Posición & Equipo & Puntaje \\ \hline
 			1 & Boca Juniors & 0.086019 \\
 			2 & Aldosivi & 0.065353 \\
 			3 & River Plate & 0.063500 \\
@@ -784,7 +784,7 @@ nos va interesar es la de Aldosivi.
 		\end{tabular}
 		\begin{tabular}{| c | l | c |}
 			\hline
-			Posicion & Equipo & Puntaje \\ \hline
+			Posición & Equipo & Puntaje \\ \hline
 			1 & Boca Juniors & 0.055556 \\
 			2 & San Lorenzo & 0.051723 \\
 			3 & Rosario Central & 0.049808 \\

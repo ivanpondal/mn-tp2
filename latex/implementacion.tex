@@ -1,6 +1,6 @@
 \subsection{Page Rank}
 
-A la hora de implementar Page Rank, en ambas versiones, utilizamos \textsc{C++}, lenguaje que nos permite realizar mediciones temporales precisas, como asi tambien utilizar nuestras propias estructuras de datos.
+A la hora de implementar Page Rank, en ambas versiones, utilizamos \textsc{C++}, lenguaje que nos permite realizar mediciones temporales precisas, como así también utilizar nuestras propias estructuras de datos.
 A su vez es necesario tener en cuenta que los datos de entrada nos son provistos de la siguiente forma:
 \begin{itemize}
 	\item Cantidad de nodos ($n$) y cantidad de links salientes ($m$).
@@ -8,7 +8,7 @@ A su vez es necesario tener en cuenta que los datos de entrada nos son provistos
 \end{itemize}
 
 \subsubsection{Page Rank sin matriz esparsa}
-En esta version del Page Rank utilizamos un vector de vector para representar la matriz $P_2$, la cual es necesaria para utilizar el metodo de la potencia en su formulacion clasica.
+En esta versión del Page Rank utilizamos un vector de vector para representar la matriz $P_2$, la cual es necesaria para utilizar el método de la potencia en su formulación clásica.
 Los paso para realizar Page Rank sin matriz esparsa son los siguientes:
 \begin{enumerate}
 	\item Leemos los datos de entrada y luego generamos $P$
@@ -19,7 +19,7 @@ Los paso para realizar Page Rank sin matriz esparsa son los siguientes:
 		Leer i,j del input
 		P[j-1][i-1] = 1
 	Fin Para
-	Crear un vector, links_salientes, de tamano n
+	Crear un vector, links_salientes, de tamanio n
 	Para j=0 hasta n-1 hacer:
 		Para i=0 hasta n-1 hacer:
 			links_salientes[j] = links_salientes[j] + P[i][j]
@@ -48,8 +48,8 @@ Los paso para realizar Page Rank sin matriz esparsa son los siguientes:
 	Crear vector de vectores, E = multiplicarVectores(v, uno)
 	Crear vector de vectores, P2 = sumaMatrices(escalarPorMatriz(P1, c), escalarPorMatriz(E, 1-c)
 	\end{lstlisting}
-	Los procedimientos auxiliares multiplicarVectores, sumaMatrices y escalarPorMatriz son procedimientos estandar, por lo cual no los detallamos.
-	\item Calculamos el autovector asociado a 1 con el metodo de la Potencia con $P_2$, normalizando el autovector obtenido.
+	Los procedimientos auxiliares multiplicarVectores, sumaMatrices y escalarPorMatriz son procedimientos estándar, por lo cual no los detallamos.
+	\item Calculamos el autovector asociado a 1 con el método de la Potencia con $P_2$, normalizando el autovector obtenido.
 	\begin{lstlisting}
 	Definir una precision
 	Crear un vector, x, con valores aleatorios de 1 a 50 de tamanio n
@@ -66,18 +66,18 @@ Los paso para realizar Page Rank sin matriz esparsa son los siguientes:
 	y = multiplicarMatrizPorVector(B, x)
 	Normalizar y
 	\end{lstlisting}
-	El procedimiento phi consiste en calcular la norma infinito del vector pasado por parametro, con la variacion de no tomar el modulo de las componentes del vector.
+	El procedimiento phi consiste en calcular la norma infinito del vector pasado por parámetro, con la variación de no tomar el modulo de las componentes del vector.
 
-	Los procedimientos auxiliares multiplicarMatrices, multiplicarMatrizPorVector y phi son procedimientos estandar, por lo cual no los detallamos.
+	Los procedimientos auxiliares multiplicarMatrices, multiplicarMatrizPorVector y phi son procedimientos estándar, por lo cual no los detallamos.
 
-	Normalizar un vector, en nuestra implementacion, implica dividir cada componente del vector por la norma 1 del mismo.
+	Normalizar un vector, en nuestra implementación, implica dividir cada componente del vector por la norma 1 del mismo.
 	\item Una vez obtenido el autovector estacionario, $y$, generamos el ranking de las paginas y lo imprimimos:
 	\begin{lstlisting}
-	Crear un vector de pares posicion-valor, llamado ranking, de tamanio n inicializado en 0
+	Crear un vector de pares posición-valor, llamado ranking, de tamanio n inicializado en 0
 	Para i=0 hasta n-1 hacer:
 		ranking[i] = par(i, y[i])
 	Fin Para
-	Ordener ranking segun la segundo componente de los pares, valor
+	Ordenar ranking según la segundo componente de los pares, valor
 	imprimir(ranking)
 	\end{lstlisting}
 	Para ordenar el vector ranking utilizamos el procedimiento que nos provee \textit{C++},  \texttt{sort}\footnote{http://en.cppreference.com/w/cpp/algorithm/sort}.
@@ -92,7 +92,7 @@ Los paso para realizar Page Rank con matriz esparsa son los siguientes:
 	\item Leemos los datos de entrada y luego generamos $P$.
 	\begin{lstlisting}
 	Leer n, m del input
-	Crear un vector de diccionarios vacios, P, de tamano n
+	Crear un vector de diccionarios vacíos, P, de tamano n
 	Crear un vector tamano n, links_salientes, inicializado en 0
 	Para k=0 hasta m-1 hacer:
 		Leer i,j del input
@@ -105,9 +105,9 @@ Los paso para realizar Page Rank con matriz esparsa son los siguientes:
 		Fin Iteracion
 	Fin Para
 	\end{lstlisting}
-	Al igual que en la version sin matriz esparsa utilizamos \textit{links_salientes} para calcular los $n_j$ necesarios para luego calcular los valores de $P$.
+	Al igual que en la versión sin matriz esparsa utilizamos \textit{links_salientes} para calcular los $n_j$ necesarios para luego calcular los valores de $P$.
 
-	\item Calculamos el autovector asociado a 1 con el metodo de la Potencia con $P$, normalizando el autovector obtenido.
+	\item Calculamos el autovector asociado a 1 con el método de la Potencia con $P$, normalizando el autovector obtenido.
 	\begin{lstlisting}
 	Definir una precision
 	Definir c como el factor de teletransportacion
@@ -127,7 +127,7 @@ Los paso para realizar Page Rank con matriz esparsa son los siguientes:
 	Mientras (delta - utimo_delta) > precision
 	Normalizar y
 	\end{lstlisting}
-	A continuacion describimos el procedimiento auxiliar esparsaPorVector:
+	A continuación describimos el procedimiento auxiliar esparsaPorVector:
 	\begin{lstlisting}
 	esparsaPorVector(matriz esparsa P, vector x):
 		Crear vector, y, de tamano n
@@ -141,19 +141,19 @@ Los paso para realizar Page Rank con matriz esparsa son los siguientes:
 		Fin del Para
 		Devolver y
 	\end{lstlisting}
-	El procedimiento phi es igual de la version sin matriz esparsa.
+	El procedimiento phi es igual de la versión sin matriz esparsa.
 
-	Los procedimientos auxiliares escalarPorVector, sumaVectores y normaUno son procedimientos estandar, por lo cual no los detallamos.
+	Los procedimientos auxiliares escalarPorVector, sumaVectores y normaUno son procedimientos estándar, por lo cual no los detallamos.
 
-	Por ultimo Normalizar un vector consiste el realizar el mismo procedimiento descripto en la version sin matriz esparsa.
-	\item A partir de este punto, los pasos son identicos a los que realizamos en la version sin matriz esparsa.
+	Por ultimo Normalizar un vector consiste el realizar el mismo procedimiento descripto en la versión sin matriz esparsa.
+	\item A partir de este punto, los pasos son idénticos a los que realizamos en la versión sin matriz esparsa.
 
 \end{enumerate}
 
 \subsection{Scripts Rankings Deportivos}
 
 Para los dos modelos siendo estudiados, GeM y el sistema de puntaje de la AFA,
-decidimos implementarlos com scripts para \textsc{MATLAB/Octave}, dado que lo que nos
+decidimos implementarlos con scripts para \textsc{MATLAB/Octave}, dado que lo que nos
 interesaba era analizar los resultados de los mismos y no analizar su tiempo de
 cómputo u otro atributo relacionado a su implementación.
 
@@ -186,12 +186,12 @@ Ahora explicaremos el código desarrollado:
 	Crear matriz A de tamanio equipos*equipos llena de 0s
 	Mientras partidos > 0
 		Cargo numero de fecha del partido junto a los equipos y el resultado
-		Si habia limite de fecha y ya se cumplio
+		Si había limite de fecha y ya se cumplió
 			partidos = 0
 		Si no
-			Si el primer equipo perdio
+			Si el primer equipo perdió
 				A[numero primer equipo][numero segundo equipo] += diferencia de puntos
-			Si el segundo equipo perdio
+			Si el segundo equipo perdió
 				A[numero segundo equipo][numero primer equipo] += diferencia de puntos
 			Fin si
 		Fin si
@@ -206,10 +206,10 @@ Ahora explicaremos el código desarrollado:
 	Para i de 1 a equipos
 		sumaFila = suma total de elementos en fila i de A
 		Si la suma > 0
-			La fila i de H seran todos los elementos de la fila i de A
+			La fila i de H serán todos los elementos de la fila i de A
 			cada uno dividido por sumaFila
 		Si no
-			Pongo un 1 en la posicion i del vector a
+			Pongo un 1 en la posición i del vector a
 		Fin si
 	Fin para
 	\end{lstlisting}
@@ -294,7 +294,7 @@ Pasamos a describir el código:
 	Crear matriz S de tamanio equipos*2 llena de 0s
 	Mientras partidos > 0
 		Cargo numero de fecha del partido junto a los equipos y el resultado
-		Si habia limite de fecha y ya se cumplio
+		Si había limite de fecha y ya se cumplió
 			partidos = 0
 		Si no
 			Si hubo empate

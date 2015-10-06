@@ -5,7 +5,7 @@ Hoy en día la cantidad de páginas web en todo el mundo asciende a una cantidad
 (Search Engines) cumplen un rol tan importante en el uso diario de internet desde
 hace muchos años.
 
-Dichos buscadores nos permiten realizar busquedas de páginas web mediante distintos
+Dichos buscadores nos permiten realizar búsquedas de páginas web mediante distintos
 criterios, facilitando el acceso a la información.
 
 Un posible criterio (bastante utilizado) es considerar que las páginas web populares
@@ -15,7 +15,7 @@ de popularidad los resultados obtenidos, esperando que encontremos más rápido 
 
  Siguiendo esta intuición, se han elaborado diferentes algoritmos para ``rankear''
  las páginas web. A continuación presentaremos el famoso método PageRank, utilizado
- por Google en sus comienzos.
+ por Google.
 
 \subsubsection{PageRank}\label{PageRank}
 
@@ -40,7 +40,7 @@ apuntan a la página $k$:
     x_k = \sum\limits_{j \in\ L_k}{\frac{x_j}{n_j}},\quad k=1,\dots,n
 \end{equation}
 
-En este algoritmo, hallaramos los $x_k$ modelando el problema como una cadena de
+En este algoritmo, hallaremos los $x_k$ modelando el problema como una cadena de
  Markov, a la cual llamaremos Matriz de Transición, y que construiremos de la siguiente forma:
 
 \begin{enumerate}
@@ -49,13 +49,13 @@ En este algoritmo, hallaramos los $x_k$ modelando el problema como una cadena de
 	\item Luego, sea $W\in\{0,1\}^{n \times n}$ la \textit{matriz de conectividad} de $G$, tal
         que la celda $\{i,j\}$ tiene un 1 si hay un link saliente de la $j$-ésima página
         a la $i$-ésima página (los \textit{autolinks} son ignorados, o lo que es lo mismo,
-        $\forall\ 1\leq i\leq n\ W_{i,i}$).
+        $\forall\ 1\leq i\leq n\ W_{i,i}=0$).
 	\item Si definimos $n_j = \sum\limits_{i=1}^{n}{W_{i,j}}$ como el grado de $j$
-        (la cantida de links salientes), entonces podemos definir la matriz
+        (la cantidad de links salientes), entonces podemos definir la matriz
         $P\in\mathbb{R}^{n \times n}$, tal que la $P_{i,j} = 1/n_{j} * W_{i,j} $, y
         $P$ es estocástica por columnas.
 
-        Además, notese que resolver el sistema dado por \ref{eq:puntajes_page_rank}
+        Además, nótese que resolver el sistema dado por \ref{eq:puntajes_page_rank}
         es equivalente a encontrar un $x\in\mathbb{R}^n$ tal que $Px=x$.
         Es decir, encontrar el autovector asociado al autovalor 1 de $P$ tal que
         $x_i > 0$ y $\sum\limits_{i=1}^{n}{x_i} = 1$.
@@ -68,7 +68,7 @@ En este algoritmo, hallaramos los $x_k$ modelando el problema como una cadena de
         Entonces, $P_{1} = P + D$, dónde $D = vd^{t}$, $d\in\{0,1\}^{n}$ tal que
         $d_j = 1$ si $n_j = 0$, y $d_j = 0$ en caso contrario, y $v\in\mathbb{R}^n$
          tal que $v_j = 1/n$.
-    \item Entonces, $P_{1}$ es estocástica por columnas, pero puede que no sea regular.
+    \item Por lo tanto, $P_{1}$ es estocástica por columnas, pero puede que no sea regular.
         Para que sí lo sea, extendemos el concepto anterior a todas las páginas
         (fenómeno de \textit{teletransportación}).
 
@@ -97,10 +97,10 @@ FALTA DECIR PORQUE SE PUEDE USAR EL MÉTODO DE LA POTENCIA.
 \subsubsection{PageRank con matriz Esparsa}
 
 Partiendo del hecho de que, aproximadamente, cada pagina Web tiene 7 links salientes\cite{Kamvar2003} surge la posibilidad de optimizar la estructura que representa el Grafo dirigido de la Web, debido a la baja densidad de la matriz de conectividad, $W$, asociada a dicho Grafo.
-Esta optimizacion no es solo una posibilidad, sino una necesidad dado que la cantidad de Webs indexadas tiene un requerimiento prohibitivo en terminos de memoria si la representamos, ingenuamente, como un vector de vectores.
-Nuestra hipotesis es que, utilizando una estructura de datos optimizada, no solo obtendremos mejoras en terminos de complejidad espacial, sino tambien en terminos de complejidad temporal.
+Esta optimización no es solo una posibilidad, sino una necesidad dado que la cantidad de páginas indexadas tiene un requerimiento prohibitivo en términos de memoria si la representamos, ingenuamente, como un vector de vectores.
+Nuestra hipótesis es que, utilizando una estructura de datos optimizada, no solo obtendremos mejoras en términos de complejidad espacial, sino también en términos de complejidad temporal.
 
-A partir de este analisis, nos propusimo analizar tres estructuras de datos que representan matrices esparsas:
+A partir de este análisis, nos propusimos analizar tres estructuras de datos que representan matrices esparsas:
 \begin{enumerate}
   \item \textit{Dictionary of Keys (dok)}
   \item \textit{Compressed Sparse Row (CSR)}
@@ -109,7 +109,7 @@ A partir de este analisis, nos propusimo analizar tres estructuras de datos que 
 
 Sea $A \in \mathbb{R}^{n \times n}$ una matriz esparsa, y sea $m$ es la cantidad de valores distintos de 0 de $A$.
 \paragraph{1. Dictionary of Keys (dok):}
-Esta estructura esta representada como un vector de diccionarios, en donde cada posicion, $i$, del vector puede considerarse como una fila, y la key del diccionario contenido dentro de esa posicion representa una columna, $j$, siendo el valor asociado a esa key, en el diccionario, el valor en la matriz contenido en esa fila y columna ($A_{ij}$). Solo aquellas $A_{ij}$ que tienen valores distintos de 0 tienen una key en los diccionarios.
+Esta estructura esta representada como un vector de diccionarios, en donde cada posición, $i$, del vector puede considerarse como una fila, y la key del diccionario contenido dentro de esa posición representa una columna, $j$, siendo el valor asociado a esa key, en el diccionario, el valor en la matriz contenido en esa fila y columna ($A_{ij}$). Solo aquellas $A_{ij}$ que tienen valores distintos de 0 tienen una key en los diccionarios.
 \newline
 \newline
 Veamos un ejemplo. Sea $B \in \mathbb{R}^{4 \times 4}$ la siguiente matriz:
@@ -137,28 +137,28 @@ Esta claro que intercambiando columnas por filas, como posiciones del vector con
 \newline
 Las ventajas de usar esta estructura de datos son las siguientes:
 \begin{enumerate}
-  \item Facilidad para crearse de forma dinamicamente, es decir, si a priori no conocemos la forma de la matriz a representar.
-  \item La operacion matriz esparsa por vector es sencilla.
+  \item Facilidad para crearse de forma dinámicamente, es decir, si a priori no conocemos la forma de la matriz a representar.
+  \item La operación matriz esparsa por vector es sencilla.
 \end{enumerate}
 Por otro lado, sus desventajas son:
 \begin{enumerate}
   \item Los accesos a los valores no tienen complejidad temporal constante.
-  \item Las operaciones entre matrices esparsas, sea la suma o la multiplicacion, son engorrosas.
+  \item Las operaciones entre matrices esparsas, sea la suma o la multiplicación, son engorrosas.
 \end{enumerate}
 
 \paragraph{2. Compressed Sparse Row (CSR):}
 
-Esta estructura utiliza tres vectores, dos de tamano $m$, llamemosles \textit{val} y \textit{col_ind} respectivamente, y uno de tamano $n+1$, llamemosle \textit{row_ptr}.
+Esta estructura utiliza tres vectores, dos de tamaño $m$, llamémosles \textit{val} y \textit{col_ind} respectivamente, y uno de tamaño $n+1$, llamémosle \textit{row_ptr}.
 \begin{itemize}
     \item En \textit{val} guardamos los valores de $A$ distintos de 0, recorriendo $A$ por filas, es decir fijando las filas y avanzado por las columnas.
-    \item En la posicion $k$ de \textit{col_ind} guardamos el indice $j$ del valor $A_{ij}$ contenido en la posicion $k$ del vector \textit{val}.
-    \item Por ultimo en \textit{row_ptr} guardamos indices del vector \textit{val} en los cuales se encuentran el primera valor de cada fila, de tal
+    \item En la posición $k$ de \textit{col_ind} guardamos el índice $j$ del valor $A_{ij}$ contenido en la posición $k$ del vector \textit{val}.
+    \item Por ultimo en \textit{row_ptr} guardamos índices del vector \textit{val} en los cuales se encuentran el primera valor de cada fila, de tal
      forma que para la fila $i$, el valor $k$ contenido en \textit{row_ptr[i]}, nos dice que \textit{val[k]} corresponde al primer valor de la fila
       $i$ y el valor $k'$ contenido en \textit{row_ptr[i+1]}, nos dice que \textit{val[k'-1]} corresponde al ultimo valor de la fila $i$.
       Vale la pena aclarar que si $k = k'$ entonces la fila no tiene valores distintos de 0.
 \end{itemize}
 
-Utilizemos $B$ como la matriz del punto anterior:
+Utilicemos $B$ como la matriz del punto anterior:
 \[
   B = \left(\begin{array}{*5{c}}
     10 & 0 & 0 & -2\\
@@ -252,27 +252,27 @@ La misma seria representado de la siguiente manera:
 
 Las ventajas de usar esta estructura de datos son las siguientes:
 \begin{enumerate}
-  \item Eficiente a la hora de realizar operaciones aritmeticas entre matrices esparsas (suma, multiplicacion).
-  \item La operacion matriz esparsa por vector es sencilla.
+  \item Eficiente a la hora de realizar operaciones aritméticas entre matrices esparsas (suma, multiplicación).
+  \item La operación matriz esparsa por vector es sencilla.
 \end{enumerate}
 Por otro lado, sus desventajas son:
 \begin{enumerate}
-  \item Dificultad a la hora de crearse de forma dinamica, ya que debemos recalcular/redimensionar los tamanos de los vectores.
-  \item Cambios en la esparcidad son costosos, misma razon que el punto anterior.
+  \item Dificultad a la hora de crearse de forma dinámica, ya que debemos recalcular/redimensionar los tamaños de los vectores.
+  \item Cambios en la esparcidad son costosos, misma razón que el punto anterior.
 \end{enumerate}
 
 \paragraph{3. Compressed Sparse Column (CSC):}
 
-Muy parecidad a la \textit{Compressed Sparse Row (CSR)}.
- Tambien utiliza tres vectores, dos de tamano $m$, llamemosles \textit{val} y \textit{row_ind} respectivamente, y uno de tamano $n+1$, llamemosle \textit{col_ptr}.
+Muy parecida a la \textit{Compressed Sparse Row (CSR)}.
+ También utiliza tres vectores, dos de tamaño $m$, llamémosles \textit{val} y \textit{row_ind} respectivamente, y uno de tamaño $n+1$, llamémosle \textit{col_ptr}.
 
  \begin{itemize}
      \item En \textit{val} guardamos los valores de $A$ distintos de 0, recorriendo $A$ por columnas, es decir fijando las columnas y avanzado por las filas.
-     \item En la posicion $k$ de \textit{row_ind} guardamos el indice $i$ del valor $A_{ij}$ contenido en la posicion $k$ del vector \textit{val}.
-     \item Por ultimo en \textit{col_ptr} guardamos indices del vector \textit{val} en los cuales se encuentran el primera valor de cada columna, de tal forma que para la columna $j$, el valor $k$ contenido en \textit{col_ptr[j]}, nos dice que \textit{val[k]} corresponde al primer valor de la fila $j$ y el valor $k'$ contenido en \textit{col_ptr[j+1]}, nos dice que \textit{val[k'-1]} corresponde al ultimo valor de la col $j$. Vale la pena aclarar que si $k = k'$ entonces la columna no tiene valores distintos de 0.
+     \item En la posición $k$ de \textit{row_ind} guardamos el índice $i$ del valor $A_{ij}$ contenido en la posición $k$ del vector \textit{val}.
+     \item Por ultimo en \textit{col_ptr} guardamos índices del vector \textit{val} en los cuales se encuentran el primera valor de cada columna, de tal forma que para la columna $j$, el valor $k$ contenido en \textit{col_ptr[j]}, nos dice que \textit{val[k]} corresponde al primer valor de la fila $j$ y el valor $k'$ contenido en \textit{col_ptr[j+1]}, nos dice que \textit{val[k'-1]} corresponde al ultimo valor de la col $j$. Vale la pena aclarar que si $k = k'$ entonces la columna no tiene valores distintos de 0.
  \end{itemize}
 
-Nuevamente utilizemos $B$ como ejemplo:
+Nuevamente utilicemos $B$ como ejemplo:
 \[
   B = \left(\begin{array}{*5{c}}
     10 & 0 & 0 & -2\\
@@ -367,19 +367,19 @@ La misma seria representado de la siguiente manera:
 
 Las ventajas de usar esta estructura de datos son las siguientes:
 \begin{enumerate}
-  \item Eficiente a la hora de realizar operaciones aritmeticas entre matrices esparsas (suma, multiplicacion).
-  \item La operacion matriz esparsa por vector es sencilla.
+  \item Eficiente a la hora de realizar operaciones aritméticas entre matrices esparsas (suma, multiplicación).
+  \item La operación matriz esparsa por vector es sencilla.
 \end{enumerate}
 Por otro lado, sus desventajas son:
 \begin{enumerate}
-  \item Dificultad a la hora de crearse de forma dinamica, ya que debemos recalcular/redimensionar los tamanos de los vectores.
-  \item Cambios en la esparcidad son costosos, misma razon que el punto anterior.
+  \item Dificultad a la hora de crearse de forma dinámica, ya que debemos recalcular/redimensionar los tamaños de los vectores.
+  \item Cambios en la esparcidad son costosos, misma razón que el punto anterior.
 \end{enumerate}
 
 \paragraph{Contexto de Uso}
 
 Antes de definir que estructura de datos vamos a utilizar para representar matrices esparsas, debemos definir el contexto de uso de la misma.
-Sabemos que el algoritmo de PageRank utiliza el Método de la Potencia, usando la matriz $P_2$ definida previamente. Sin embargo la $P_2$ no es esparsa, inclusive todos sus valores son distintos de 0, por lo cual utilizar la implementacion del Page Rank descripta en la Seccion \ref{PageRank} no es posible .
+Sabemos que el algoritmo de PageRank utiliza el Método de la Potencia, usando la matriz $P_2$ definida previamente. Sin embargo la $P_2$ no es esparsa, inclusive todos sus valores son distintos de 0, por lo cual utilizar la implementación del Page Rank descripta en la Sección \ref{PageRank} no es posible .
 
 Para poder hacer frente a esta dificultad, utilizamos el Algoritmo 1 propuesto por Kamvar et al.\cite{Kamvar2003} para calcular $x^{(k+1)} = P_2x^{k}$, cuyos pasos son los siguientes:
 \begin{enumerate}
@@ -388,14 +388,14 @@ Para poder hacer frente a esta dificultad, utilizamos el Algoritmo 1 propuesto p
     \item $y = y + wv$
 \end{enumerate}
 
-donde $c$, $P$ y $v$ corresponden al escalar, la matriz y el vector descriptos en la Seccion \ref{PageRank}.
+donde $c$, $P$ y $v$ corresponden al escalar, la matriz y el vector descriptos en la Sección \ref{PageRank}.
 
-Tenemos que ver que el algortimo descripto calcula efectivamente $x^{(k+1)} = P_2x^{k}$:
+Tenemos que ver que el algoritmo descripto calcula efectivamente $x^{(k+1)} = P_2x^{k}$:
 \begin{proposition}
     El Algoritmo 1 calcula $x^{(k+1)} = P_2x^{(k)}$
 \end{proposition}
 \begin{proof}
-Por definicion sabemos que
+Por definición sabemos que
   \begin{equation*}
             \begin{aligned}
               x^{(k+1)} &= P_2x^{(k)} \\
@@ -420,19 +420,19 @@ Luego basta ver que:
             ||x^{(k)}||_1v - ||cPx^{(k)}||_1v &= cvd^{t}x^{(k)} +v1^{t}x^{(k)} - cv1^{t}x^{(k)}  \\
           \end{aligned}
 \end{equation*}
-Sabemos que $\forall\ 1\leq i\leq n\ x^{(k)}_{i} \geq 0$, ya que $x$ es un vector de probabilidades. Entonces $||x^{(k)}||_1$ = $\sum\limits_{i=1}^{n}{x^{(k)}_{i}}$. Tambien sabemos que $1^{t}x^{(k)} = \sum\limits_{i=1}^{n}{1x^{(k)}_{i}}$, por lo tanto
+Sabemos que $\forall\ 1\leq i\leq n\ x^{(k)}_{i} \geq 0$, ya que $x$ es un vector de probabilidades. Entonces $||x^{(k)}||_1$ = $\sum\limits_{i=1}^{n}{x^{(k)}_{i}}$. También sabemos que $1^{t}x^{(k)} = \sum\limits_{i=1}^{n}{1x^{(k)}_{i}}$, por lo tanto
 $||x^{(k)}||_1 = 1^{t}x^{(k)}$.
 \newline
 Por otro lado sabemos que $0\leq c\leq 1$, lo que implica que $|c| = c$.
 \newline
-Teniendo en cuenta esta informacion, la igualdad nos queda de la siguiente forma:
+Teniendo en cuenta esta información, la igualdad nos queda de la siguiente forma:
 \begin{equation*}
           \begin{aligned}
             v1^{t}x^{(k)} - c||Px^{(k)}||_1v &= cvd^{t}x^{(k)} + v1^{t}x^{(k)} - cv1^{t}x^{(k)}  \\
             - c||Px^{(k)}||_1v &= cvd^{t}x^{(k)} - cv1^{t}x^{(k)}  \\
           \end{aligned}
 \end{equation*}
-Tomando como factor comun $v$ y $c$:
+Tomando como factor común $v$ y $c$:
 \begin{equation*}
           \begin{aligned}
             - c||Px^{(k)}||_1v &= cv(d^{t}x^{(k)} - 1^{t}x^{(k)})  \\
@@ -441,18 +441,18 @@ Tomando como factor comun $v$ y $c$:
           \end{aligned}
 \end{equation*}
 
-Sabemos, por definicion de $d$, que $d^{t}$ solo tiene $1$ y $0$ como valores, por lo tanto al realizar $(d^{t} - 1^{t})$ obtendremos un vector fila,
-llamemosle $z$, cuyos valores seran $0$ o $-1$. Lo que implica que $z_j = 0$ cuando $d^{t}_j = 1$, situacion que se da cuando, para ese
-$j$, $\sum_{i=1}^{n}{P_{ij}} = 0$. Caso contrario $z_j = -1$ cuando $d^{t}_j = 0$, situacion que se da cuando, para ese $j$,
- $\sum_{i=1}^{n}{P_{ij}} = 1$. Por lo tanto al mutiplicar $zx^{(k)}$ obtendremos un escalar que sera la suma de los opuestos de
- los $x^{(k)}_j$ que cumplan que, para ese $j$, $\sum_{i=1}^{n}{P_{ij}} = 1$, ya que los otros seran mutiplicados por $0$.
+Sabemos, por definición de $d$, que $d^{t}$ solo tiene $1$ y $0$ como valores, por lo tanto al realizar $(d^{t} - 1^{t})$ obtendremos un vector fila,
+llamémosle $z$, cuyos valores serán $0$ o $-1$. Lo que implica que $z_j = 0$ cuando $d^{t}_j = 1$, situación que se da cuando, para ese
+$j$, $\sum_{i=1}^{n}{P_{ij}} = 0$. Caso contrario $z_j = -1$ cuando $d^{t}_j = 0$, situación que se da cuando, para ese $j$,
+ $\sum_{i=1}^{n}{P_{ij}} = 1$. Por lo tanto al multiplicar $zx^{(k)}$ obtendremos un escalar que sera la suma de los opuestos de
+ los $x^{(k)}_j$ que cumplan que, para ese $j$, $\sum_{i=1}^{n}{P_{ij}} = 1$, ya que los otros serán multiplicados por $0$.
 
-Por otro lado, partiendo del hecho de que $P$ es estocastica por columnas, sabemos que al realizar $Px^{(k)}$, aquellas columnas, $j$, que
+Por otro lado, partiendo del hecho de que $P$ es estocástica por columnas, sabemos que al realizar $Px^{(k)}$, aquellas columnas, $j$, que
 cumplan que $\sum_{i=1}^{n}{P_{ij}} = 0$, forzaran a que los $x^{(k)}_j$ no sean parte de ninguna componente del vector resultante,
-ya que en todas las multiplicaciones de filas de $P$ por el vector $x^{(k)}$, estos $x^{(k)}_j$ seran multiplicados por $0$. Caso contrario
+ya que en todas las multiplicaciones de filas de $P$ por el vector $x^{(k)}$, estos $x^{(k)}_j$ serán multiplicados por $0$. Caso contrario
 cuando las columnas, $j$, cumplan que $\sum_{i=1}^{n}{P_{ij}} = 1$, estas forzaran a que la suma de todos los $x^{(k)}_j$ presentes
 en las distintas componentes del vector resultante sea igual a $x^{(k)}_j$. Precisamente al aplicar $||.||_1$ al vector $Px^{(k)}$, el
-resultado sera un escalar que sera la suma de todas los $x^{(k)}_j$ que cumplan la condicion antes descripta. Por ultimo si al resultado
+resultado sera un escalar que sera la suma de todas los $x^{(k)}_j$ que cumplan la condición antes descripta. Por ultimo si al resultado
 de aplicar $||.||_1$ lo multiplicamos por $-1$ obtenemos un escalar que sera la suma de los opuestos de los $x^{(k)}_j$ que cumplan que,
 para ese $j$, $\sum_{i=1}^{n}{P_{ij}} = 1$.
 
@@ -460,14 +460,14 @@ Por todo lo expuesto anteriormente, podemos concluir que $- ||Px^{(k)}||_1 = (d^
 calcula $x^{(k+1)} = P_2x^{(k)}$.
 \end{proof}
 
-Luego, sabemos que la unica operacion que vamos a realizar con la matriz esparsa es multiplicarla por un vector. Tambien sabemos que la
-construccion de la matriz es de forma dinamica, ya que vamos leyendo los links salientes de cada pagina de forma secuencial.
+Luego, sabemos que la única operación que vamos a realizar con la matriz esparsa es multiplicarla por un vector. También sabemos que la
+construcción de la matriz es de forma dinámica, ya que vamos leyendo los links salientes de cada pagina de forma secuencial.
 
-A partir de esta informacion concluimos que la estructura de datos que mas se adecua a nuestras necesidades es el \textit{Dictionary
+A partir de esta información concluimos que la estructura de datos que mas se adecua a nuestras necesidades es el \textit{Dictionary
 of Keys (dok)}, en donde las posiciones del vector representan las filas y las keys de los diccionarios las columnas.
 
-Esta eleccion se debe al hecho de que podemos actualizar la matriz de forma sencilla a medida de que vamos leyendo los datos de entrada, y a su vez
- la multiplicacion por un vector se realiza de forma sencilla, vease Seccion \ref{imp_esparsa}.
+Esta elección se debe al hecho de que podemos actualizar la matriz de forma sencilla a medida de que vamos leyendo los datos de entrada, y a su vez
+ la multiplicación por un vector se realiza de forma sencilla, véase Sección \ref{imp_esparsa}.
 
 \newpage
 \subsection{Rankings en competencias deportivas}\label{rankings_deportivos}
@@ -549,7 +549,7 @@ Formalmente, el modelado se realiza de la siguiente manera:
 \end{enumerate}
 
 De esta forma al igual que con PageRank, calculando el autovector $\pi$
-obtenemos nuestro ranking. Este modelo permite cierta flexibidad a partir del
+obtenemos nuestro ranking. Este modelo permite cierta flexibilidad a partir del
 $u$, $v$ y $c$ que tomemos.
 
 El vector de probabilidad $u$ se aplicará en el caso de que un equipo se encuentre invicto, esto
@@ -570,7 +570,7 @@ estando navegando el grafo, uno se \textit{teletransportará} a otro nodo
 independientemente de las conexiones de los mismos. Este vector por defecto
 también suele tomar el valor de la distribución uniforme.
 
-Por último tenemos nuestro valor $c$ que actua como un factor de amortiguación
+Por último tenemos nuestro valor $c$ que actúa como un factor de amortiguación
 donde lo que se modifica es cuánto afecta el \textit{navegante aleatorio} al
 resultado final, donde con $c = 0$, únicamente influye el \textit{navegante
 aleatorio} y con $c = 1$ se elimina el efecto del mismo.
@@ -605,7 +605,7 @@ definición del modelo, los pesos de las aristas en el grafo dependen en parte d
 diferencia de puntaje con la que gana un equipo sobre otro.
 
 Al encontrarnos con un empate no existe diferencia alguna, por lo tanto no
-implica ningún cambio en el sistema. Esto podría defavorecer a los equipos que
+implica ningún cambio en el sistema. Esto podría desfavorecer a los equipos que
 más empates tuvieran en la temporada, ya que sólo los partidos donde hubieran
 ganado o perdido afectarían su lugar en la tabla de puntajes. Además podría
 suceder que un equipo perdiese contra un contrincante que no tuviera mucho peso
@@ -624,13 +624,13 @@ En base a esto, proponemos dos formas alternativas de modelar el empate:
     \item Otra posibilidad sería que en caso de empate, se utilizaran otras métricas
         del deporte para definir el ganador, al cual luego se le podría asignar
         el puntaje mínimo para ganar el partido. Por ejemplo, si tomamos el caso
-        del futbol, en caso de empate podríamos definir el ganador como el equipo
-        que tuvo mayor posesión del balon durante el partido, o el equipo que tuvo
+        del fútbol, en caso de empate podríamos definir el ganador como el equipo
+        que tuvo mayor posesión del balón durante el partido, o el equipo que tuvo
         menor cantidad de tarjetas, o una combinación de varios factores. Una vez
         determinado el ganador, el score asignado sería 1-0.
         De esta forma, rompemos el empate refinando el criterio de ganador, y como
         asignamos el mínimo puntaje para ganar, el puntaje en el ranking que obtiene
-        el ganador no es altamente influenciado por el partido en cuestion.
+        el ganador no es altamente influenciado por el partido en cuestión.
 \end{itemize}
 
 \subsubsection{Puntaje AFA}
@@ -650,7 +650,7 @@ en particular se aplicó una fecha adicional de \textit{clásicos}, donde cada
 equipo vuelve a jugar contra su respectivo clásico. Este es un punto donde se
 desequilibran un tanto las cosas ya que un participante podría tener asignado
 como clásico un puntero, mientras que otro al último en la tabla de posiciones.
-Para este sistema de puntuación ambos partidos serían tratados al igual quel
+Para este sistema de puntuación ambos partidos serían tratados al igual que el
 resto del torneo.
 
 \newpage
@@ -658,7 +658,7 @@ resto del torneo.
 
 El Método de la Potencia es un método iterativo que calcula sucesivas aproximaciones a los autovectores y autovalores de una matriz.
 
-Sea $A\in\mathbb{R}^{n \times n}$ una matriz cuadradad y sean $\lambda_1,\lambda_2,...,\lambda_n$
+Sea $A\in\mathbb{R}^{n \times n}$ una matriz cuadrada y sean $\lambda_1,\lambda_2,...,\lambda_n$
 sus autovalores, con $v_1,v_2,...,v_n$ los autovalores asociados. Para poder aplicar el método a
 la matriz $A$, debe valer que:
 
@@ -691,7 +691,7 @@ Reescribiendo, tenemos que:
         \end{aligned}
 \end{equation*}
 
-Y es facil ver que $\lim\limits_{k \to \infty} \sum\limits_{j=2}^{n}{\beta_j \frac{\lambda_j^k}{\lambda_1^k} v_j} = 0$,
+Y es fácil ver que $\lim\limits_{k \to \infty} \sum\limits_{j=2}^{n}{\beta_j \frac{\lambda_j^k}{\lambda_1^k} v_j} = 0$,
 ya que $\forall\ 2\leq j\leq n,\ |\lambda_1| > |\lambda_i|$.
 
 Luego, consideremos una función $\phi:\mathbb{R}^{n}\to \mathbb{R}$ tal que:
