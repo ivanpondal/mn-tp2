@@ -57,14 +57,14 @@ $L_1(x,y) = \sum\limits_{i=1}^n | x[i] - y[i] | $
 \end{center}
 
 Siendo $n$ la cantidad de nodos del grafo siendo estudiado, $x \in \mathbb{R}^{n}$ la solución del algoritmo en una iteración $k$ e $y \in \mathbb{R}^{n}$ la de la iteración $k+1$.\\
-Esta es una forma intuitiva y logica de estudiar la convergencia, ya que al tomar la suma de los valores absolutos entre los componentes de cada vector, lo que realmente estamos haciendo es calcular cuanto varia la solución que estamos calculando a través de las iteraciones. Además, podemos asegurar que por el procedimiento de nuestro algoritmo esta diferencia va a ir disminuyendo, y cuando sea lo suficientemente chica el algoritmo va a terminar.
+Esta es una forma intuitiva y lógica de estudiar la convergencia, ya que al tomar la suma de los valores absolutos entre los componentes de cada vector, lo que realmente estamos haciendo es calcular cuanto varia la solución que estamos calculando a través de las iteraciones. Además, podemos asegurar que por el procedimiento de nuestro algoritmo esta diferencia va a ir disminuyendo, y cuando sea lo suficientemente chica el algoritmo va a terminar.
 
 Estudiamos la convergencia a través de dos instancias de tamaño mediano-grande obtenidos de SNAP, mas precisamente:
 \begin{itemize}
     \item Instancia 1: 6301 nodos y 20777 ejes.
     \item Instancia 2: 10876 nodos y 39994 ejes.
 \end{itemize}
-Por lo que podemos decir que son considerables y relativamente esparsas (por ejemplo, el primero podria tener cerca de 40 millones de ejes si fuera completo, teniendo en cuenta que es un grafo dirigido).\\
+Por lo que podemos decir que son considerables y relativamente esparsas (por ejemplo, el primero podría tener cerca de 40 millones de ejes si fuera completo, teniendo en cuenta que es un grafo dirigido).\\
 A su vez, fuimos variando el componente $c$ del algoritmo Page Rank entre 0.3, 0.6 y 0.9, el cual controla la importancia del \textit{navegante aleatorio}, es decir, a menor $c$ aumenta la probabilidad de que el usuario vaya a una página aleatoria desde la actual.\\
 Veamos los resultados:
 
@@ -117,18 +117,46 @@ Adicionalmente, vemos que Page Rank converge de forma más rápida para valores 
 \subsubsection{Tiempo de ejecución}
 
 En esta sección, analizamos el tiempo de cómputo que emplea Page Rank.\\
-Para tomar los tiempos, utilizamos la libreria chronos de C++ y pasamos las mediciones a nanosegundos. Todos las medidas fueron hechas bajo las mismas condiciones (procesos abiertos, computadora, alimentación y nivel de optimizaciones del compilador).\\
-Los experimentos pasan por tres variables: la cantidad de nodos y la cantidad de ejes del grafo siendo analizado, y la precisión utlizada en Page Rank (es decir, la diferencia que tomamos como suficiente entre dos iteraciones para dar un resultado en el método de la potencia).\\
+Para tomar los tiempos, utilizamos la librería chronos de C++ y pasamos las mediciones a nanosegundos. Todos las medidas fueron hechas bajo las mismas condiciones (procesos abiertos, computadora, alimentación y nivel de optimizaciones del compilador).\\
+Los experimentos pasan por tres variables: la cantidad de nodos y la cantidad de ejes del grafo siendo analizado, y la precisión utilizada en Page Rank (es decir, la diferencia que tomamos como suficiente entre dos iteraciones para dar un resultado en el método de la potencia).\\
+Además, comparamos la versión 'esparsa' del algoritmo Page Rank (donde la matriz se guarda de forma diferente) con la versión clásica del mismo algoritmo. En este caso, la precisión del algoritmo esta fija y se va variando la cantidad de vértices.\\
+Para los demás experimentos, cabe destacar que utilizamos la versión esparsa del algoritmo ya que por la cantidad de nodos y ejes, la versión normal es muy lenta para evaluar.\\
 Con este fin, generamos instancias de forma dinámica y aleatoria, es decir que dada una cantidad de nodos, asignamos los ejes aleatoriamente hasta llegar a cierta cantidad a través de la libreria Random de C++.\\
-Más precisamente, las instancias utilizadas en los experimentos consisten en:
+Más precisamente, los experimentos consisten en:
 \begin{itemize}
+    \item Una comparación entre el algoritmo para matrices esparsas y Page Rank normal.
     \item Nodos del grafo: variar la cantidad de nodos entre 1000 y 100,000 con tantos ejes como 2 veces la cantidad de nodos en cuestión.
     \item Ejes del grafo: dado un grafo con 3000 nodos, vamos variando la cantidad de ejes entre 1000 y 8,000,000 (el grafo completo tendría 8,997,000 ejes).
-    \item Precisión: teniendo un grafo de 3000 nodos y 1,000,000 ejes, variamos la precisión entre 0.1 y 0.000000000000001 (dividiendola por 10 entre cada iteración).
+    \item Precisión: teniendo un grafo de 3000 nodos y 1,000,000 ejes, variamos la precisión entre 0.1 y 0.000000000000001 (dividiéndola por 10 entre cada iteración).
 \end{itemize}
 El factor $c$ de Page Rank fue configurado en 0.85, ya que no afecta el tiempo de cómputo.\\
 
 Los resultados de los experimentos fueron los siguientes:
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        title={Esparsa vs No Esparsa},
+        xlabel={cantidad de nodos},
+        ylabel={tiempo (nanosegundos)},
+        ylabel absolute,
+        ylabel style={yshift=.3cm},
+        scaled x ticks=false,
+        scaled y ticks=false,
+        enlargelimits=0.05,
+        width=0.85\textwidth,
+        height=0.45\textwidth
+    ]
+    \addplot[color=green] table[x=nodos,y=esp]{datos/pr-tiempos-esparsa.out};
+    \addplot[color=red] table[x=nodos,y=noesp]{datos/pr-tiempos-esparsa.out};
+    \legend{Esparsa, No esparsa}
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+Como podemos ver, la versión esparsa del algoritmo optimiza el tiempo de cómputo de forma significativa. Por este motivo, para los demás experimentos vamos a utilizar esta versión del algoritmo.\\
+
+En el siguiente experimento podemos ver como varían los tiempos según la cantidad de nodos del grafo:
 
 \begin{center}
     \begin{tikzpicture}
@@ -149,7 +177,7 @@ Los resultados de los experimentos fueron los siguientes:
     \end{tikzpicture}
 \end{center}
 
-Como vemos, la cantidad de nodos del grafo afecta el rapidez del algoritmo Page Rank. A simple vista, se nota que la curva que sigue el eje 'y' del gráfico tiene pinta de superior a lineal, aun asi nos limitamos a decir que es polinomial. Mientras que vamos aumentando la cantidad de nodos, los ejes empleados pasa a ser el doble de la cantidad de nodos en la iteración. Entonces la duda que queda en cuestión es saber si es la cantidad de ejes el factor clave que hace escalar los tiempos o la cantidad de nodos, lo que analizamos a continuación:
+Como vemos, la cantidad de nodos del grafo afecta la rapidez del algoritmo Page Rank. A simple vista, se nota que la curva que sigue el eje 'y' del gráfico tiene pinta de superior a lineal, aun así nos limitamos a decir que es polinomial. Mientras que vamos aumentando la cantidad de nodos, los ejes empleados pasa a ser el doble de la cantidad de nodos en la iteración. Entonces la duda que queda en cuestión es saber si es la cantidad de ejes el factor clave que hace escalar los tiempos o la cantidad de nodos, lo que analizamos a continuación:
 
 \begin{center}
     \begin{tikzpicture}
@@ -170,7 +198,7 @@ Como vemos, la cantidad de nodos del grafo afecta el rapidez del algoritmo Page 
     \end{tikzpicture}
 \end{center}
 
-En este caso, la curva es más pronunciada. Esto es un fuerte indicador de que la cantidad de ejes afecta la rapidez del algoritmo de manera más critica que la cantidad de nodos empleados. Aun asi, la curva que sigue el gráfico parece ser polinomial.\\
+En este caso, la curva es más pronunciada. Esto es un fuerte indicador de que la cantidad de ejes afecta la rapidez del algoritmo de manera más critica que la cantidad de nodos empleados. Aun así, la curva que sigue el gráfico parece ser polinomial.\\
 
 Esto resultados tienen sentido ya que por las operaciones del algoritmo, sabemos que la mayor parte de la complejidad recide en generar la matriz de transición, lo cual toma una complejidad cúbica derivada de multiplicar matrices (además de sumarlas y escalarlas, lo cuál es cuadrático). \\
 Adicionalmente, en los tests de convergencia, el algoritmo no toma muchas iteraciones en determinar el autovector que queremos como respuesta, por lo que restaría ver como afecta al algoritmo el tiempo que se toma en usar el método de la potencia.
@@ -312,7 +340,7 @@ Las instancias que usamos para hacer estas comparaciones fueron:
 \end{itemize}
 De forma de poder analizar los resultados facilmente, nos limitamos a instancias chicas.\\
 
-Para la instancia 1, el valor $c$ del algoritmo Page Rank fue configurado en 0.3, 0.6 y luego en 0.9 con el fin de introducir la posibilidad de que el navegante salte a otra página de forma aleatoria y ver cuánto afecta al resultado final. Esto no es asi para la instancia 3 ya que al ser un grafo donde la probabilidad de ir a las demás páginas es igual para todas, el concepto de navegante aleatorio es irrelevante porque es igual de probable que vaya a cualquier página desde el principio.
+Para la instancia 1, el valor $c$ del algoritmo Page Rank fue configurado en 0.3, 0.6 y luego en 0.9 con el fin de introducir la posibilidad de que el navegante salte a otra página de forma aleatoria y ver cuánto afecta al resultado final. Esto no es así para la instancia 3 ya que al ser un grafo donde la probabilidad de ir a las demás páginas es igual para todas, el concepto de navegante aleatorio es irrelevante porque es igual de probable que vaya a cualquier página desde el principio.
 
 Los resultados fueron:
 
@@ -480,7 +508,7 @@ Por lo tanto concluimos que tanto la cantidad de ejes como la distribución son 
 \subsection{GeM}
 
 \subsubsection{Variando el parámetro $c$}\label{exp_gem_2}
-Este experimento consite en variar el parámetro $c$ y analizar como impacta esta
+Este experimento consiste en variar el parámetro $c$ y analizar como impacta esta
 variación en los resultados obtenidos al generar el ranking con GeM.
 
 Recordemos que $c$ es el coeficiente de amortiguación, que regula que tanto afecta
@@ -610,7 +638,7 @@ Analizando los resultados tenemos que:
 \end{itemize}
 
 En base a lo analizado, podemos concluir que los resultados del experimento corroboran
-las hipotesis planteadas.
+las hipótesis planteadas.
 
 \subsubsection{Evolución del ranking}
 
