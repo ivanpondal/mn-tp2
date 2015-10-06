@@ -63,6 +63,7 @@
 \usepackage{arrayjobx}
 \usepackage{enumitem}
 \usepackage{multicol}
+\usepackage{natbib}
 \usepackage{etoolbox}
 \usepackage{listingsutf8}
 \lstset{inputencoding=utf8/latin1}
@@ -75,21 +76,8 @@
 	literate={\ \ }{{\ }}1,
 	tabsize=2}
 \newcommand{\subscript}[2]{$#1 _ #2$}
-% *********************** %
 
-% ******************************************************** %
-% TEMPLATE DE INFORME ORGA2 v0.1 %
-% ******************************************************** %
-% ******************************************************** %
-% %
-% ALGUNOS PAQUETES REQUERIDOS (EN UBUNTU): %
-% ========================================
-% %
-% texlive-latex-base %
-% texlive-latex-recommended %
-% texlive-fonts-recommended %
-% texlive-latex-extra %
-% texlive-lang-spanish (en ubuntu 13.10) %
+
 % ******************************************************** %
 \begin{document}
 \thispagestyle{empty}
@@ -127,6 +115,14 @@
 \newpage
 \section{Conclusión}
 \input{conclusion}
+
+\newpage
+\bibliographystyle{plain}
+\section{Referencias}
+\begingroup
+\renewcommand{\section}[2]{}
+\bibliography{informe}
+\endgroup
 
 \newpage
 \appendix
