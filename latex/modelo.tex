@@ -763,14 +763,14 @@ Y tomando el límite con $k$ tendiendo a infinito:
 Finalmente,
 \begin{equation*}
         \begin{aligned}
-          x_{(k+1)} 
-            &= \frac{Ax_k}{||Ax_k||} 
+          x_{(k+1)}
+            &= \frac{Ax_k}{||Ax_k||}
             &= \frac{A^kx}{||A^kx||}
             &= \frac{\lambda_1^k \left(\beta_1 v_1 +\sum\limits_{j=2}^{n}{\beta_j \frac{\lambda_j^k}{\lambda_1^k} v_j} \right)}{||\lambda_1^k \left(\beta_1 v_1 +\sum\limits_{j=2}^{n}{\beta_j \frac{\lambda_j^k}{\lambda_1^k} v_j} \right)||}
         \end{aligned}
 \end{equation*}
 
-Ahora, tomando limites:
+Ahora, tomando límites:
 
 \begin{equation*}
         \begin{aligned}
@@ -782,4 +782,5 @@ Ahora, tomando limites:
 
 Lo cual tiende a un autovector asociado al autovalor principal $\lambda_1$. Si podemos garantizar que $\lambda_1^k \beta_1> 0$, entonces podríamos decir que $x_{(k+1)}$ tiende a $\frac{v_1}{||v_1||}$ cuando k tiende al infinito. Además, si el vector $v_1$ se encuentra normalizado, concluimos que $x_{(k+1)}  \xrightarrow{k \to \infty} v_1$.
 
+En la práctica se utiliza $\phi(x)= x_p$, dónde $|x_p| = ||x||_\infty$, que cumple las condiciones pedidas.
 \end{proof}
