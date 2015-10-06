@@ -19,8 +19,7 @@ de popularidad los resultados obtenidos, esperando que encontremos más rápido 
 
 \subsubsection{PageRank}\label{PageRank}
 
-El algoritmo de PageRank\footnote{Kurt Bryan and Tanya Leise. The linear algebra
-behind google. SIAM Review, 48(3):569–581, 2006.} se define para un conjunto de
+El algoritmo de PageRank\cite{Bryan2006} se define para un conjunto de
 páginas Web $ = \{ 1,\dots, n \}$ de forma tal de asignar a cada una de ellas un
  puntaje que determine la importancia relativa de la página respecto de las demás.
 
@@ -93,10 +92,7 @@ mayor a menor:
 
 \subsubsection{PageRank con matriz Esparsa}
 
-Partiendo del hecho de que, aproximadamente, cada pagina Web tiene 7 links salientes\footnote{Sepandar D. Kamvar, Taher H. Haveliwala, Christopher D. Manning, and Gene H. Golub.
-Extrapolation methods for accelerating pagerank computations. In Proceedings of the 12th
-international conference on World Wide Web, WWW ’03, pages 261–270, New York, NY,
-USA, 2003. ACM.} surge la posibilidad de optimizar la estructura que representa el Grafo dirigido de la Web, debido a la baja densidad de la matriz de conectividad, $W$, asociada a dicho Grafo.
+Partiendo del hecho de que, aproximadamente, cada pagina Web tiene 7 links salientes\cite{Kamvar2003} surge la posibilidad de optimizar la estructura que representa el Grafo dirigido de la Web, debido a la baja densidad de la matriz de conectividad, $W$, asociada a dicho Grafo.
 Esta optimizacion no es solo una posibilidad, sino una necesidad dado que la cantidad de Webs indexadas tiene un requerimiento prohibitivo en terminos de memoria si la representamos, ingenuamente, como un vector de vectores.
 Nuestra hipotesis es que, utilizando una estructura de datos optimizada, no solo obtendremos mejoras en terminos de complejidad espacial, sino tambien en terminos de complejidad temporal.
 
@@ -416,10 +412,7 @@ Por otro lado, sus desventajas son:
 Antes de definir que estructura de datos vamos a utilizar para representar matrices esparsas, debemos definir el contexto de uso de la misma.
 Sabemos que el algoritmo de PageRank utiliza el metodo de la Potencia, usando la matriz $P_2$ definida previamente. Sin embargo la $P_2$ no es esparsa, inclusive todos sus valores son distintos de 0, por lo cual utilizar la implementacion del Page Rank descripta en la Seccion \ref{PageRank} no es posible .
 
-Para poder hacer frente a esta dificultad, utilizamos el algoritmo propuesto por Kamvar et al.[Algoritmo 1]\footnote{Sepandar D. Kamvar, Taher H. Haveliwala, Christopher D. Manning, and Gene H. Golub.
-Extrapolation methods for accelerating pagerank computations. In Proceedings of the 12th
-international conference on World Wide Web, WWW ’03, pages 261–270, New York, NY,
-USA, 2003. ACM.} para calcular $x^{(k+1)} = P_2x^{k}$, cuyos pasos son los siguientes:
+Para poder hacer frente a esta dificultad, utilizamos el Aglrotimo 1 propuesto por Kamvar et al.\cite{Kamvar2003} para calcular $x^{(k+1)} = P_2x^{k}$, cuyos pasos son los siguientes:
 \begin{enumerate}
     \item $y = cPx$
     \item $w = ||x||_1 - ||y||_1$
@@ -508,19 +501,14 @@ Esta eleccion se debe al hecho de que podemos actualizar la matriz de forma senc
  la multiplicacion por un vector se realiza de forma sencilla, vease Seccion Implementacion Esparsa (CAMBIAR CON LA REF).
 
 
-
-
-
 \subsection{Rankings en competencias deportivas}
 
 Elegir un sistema de puntos que sea justo para todos los participantes en un
 deporte no es una tarea sencilla. Existen muchos factores que afectan el
 resultado de una competencia como lo pueden ser el orden en el que deben
 competir entre si los equipos, generando desbalances respecto las capacidades de
-cada uno. Es por esto que a continuación presentaremos el modelo GeM
-\footnote{Angela Y. Govan, Carl D. Meyer, and Rusell Albright. Generalizing
-google’s pagerank to rank national football league teams. In Proceedings of SAS
-Global Forum 2008, 2008.} que busca modelar los resultados de forma tal que estos
+cada uno. Es por esto que a continuación presentaremos el modelo GeM\cite{Govan2008}
+ que busca modelar los resultados de forma tal que estos
 factores impacten lo menos posible en el posicionamiento final de la tabla de
 puntajes.
 
