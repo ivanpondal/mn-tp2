@@ -8,6 +8,7 @@
 #include <sstream>
 #include <math.h>
 #include <ctime>
+#include <cstdio>
 #include <chrono>
 #include <random>
 
@@ -468,9 +469,18 @@ int main(int argc, char *argv[])
 {
 	srand(time(NULL));
 	// si no hay argumentos corro tests unitarios, si no los de la cátedra
-	if(argc == 4){
-		int a;
-		a = 0;
+	if(argc == 6){
+		int metodo = 0;
+		int instancia = 0;
+		double c = 0;
+		double tol_corte = 0;
+		sscanf(argv[1], "%u", &metodo);
+		sscanf(argv[2], "%lf", &c);
+		sscanf(argv[3], "%u", &instancia);
+		char* inputfile = argv[4];
+		sscanf(argv[5], "%lf", &tol_corte);
+
+		resolver(metodo, c, instancia, inputfile, tol_corte);
 	}
 	else{
 		// test_cargar_SNAP();

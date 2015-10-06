@@ -74,7 +74,7 @@ function res = GeM(in_filename, out_filename, team_codes_filename = '', c = 0.85
 	endfor
 
 	res = S;
-	if(out_filename != '')
+	if(!strcmp(out_filename, ''))
 		save_solution(teams, S, out_filename, team_codes_filename);
 	endif
 endfunction
