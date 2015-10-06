@@ -1,31 +1,111 @@
-\subsection{Page Rank con matriz Esparsa}
-A la hora de implementar Page Rank con matriz Esparsa utilizamos \textsc{C++}, lenguaje que nos permite realizar mediciones temporales precisas, como asi tambien utilizar nuestras propias estructuras de datos.
-Recordemos que elegimos el \textit{Dictionary of Keys (dok)} para representar las matrices esparsas. El mismo consiste en un vector de diccionarios, en donde las posiciones del vector representan filas y las keys de los diccionarios las columnas.
+\subsection{Page Rank}
+
+A la hora de implementar Page Rank, en ambas versiones, utilizamos \textsc{C++}, lenguaje que nos permite realizar mediciones temporales precisas, como asi tambien utilizar nuestras propias estructuras de datos.
 A su vez es necesario tener en cuenta que los datos de entrada nos son provistos de la siguiente forma:
 \begin{itemize}
 	\item Cantidad de nodos ($n$) y cantidad de links salientes ($m$).
 	\item $m$ lineas con pares $i$, $j$, donde $i$ tiene un link hacia $j$.
 \end{itemize}
-Los paso para realizar Page Rank son los siguientes:
 
+\subsubsection{Page Rank sin matriz esparsa}
+En esta version del Page Rank utilizamos un vector de vector para representar la matriz $P_2$, la cual es necesaria para utilizar el metodo de la potencia en su formulacion clasica.
+Los paso para realizar Page Rank sin matriz esparsa son los siguientes:
+\begin{enumerate}
+	\item Leemos los datos de entrada y luego generamos $P$
+	\begin{lstlisting}
+	Leer n, m del input
+	Crear un vector de vectores, P, de tamanio n*n
+	Para k=0 hasta m-1 hacer:
+		Leer i,j del input
+		P[j-1][i-1] = 1
+	Fin Para
+	Crear un vector, links_salientes, de tamano n
+	Para j=0 hasta n-1 hacer:
+		Para i=0 hasta n-1 hacer:
+			links_salientes[j] = links_salientes[j] + P[i][j]
+		Fin Para
+		Para i=0 hasta n-1 hacer:
+			Si links_salientes[j] > 0 entonces:
+				P[i][j] = P[i][j] / links_salientes[j]
+			Fin Si
+		Fin Para
+	Fin Para
+	\end{lstlisting}
+	Vale la pena aclarar que utilizamos \textit{links_salientes} para calcular los $n_j$ necesarios para luego calcular los valores de $P$.
+	\item A partir de $P$ y \textit{links_salientes} generamos $P_2$
+	\begin{lstlisting}
+	Definir c como el factor de teletransportacion
+	Crear un vector, v, de tamanio n iniciliazado en 1/n
+	Crear un vector, d, de tamanio 0 inicializado en 0
+	Para j=0 hasta n-1 hacer:
+		Si links_salientes[j] = 0 hacer:
+			d[j] = 1
+		Fin Si
+	Fin Para
+	Crear vector de vectores, D = multiplicarVectores(v, d)
+	Crear vector de vectores, P1 = sumaMatrices(P, D)
+	Crear vector, uno, inicializado en 1
+	Crear vector de vectores, E = multiplicarVectores(v, uno)
+	Crear vector de vectores, P2 = sumaMatrices(escalarPorMatriz(P1, c), escalarPorMatriz(E, 1-c)
+	\end{lstlisting}
+	Los procedimientos auxiliares multiplicarVectores, sumaMatrices y escalarPorMatriz son procedimientos estandar, por lo cual no los detallamos.
+	\item Calculamos el autovector asociado a 1 con el metodo de la Potencia con $P_2$, normalizando el autovector obtenido.
+	\begin{lstlisting}
+	Definir una precision
+	Crear un vector, x, con valores aleatorios de 1 a 50 de tamanio n
+	Crear vector de vectores, B = multiplicarMatrices(P2, P2)
+	Crear vector de vectores, C = P2
+	delta = phi(multiplicarMatrizPorVector(B, x)) / phi(multiplicarMatrizPorVector(C, x))
+	ultimo_delta = INFINITY
+	Mientras (delta - ultimo_delta) > precision hacer:
+		C = B
+		B = multiplicarMatrices(B, P2)
+		ultimo_delta = delta
+		delta = phi(multiplicarMatrizPorVector(B, x)) / phi(multiplicarMatrizPorVector(C, x))
+	Fin Mientras
+	y = multiplicarMatrizPorVector(B, x)
+	Normalizar y
+	\end{lstlisting}
+	El procedimiento phi consiste en calcular la norma infinito del vector pasado por parametro, con la variacion de no tomar el modulo de las componentes del vector.
+
+	Los procedimientos auxiliares multiplicarMatrices, multiplicarMatrizPorVector y phi son procedimientos estandar, por lo cual no los detallamos.
+
+	Normalizar un vector, en nuestra implementacion, implica dividir cada componente del vector por la norma 1 del mismo.
+	\item Una vez obtenido el autovector estacionario, $y$, generamos el ranking de las paginas y lo imprimimos:
+	\begin{lstlisting}
+	Crear un vector de pares posicion-valor, llamado ranking, de tamanio n inicializado en 0
+	Para i=0 hasta n-1 hacer:
+		ranking[i] = par(i, y[i])
+	Fin Para
+	Ordener ranking segun la segundo componente de los pares, valor
+	imprimir(ranking)
+	\end{lstlisting}
+	Para ordenar el vector ranking utilizamos el procedimiento que nos provee \textit{C++},  \texttt{sort}\footnote{http://en.cppreference.com/w/cpp/algorithm/sort}.
+
+	El procedimiento consiste, simplemente, en recorrer el vector ranking e ir imprimiendo sus pares.
+\end{enumerate}
+
+\subsubsection{Page Rank con matriz esparsa}\label{imp_esparsa}
+Recordemos que elegimos el \textit{Dictionary of Keys (dok)} para representar las matrices esparsas. El mismo consiste en un vector de diccionarios, en donde las posiciones del vector representan filas y las keys de los diccionarios las columnas.
+Los paso para realizar Page Rank con matriz esparsa son los siguientes:
 \begin{enumerate}
 	\item Leemos los datos de entrada y luego generamos $P$.
 	\begin{lstlisting}
 	Leer n, m del input
-	Crear un vector de diccionarios vacios, A, de tamano n
+	Crear un vector de diccionarios vacios, P, de tamano n
 	Crear un vector tamano n, links_salientes, inicializado en 0
 	Para k=0 hasta m-1 hacer:
 		Leer i,j del input
-		Crear la key i-1 con 1 como valor asociado en el diccionario de A[j-1]
+		Crear la key i-1 con 1 como valor asociado en el diccionario de P[j-1]
 		Sumar 1 al contenido de links_salientes[i-1]
 	Fin Para
 	Para i=0 hasta n-1 hacer:
-		Iterar en el diccionario de A[i]:
+		Iterar en el diccionario de P[i]:
 			Actualizar los valores asociados a las keys con el valor 1 / links_salientes[key]
 		Fin Iteracion
 	Fin Para
 	\end{lstlisting}
-	Vale la pena aclarar que utilizamos \textit{links_salientes} para calcular los $n_j$ necesarios para luego calcular los valores de $P$.
+	Al igual que en la version sin matriz esparsa utilizamos \textit{links_salientes} para calcular los $n_j$ necesarios para luego calcular los valores de $P$.
 
 	\item Calculamos el autovector asociado a 1 con el metodo de la Potencia con $P$, normalizando el autovector obtenido.
 	\begin{lstlisting}
@@ -34,7 +114,8 @@ Los paso para realizar Page Rank son los siguientes:
 	Crear un vector, x, con valores aleatorios de 1 a 50 de tamanio n
 	Crear un vector, v, con 1/n como valores de tamanio n
 	Crear un vector, y, igual a x
-	Crear dos numeros flotantes, delta y ultimo_delta, inicializados en INFINITY y 0 respectivamente.
+	delta =  INFINITY
+	ultimo_delta = 0.
 	Hacer:
 		x = y
 		y = esparsaPorVector(P, x)
@@ -51,7 +132,7 @@ Los paso para realizar Page Rank son los siguientes:
 	esparsaPorVector(matriz esparsa P, vector x):
 		Crear vector, y, de tamano n
 		Para i = 0 hasta n-1 hacer:
-			flotante, suma, inicializado en 0
+			suma = 0
 			Itero sobre las keys del diccionario en P[i]:
 				entero j = key
 				suma = (valor de la key)*x[j]
@@ -60,19 +141,12 @@ Los paso para realizar Page Rank son los siguientes:
 		Fin del Para
 		Devolver y
 	\end{lstlisting}
-	El procedimiento phi consiste en calcular la norma infinito del vector pasado por parametro, con la variacion de no tomar el modulo de las componentes del vector.
-	Los procedimientos auxiliares escalarPorVector, sumaVectores, normaUno y phi son procedimientos estandar, por lo cual no los detallamos.
+	El procedimiento phi es igual de la version sin matriz esparsa.
 
-	\item Generamos el ranking a partir del autovector y calculado en el paso previo.
-	\begin{lstlisting}
-	Crear un vector de pares posicion y valor, llamado ranking, de tamano n
-	Para i=0 hasta n-1 hacer:
-		ranking[i] = par(i, y[i])
-	Fin Para
-	Ordenar ranking segun sus valores
-	\end{lstlisting}
-	Para ordenar el vector ranking utilizamos el procedimiento que nos provee \textit{C++},  \texttt{sort}\footnote{http://en.cppreference.com/w/cpp/algorithm/sort}
+	Los procedimientos auxiliares escalarPorVector, sumaVectores y normaUno son procedimientos estandar, por lo cual no los detallamos.
 
+	Por ultimo Normalizar un vector consiste el realizar el mismo procedimiento descripto en la version sin matriz esparsa.
+	\item A partir de este punto, los pasos son identicos a los que realizamos en la version sin matriz esparsa.
 
 \end{enumerate}
 
