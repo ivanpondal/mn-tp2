@@ -106,7 +106,7 @@ $$v_1, v_2, \dots, v_n \text{ son autovectores l.i.}$$
 Por lo visto, $P_2$ cumple los requisitos necesarios para utilizar el Método de la Potencia.
 Explicaremos en detalle el Método de la Potencia en la sección \ref{metodo_potencia}.
 
-\subsubsection{PageRank con matriz Esparsa}
+\subsubsection{PageRank con matriz esparza}
 
 Partiendo del hecho de que, aproximadamente, cada pagina Web tiene 7 links salientes\cite{Kamvar2003} surge la posibilidad de optimizar la estructura que representa el Grafo dirigido de la Web, debido a la baja densidad de la matriz de conectividad, $W$, asociada a dicho Grafo.
 Esta optimización no es solo una posibilidad, sino una necesidad dado que la cantidad de páginas indexadas tiene un requerimiento prohibitivo en términos de memoria si la representamos, ingenuamente, como un vector de vectores.
@@ -119,7 +119,7 @@ A partir de este análisis, nos propusimos analizar tres estructuras de datos qu
   \item \textit{Compressed Sparse Column (CSC)}
 \end{enumerate}
 
-Sea $A \in \mathbb{R}^{n \times n}$ una matriz esparsa, y sea $m$ es la cantidad de valores distintos de 0 de $A$.
+Sea $A \in \mathbb{R}^{n \times n}$ una matriz esparza, y sea $m$ es la cantidad de valores distintos de 0 de $A$.
 \paragraph{1. Dictionary of Keys (dok):}
 Esta estructura esta representada como un vector de diccionarios, en donde cada posición, $i$, del vector puede considerarse como una fila, y la key del diccionario contenido dentro de esa posición representa una columna, $j$, siendo el valor asociado a esa key, en el diccionario, el valor en la matriz contenido en esa fila y columna ($A_{ij}$). Solo aquellas $A_{ij}$ que tienen valores distintos de 0 tienen una key en los diccionarios.
 \newline
@@ -150,7 +150,7 @@ Esta claro que intercambiando columnas por filas, como posiciones del vector con
 Las ventajas de usar esta estructura de datos son las siguientes:
 \begin{enumerate}
   \item Facilidad para crearse de forma dinámicamente, es decir, si a priori no conocemos la forma de la matriz a representar.
-  \item La operación matriz esparsa por vector es sencilla.
+  \item La operación matriz esparza por vector es sencilla.
 \end{enumerate}
 Por otro lado, su principal desventaja es que:
 \begin{enumerate}
@@ -264,7 +264,7 @@ La misma seria representado de la siguiente manera:
 Las ventajas de usar esta estructura de datos son las siguientes:
 \begin{enumerate}
   \item Eficiente a la hora de realizar operaciones aritméticas entre matrices esparsas (suma, multiplicación).
-  \item La operación matriz esparsa por vector es sencilla.
+  \item La operación matriz esparza por vector es sencilla.
 \end{enumerate}
 Por otro lado, sus desventajas son:
 \begin{enumerate}
@@ -379,7 +379,7 @@ La misma seria representado de la siguiente manera:
 Las ventajas de usar esta estructura de datos son las siguientes:
 \begin{enumerate}
   \item Eficiente a la hora de realizar operaciones aritméticas entre matrices esparsas (suma, multiplicación).
-  \item La operación matriz esparsa por vector es sencilla.
+  \item La operación matriz esparza por vector es sencilla.
 \end{enumerate}
 Por otro lado, sus desventajas son:
 \begin{enumerate}
@@ -390,7 +390,7 @@ Por otro lado, sus desventajas son:
 \paragraph{Contexto de Uso}
 
 Antes de definir que estructura de datos vamos a utilizar para representar matrices esparsas, debemos definir el contexto de uso de la misma.
-Sabemos que el algoritmo de PageRank utiliza el Método de la Potencia, usando la matriz $P_2$ definida previamente. Sin embargo la $P_2$ no es esparsa, inclusive todos sus valores son distintos de 0, por lo cual utilizar la implementación del Page Rank descripta en la Sección \ref{PageRank} no es posible .
+Sabemos que el algoritmo de PageRank utiliza el Método de la Potencia, usando la matriz $P_2$ definida previamente. Sin embargo la $P_2$ no es esparza, inclusive todos sus valores son distintos de 0, por lo cual utilizar la implementación del Page Rank descripta en la Sección \ref{PageRank} no es posible .
 
 Para poder hacer frente a esta dificultad, utilizamos el Algoritmo 1 propuesto por Kamvar et al.\cite{Kamvar2003} para calcular $x^{(k+1)} = P_2x^{k}$, cuyos pasos son los siguientes:
 \begin{enumerate}
@@ -471,14 +471,14 @@ Por todo lo expuesto anteriormente, podemos concluir que $- ||Px^{(k)}||_1 = (d^
 calcula $x^{(k+1)} = P_2x^{(k)}$.
 \end{proof}
 
-Luego, sabemos que la única operación que vamos a realizar con la matriz esparsa es multiplicarla por un vector. También sabemos que la
+Luego, sabemos que la única operación que vamos a realizar con la matriz esparza es multiplicarla por un vector. También sabemos que la
 construcción de la matriz es de forma dinámica, ya que vamos leyendo los links salientes de cada pagina de forma secuencial.
 
 A partir de esta información concluimos que la estructura de datos que mas se adecua a nuestras necesidades es el \textit{Dictionary
 of Keys (dok)}, en donde las posiciones del vector representan las filas y las keys de los diccionarios las columnas.
 
 Esta elección se debe al hecho de que podemos actualizar la matriz de forma sencilla a medida de que vamos leyendo los datos de entrada, y a su vez
- la multiplicación por un vector se realiza de forma sencilla, véase Sección \ref{imp_esparsa}.
+ la multiplicación por un vector se realiza de forma sencilla, véase Sección \ref{imp_esparza}.
 
 \newpage
 \subsection{Rankings en competencias deportivas}\label{rankings_deportivos}

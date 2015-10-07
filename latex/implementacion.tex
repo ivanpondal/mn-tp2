@@ -7,9 +7,9 @@ A su vez es necesario tener en cuenta que los datos de entrada nos son provistos
 	\item $m$ lineas con pares $i$, $j$, donde $i$ tiene un link hacia $j$.
 \end{itemize}
 
-\subsubsection{Page Rank sin matriz esparsa}
+\subsubsection{Page Rank sin matriz esparza}
 En esta versión del Page Rank utilizamos un vector de vector para representar la matriz $P_2$, la cual es necesaria para utilizar el método de la potencia en su formulación clásica.
-Los paso para realizar Page Rank sin matriz esparsa son los siguientes:
+Los paso para realizar Page Rank sin matriz esparza son los siguientes:
 \begin{enumerate}
 	\item Leemos los datos de entrada y luego generamos $P$
 	\begin{lstlisting}
@@ -85,9 +85,9 @@ Los paso para realizar Page Rank sin matriz esparsa son los siguientes:
 	El procedimiento consiste, simplemente, en recorrer el vector ranking e ir imprimiendo sus pares.
 \end{enumerate}
 
-\subsubsection{Page Rank con matriz esparsa}\label{imp_esparsa}
+\subsubsection{Page Rank con matriz esparza}\label{imp_esparza}
 Recordemos que elegimos el \textit{Dictionary of Keys (dok)} para representar las matrices esparsas. El mismo consiste en un vector de diccionarios, en donde las posiciones del vector representan filas y las keys de los diccionarios las columnas.
-Los paso para realizar Page Rank con matriz esparsa son los siguientes:
+Los paso para realizar Page Rank con matriz esparza son los siguientes:
 \begin{enumerate}
 	\item Leemos los datos de entrada y luego generamos $P$.
 	\begin{lstlisting}
@@ -105,7 +105,7 @@ Los paso para realizar Page Rank con matriz esparsa son los siguientes:
 		Fin Iteracion
 	Fin Para
 	\end{lstlisting}
-	Al igual que en la versión sin matriz esparsa utilizamos \textit{links_salientes} para calcular los $n_j$ necesarios para luego calcular los valores de $P$.
+	Al igual que en la versión sin matriz esparza utilizamos \textit{links_salientes} para calcular los $n_j$ necesarios para luego calcular los valores de $P$.
 
 	\item Calculamos el autovector asociado a 1 con el método de la Potencia con $P$, normalizando el autovector obtenido.
 	\begin{lstlisting}
@@ -118,7 +118,7 @@ Los paso para realizar Page Rank con matriz esparsa son los siguientes:
 	ultimo_delta = 0.
 	Hacer:
 		x = y
-		y = esparsaPorVector(P, x)
+		y = esparzaPorVector(P, x)
 		y = escalarPorVector(y, c)
 		w = normaUno(x) - normaUno(y)
 		y = sumaVectores(y + escalarPorVector(w, v))
@@ -127,9 +127,9 @@ Los paso para realizar Page Rank con matriz esparsa son los siguientes:
 	Mientras (delta - utimo_delta) > precision
 	Normalizar y
 	\end{lstlisting}
-	A continuación describimos el procedimiento auxiliar esparsaPorVector:
+	A continuación describimos el procedimiento auxiliar esparzaPorVector:
 	\begin{lstlisting}
-	esparsaPorVector(matriz esparsa P, vector x):
+	esparzaPorVector(matriz esparza P, vector x):
 		Crear vector, y, de tamano n
 		Para i = 0 hasta n-1 hacer:
 			suma = 0
@@ -141,12 +141,12 @@ Los paso para realizar Page Rank con matriz esparsa son los siguientes:
 		Fin del Para
 		Devolver y
 	\end{lstlisting}
-	El procedimiento phi es igual de la versión sin matriz esparsa.
+	El procedimiento phi es igual de la versión sin matriz esparza.
 
 	Los procedimientos auxiliares escalarPorVector, sumaVectores y normaUno son procedimientos estándar, por lo cual no los detallamos.
 
-	Por ultimo Normalizar un vector consiste el realizar el mismo procedimiento descripto en la versión sin matriz esparsa.
-	\item A partir de este punto, los pasos son idénticos a los que realizamos en la versión sin matriz esparsa.
+	Por ultimo Normalizar un vector consiste el realizar el mismo procedimiento descripto en la versión sin matriz esparza.
+	\item A partir de este punto, los pasos son idénticos a los que realizamos en la versión sin matriz esparza.
 
 \end{enumerate}
 
