@@ -516,13 +516,14 @@ el \textit{navegante aleatorio} al resultado final.
 
 Como es intuitivo de pensar, nuestra hipótesis en este experimento es que al tender
 $c$ a cero aumenta la influencia del \textit{navegante aleatorio} en el puntaje de
-cada página y, por lo tanto, más se parecen los puntajes de todas la páginas.
-Es decir, menos dejan de importar los links salientes de las distintas páginas
-del grafo original.
+cada equipo y, por lo tanto, más se parecen los puntajes de todas la equipos.
+Es decir, menos dejan de importar los resultados de cada partido en el grafo original.
 
 Por otro lado, cuando $c$ tiende a uno se debilita la influencia del \textit{navegante
 aleatorio}, causando que el puntaje dependa solo de la matriz $H + au^{t}$, descrita
-en la sección \ref{sec:gem_model}.
+en la sección \ref{sec:gem_model}. Esta matriz, tiene únicamente en cuenta los
+resultados de los equipos, con la consideración de que los equipos invictos tienen
+una probabilidad uniforme de perder contra cualquier otro participante.
 
 Se muestran a continuación dichos resultados para diferentes valores de $c$:
 
@@ -637,8 +638,19 @@ Analizando los resultados tenemos que:
         de ellos cambian de posición (Crucero del Norte y Temperley).
 \end{itemize}
 
-En base a lo analizado, podemos concluir que los resultados del experimento corroboran
-las hipótesis planteadas.
+Y podemos concluir:
+\begin{itemize}
+    \item Se puede apreciar que el parámetro $c$ tiene un impacto muy importante en
+        el algoritmo, por lo que su correcta elección es fundamental para que el
+        ranking resultante tenga sentido.
+    \item Al utilizar un $c$ cercano a cero el ranking se vuelve aleatorio.
+    \item Y al utilizar un $c$ cercano a uno eliminamos la probabilidad de que
+        un equipo cualquiera pierda contra cualquier otro, sin importar su posición
+        actual en el ranking.
+    \item Tanto Kamvar et al.\cite{Kamvar2003} como Bryan y Leise\cite{Bryan2006}
+        sugieren utilizar un $c=0.85$, ya que este valor fue el utilizado originalmente
+        por Google.
+\end{itemize}
 
 \subsubsection{Evolución del ranking}
 
@@ -827,6 +839,7 @@ avance de los equipos está limitado y por ende resulta mucho más controlado.
 Estas son características claves de cada sistema ya que a la hora de decidir qué
 modelo utilizar es necesario tener en cuenta los efectos secundarios de los
 métodos aplicados.
+
 Es aquí donde el concepto de ranking ``justo'' depende de lo que consideren más
 importante los organizadores. Si se cree que todo equipo posee exactamente el
 mismo nivel, entonces el ranking estándar ofrecerá un resultado simple,
