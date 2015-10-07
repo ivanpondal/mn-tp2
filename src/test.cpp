@@ -500,7 +500,6 @@ int main(int argc, char *argv[])
 		int metodo = 0;
 		int instancia = 0;
 		sscanf(argv[1], "%u", &metodo);
-		cout<<metodo<<endl;
 		if(metodo == 0){
 			// Page Rank o GeM
 			double c = 0;
